@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ProjectCompactCell" customModule="USGBC" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-usgbc-gray" translatesAutoresizingMaskIntoConstraints="NO" id="acI-T7-sZH">
+                        <rect key="frame" x="11" y="12" width="76" height="76"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stony Brook Millstone Watershed Associate" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gL1-Uo-bq7">
+                        <rect key="frame" x="92" y="12" width="235" height="32"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LEED BD+C: New Construction v3 - LEED 2009" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gt4-tK-CwW">
+                        <rect key="frame" x="92" y="44" width="236" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="Dj5-gw-yRX"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Los Angeles, CA 90071" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UDm-gQ-J9c">
+                        <rect key="frame" x="92" y="74" width="235" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="Ges-vL-JRv"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
+                        <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8gg-J1-DfZ">
+                        <rect key="frame" x="8" y="99" width="304" height="1"/>
+                        <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="certified_project" translatesAutoresizingMaskIntoConstraints="NO" id="bfi-Qu-WQC">
+                        <rect key="frame" x="3" y="11" width="76" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="76" id="4iG-gu-wqF"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Gt4-tK-CwW" secondAttribute="trailing" constant="-8" id="2OR-dW-drA"/>
+                <constraint firstItem="gL1-Uo-bq7" firstAttribute="leading" secondItem="Gt4-tK-CwW" secondAttribute="leading" id="3Uf-sm-RpJ"/>
+                <constraint firstItem="acI-T7-sZH" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="7Hr-fv-cOr"/>
+                <constraint firstItem="acI-T7-sZH" firstAttribute="top" secondItem="gL1-Uo-bq7" secondAttribute="top" id="Cbd-ct-095"/>
+                <constraint firstItem="bfi-Qu-WQC" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="11" id="IiX-me-uTD"/>
+                <constraint firstItem="Gt4-tK-CwW" firstAttribute="leading" secondItem="UDm-gQ-J9c" secondAttribute="leading" id="JnF-Ph-ejU"/>
+                <constraint firstItem="8gg-J1-DfZ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="TnI-vM-LLI"/>
+                <constraint firstAttribute="trailing" secondItem="gL1-Uo-bq7" secondAttribute="trailing" constant="-7" id="UtX-xR-ave"/>
+                <constraint firstItem="gL1-Uo-bq7" firstAttribute="leading" secondItem="acI-T7-sZH" secondAttribute="trailing" constant="5" id="X2Y-qc-meE"/>
+                <constraint firstItem="8gg-J1-DfZ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="XIv-aS-QZH"/>
+                <constraint firstItem="acI-T7-sZH" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="12" id="c28-k9-v26"/>
+                <constraint firstItem="8gg-J1-DfZ" firstAttribute="top" secondItem="UDm-gQ-J9c" secondAttribute="bottom" constant="9" id="fWw-xN-Q3o"/>
+                <constraint firstItem="UDm-gQ-J9c" firstAttribute="top" secondItem="Gt4-tK-CwW" secondAttribute="bottom" constant="15" id="hIa-PB-f7z"/>
+                <constraint firstItem="gL1-Uo-bq7" firstAttribute="trailing" secondItem="UDm-gQ-J9c" secondAttribute="trailing" id="jgR-td-EwJ"/>
+                <constraint firstAttribute="bottom" secondItem="8gg-J1-DfZ" secondAttribute="bottom" id="lMF-IA-C3X"/>
+                <constraint firstItem="Gt4-tK-CwW" firstAttribute="top" secondItem="gL1-Uo-bq7" secondAttribute="bottom" id="lrO-63-vkc"/>
+                <constraint firstItem="gL1-Uo-bq7" firstAttribute="leading" secondItem="bfi-Qu-WQC" secondAttribute="trailing" constant="13" id="lwE-18-AHT"/>
+                <constraint firstItem="8gg-J1-DfZ" firstAttribute="top" secondItem="bfi-Qu-WQC" secondAttribute="bottom" constant="72" id="m2d-s4-e62"/>
+                <constraint firstItem="8gg-J1-DfZ" firstAttribute="top" secondItem="acI-T7-sZH" secondAttribute="bottom" constant="11" id="qXD-wp-fTj"/>
+                <constraint firstItem="acI-T7-sZH" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="11" id="y65-Tu-8Na"/>
+                <constraint firstItem="bfi-Qu-WQC" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="3" id="yJz-nw-g71"/>
+            </constraints>
+            <connections>
+                <outlet property="addressLabel" destination="UDm-gQ-J9c" id="GeQ-gK-rhK"/>
+                <outlet property="certificationImageView" destination="bfi-Qu-WQC" id="uCa-lI-BsK"/>
+                <outlet property="imageView" destination="acI-T7-sZH" id="hqK-hS-4AW"/>
+                <outlet property="leedVersionLabel" destination="Gt4-tK-CwW" id="BR4-lb-NR3"/>
+                <outlet property="separatorView" destination="8gg-J1-DfZ" id="yci-c1-4iz"/>
+                <outlet property="titleLabel" destination="gL1-Uo-bq7" id="eJy-6b-aOV"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="certified_project" width="43" height="13"/>
+        <image name="logo-usgbc-gray" width="948" height="375"/>
+    </resources>
+</document>
