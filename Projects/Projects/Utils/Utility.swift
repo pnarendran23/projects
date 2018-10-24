@@ -226,6 +226,22 @@ class Utility{
         }
     }
     
+    static func hideToast(){
+        AWBanner.hide()
+    }
+    
+    
+    static func showBanner(y: CGFloat, message:String){
+        let h = UIApplication.shared.statusBarFrame.size.height
+        if(UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight ){
+            AWBanner.showWithDuration(144.5, delay: 0.0, message: NSLocalizedString(message, comment: ""), backgroundColor: UIColor.hex(hex: Colors.drawerBackground), textColor: UIColor.white,x:0, y: y + h, width : UIScreen.main.bounds.size.width)
+            //37
+        }else{
+            AWBanner.showWithDuration(144.5, delay: 0.0, message: NSLocalizedString(message, comment: ""), backgroundColor: UIColor.hex(hex: Colors.drawerBackground), textColor: UIColor.white,x:0, y: y + h, width : UIScreen.main.bounds.size.width)
+            //64
+        }
+    }
+    
     static func revokeduser(viewcontroller : UIViewController, name : String){
         DispatchQueue.main.async {
             Utility.hideLoading()

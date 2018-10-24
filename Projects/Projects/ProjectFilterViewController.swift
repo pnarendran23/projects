@@ -368,13 +368,14 @@ class ProjectFilterViewController: UIViewController {
                 }
             }}
         
-        var parameter = Payloads().makePayloadForProject(certificationsarray: certificationsarray, ratingsarray: ratingsarray, versionsarray: versionsarray, statesarray : tempstates, countriesarray : tempcountries)
-        print(parameter)
-        Apimanager.shared.getProjectsCount(category: parameter) { count, code in
+        var dict = [[String : [String : String]]]()
+        dict = constructCategory()
+        
+        Apimanager.shared.getProjectsCount(category: dict) { count, code in
             if(code == -1 && count != nil){
                 self.isloading = false
                 Utility.hideLoading()
-                if(parameter == ""){
+                if(dict.count == 0){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) Projects"
@@ -397,14 +398,47 @@ class ProjectFilterViewController: UIViewController {
         }
     }
     
+    func constructCategory() -> [[String : [String : String]]]{
+        var dict = [[String : [String : String]]]()
+        for i in certificationsarray{
+            if(i as! String != ""){
+                dict.append([ "match" : [ "certification_level" : i as! String ]])
+            }
+        }
+        for i in countriesarray{
+            if(i as! String != ""){
+                dict.append([ "match" : [ "country" : i as! String ]])
+            }
+        }
+        
+        for i in statesarray{
+            if(i as! String != ""){
+                dict.append([ "match" : [ "state" : i as! String ]])
+            }
+        }
+        
+        for i in ratingsarray{
+            if(i as! String != ""){
+                dict.append([ "match" : [ "rating_system" : i as! String ]])
+            }
+        }
+        
+        for i in versionsarray{
+            if(i as! String != ""){
+                dict.append([ "match" : [ "rating_system_version" : i as! String ]])
+            }
+        }
+        return dict
+    }
+    
     
     func loadProjectsMaxCount(){
-        let parameter = ""
-        Apimanager.shared.getProjectsCount(category: parameter) { count, code in
+        var dict = [[String : [String : String]]]()
+        Apimanager.shared.getProjectsCount(category: dict) { count, code in
             if(code == -1 && count != nil){
                 DispatchQueue.main.async {
                     self.isloading = false
-                    if(parameter == ""){
+                    if(dict.count == 0){
                         self.totalCount = count!
                     }
                     self.loadProjectsCount()                    

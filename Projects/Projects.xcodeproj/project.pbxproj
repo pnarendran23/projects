@@ -23,6 +23,10 @@
 		562298AA216E297C00C2D07B /* CertificationInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562298A8216E297C00C2D07B /* CertificationInfo.xib */; };
 		562298AD216E2EC400C2D07B /* Aboutproject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562298AB216E2EC400C2D07B /* Aboutproject.swift */; };
 		562298AE216E2EC400C2D07B /* Aboutproject.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562298AC216E2EC400C2D07B /* Aboutproject.xib */; };
+		5625DFF4217EF17100E61AB3 /* expandCollapse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5625DFF3217EF17100E61AB3 /* expandCollapse.swift */; };
+		5625DFF6217EF22500E61AB3 /* expandCollapse.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5625DFF5217EF22500E61AB3 /* expandCollapse.xib */; };
+		5625DFF9217EFECC00E61AB3 /* OperationsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5625DFF7217EFECC00E61AB3 /* OperationsCell.swift */; };
+		5625DFFA217EFECC00E61AB3 /* OperationsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5625DFF8217EFECC00E61AB3 /* OperationsCell.xib */; };
 		562720A8216CAAD3004B3538 /* ProjectCellwithImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562720A6216CAAD3004B3538 /* ProjectCellwithImage.swift */; };
 		562720A9216CAAD3004B3538 /* ProjectCellwithImage.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562720A7216CAAD3004B3538 /* ProjectCellwithImage.xib */; };
 		562720AC216CAAE2004B3538 /* ProjectCellwithoutImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562720AA216CAAE2004B3538 /* ProjectCellwithoutImage.swift */; };
@@ -166,6 +170,10 @@
 		562298A8216E297C00C2D07B /* CertificationInfo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CertificationInfo.xib; sourceTree = "<group>"; };
 		562298AB216E2EC400C2D07B /* Aboutproject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aboutproject.swift; sourceTree = "<group>"; };
 		562298AC216E2EC400C2D07B /* Aboutproject.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Aboutproject.xib; sourceTree = "<group>"; };
+		5625DFF3217EF17100E61AB3 /* expandCollapse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = expandCollapse.swift; sourceTree = "<group>"; };
+		5625DFF5217EF22500E61AB3 /* expandCollapse.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = expandCollapse.xib; sourceTree = "<group>"; };
+		5625DFF7217EFECC00E61AB3 /* OperationsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationsCell.swift; sourceTree = "<group>"; };
+		5625DFF8217EFECC00E61AB3 /* OperationsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OperationsCell.xib; sourceTree = "<group>"; };
 		562720A6216CAAD3004B3538 /* ProjectCellwithImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellwithImage.swift; sourceTree = "<group>"; };
 		562720A7216CAAD3004B3538 /* ProjectCellwithImage.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCellwithImage.xib; sourceTree = "<group>"; };
 		562720AA216CAAE2004B3538 /* ProjectCellwithoutImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellwithoutImage.swift; sourceTree = "<group>"; };
@@ -386,7 +394,11 @@
 		565DDB5F216B80BA00404B65 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5625DFF3217EF17100E61AB3 /* expandCollapse.swift */,
+				5625DFF5217EF22500E61AB3 /* expandCollapse.xib */,
 				565DDB60216B80BA00404B65 /* SubFilterCell.swift */,
+				5625DFF7217EFECC00E61AB3 /* OperationsCell.swift */,
+				5625DFF8217EFECC00E61AB3 /* OperationsCell.xib */,
 				562298AB216E2EC400C2D07B /* Aboutproject.swift */,
 				562298AC216E2EC400C2D07B /* Aboutproject.xib */,
 				5674088521706F7400FF55D5 /* locationcell.swift */,
@@ -398,9 +410,9 @@
 				562298A7216E297C00C2D07B /* CertificationInfo.swift */,
 				562298A8216E297C00C2D07B /* CertificationInfo.xib */,
 				562298A3216E238E00C2D07B /* projectInfo.swift */,
+				562298A4216E238E00C2D07B /* projectInfo.xib */,
 				56A5FBDD217AE3A800242EF5 /* FavouritesHeader.swift */,
 				56A5FBDE217AE3A800242EF5 /* FavouritesHeader.xib */,
-				562298A4216E238E00C2D07B /* projectInfo.xib */,
 				56090D90217DBD2800EC9E21 /* favouritesCell.swift */,
 				56090D91217DBD2800EC9E21 /* favouritesCell.xib */,
 				5622989F216E0ADF00C2D07B /* thumbnail.swift */,
@@ -800,6 +812,8 @@
 				565DDB80216B80BA00404B65 /* OverviewCell.xib in Resources */,
 				56A5FBDC217AE0A900242EF5 /* ProjectCellwithImagemore.xib in Resources */,
 				56090D93217DBD2800EC9E21 /* favouritesCell.xib in Resources */,
+				5625DFF6217EF22500E61AB3 /* expandCollapse.xib in Resources */,
+				5625DFFA217EFECC00E61AB3 /* OperationsCell.xib in Resources */,
 				56CA1BEB2169DF2100D94909 /* Assets.xcassets in Resources */,
 				566C71152179A7BF0032EEF1 /* AktivGrotesk-Rg.ttf in Resources */,
 				56FB3344216F2441000784F5 /* expandCollapseCell.xib in Resources */,
@@ -997,6 +1011,7 @@
 				566C711121799AAE0032EEF1 /* FavouritesViewController.swift in Sources */,
 				562298A9216E297C00C2D07B /* CertificationInfo.swift in Sources */,
 				565DDB4F216B7F9400404B65 /* ProjectFilterSubViewController.swift in Sources */,
+				5625DFF4217EF17100E61AB3 /* expandCollapse.swift in Sources */,
 				56A5FBDB217AE0A900242EF5 /* ProjectCellwithImagemore.swift in Sources */,
 				565DDB71216B80BA00404B65 /* Details.swift in Sources */,
 				565DDB76216B80BA00404B65 /* DirectoryProjectFilter.swift in Sources */,
@@ -1012,6 +1027,7 @@
 				565DDB7D216B80BA00404B65 /* ProjectCompactCell.swift in Sources */,
 				562720AC216CAAE2004B3538 /* ProjectCellwithoutImage.swift in Sources */,
 				56CA1C122169EFCF00D94909 /* Apimanager.swift in Sources */,
+				5625DFF9217EFECC00E61AB3 /* OperationsCell.swift in Sources */,
 				565DDB7B216B80BA00404B65 /* FilterCell.swift in Sources */,
 				562298AD216E2EC400C2D07B /* Aboutproject.swift in Sources */,
 				565DDB7C216B80BA00404B65 /* CustomInfoWindow.swift in Sources */,
@@ -1222,7 +1238,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1236,8 +1252,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1252,7 +1268,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1266,8 +1282,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

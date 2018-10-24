@@ -17,6 +17,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     fileprivate var loading = false
     var frominfoView = false
     var isLarger = false
+    var markerArray = [GMSMarker]()
     fileprivate var loadType = "init"
     var filterProjects = [Project]()
     fileprivate var pageNumber = 0
@@ -112,6 +113,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             
             self.category = Payloads().makePayloadForProject(certificationsarray: certificationsarray, ratingsarray: ratingsarray, versionsarray: versionsarray, statesarray : tempstates, countriesarray : tempcountries)
             self.totalCount = totalCount
+            self.mapView.clear()
             self.loadData()
             //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
             //loadProjectsWithPagination(filterChanged: filterChanged, id: self.scrollId, category: category, loadType: loadType)
@@ -171,20 +173,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     func updateSearchResults(for searchController: UISearchController) {
         // To show another search view controller mapViewTopConstraint.constant = 54
             //mapView.isHidden = true
-        
-            arrFilter.removeAll(keepingCapacity: false)
-            self.arrCountry.removeAll()
-            arrProjects = [String]()
-            let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-            let array = (arrCountry as NSArray).filtered(using: searchPredicate)
-            self.arrProjects = [String]()
-            arrFilter = array as! [String]
-            self.navigationItem.rightBarButtonItems = nil
-            if(searchController.isActive){
-            timer.invalidate()
-            Apimanager.shared.stopAllSessions()
-            timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
-            }
+
             //self.tableView.reloadData()
         
     }
@@ -244,7 +233,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
 //                    //Location Manager code to fetch current location
 //                    self.locationManager.delegate = self
 //                    self.locationManager.startUpdatingLocation()
-                    self.loadMapView()
+                    //self.loadMapView()
                 }else{
                     print("Not allowed")
                 }
@@ -317,31 +306,33 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     if(CLLocationManager.locationServicesEnabled()){
                         
                         if(self.from == 0 && totalRecords! == 0){
-                            self.loadMapView()
+                            Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "No projects nearby. Please try some other location")
+                            self.loadMapView(temp: projects!)
                         }else{
-                                if(projects!.count > 0 && totalRecords! <= 500){
+                                if(projects!.count > 0 && self.projects.count <= 2000){
                                 self.from = self.from + self.size
                                 self.isLarger = false
-                                self.loadMapView()
+                                    Utility.hideToast()
+                                self.loadMapView(temp: projects!)
                             self.loadProjectsElasticUsingLocation(search: search, category: category, lat: lat , lng: lng, distance: distance)
                             }else{
-                                if(totalRecords! > 500){
-                                    let temp = self.searchedProjects.first as! Project
-                                    var temparray = [Project]()
-                                    var maxValue = 0
-                                    if(totalRecords! > 500 && totalRecords! <= 999){
-                                        maxValue = 500
-                                    }else if(totalRecords! > 1000){
-                                        maxValue = 1000
-                                    }
-                                    for i in 0...maxValue{
-                                        temparray.append(temp)
-                                    }
-                                    self.isLarger = true
-                                    self.projects = temparray
-                                    self.searchedProjects = temparray
-                                    self.loadMapView()
-                                }
+//                                if(totalRecords! > 500){
+//                                    let temp = self.searchedProjects.first as! Project
+//                                    var temparray = [Project]()
+//                                    var maxValue = 0
+//                                    if(totalRecords! > 500 && totalRecords! <= 999){
+//                                        maxValue = 500
+//                                    }else if(totalRecords! > 1000){
+//                                        maxValue = 1000
+//                                    }
+//                                    for i in 0...maxValue{
+//                                        temparray.append(temp)
+//                                    }
+//                                    self.isLarger = true
+//                                    self.projects = temparray
+//                                    self.searchedProjects = temparray
+//                                    self.loadMapView()
+//                                }
                                 self.allDownloaded = true
                             }
                         }
@@ -385,7 +376,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     //self.lastRecordsCount = projects!.count
                     //self.filterProjects = self.projects
                     self.projects = self.searchedProjects
-                    self.loadMapView()
+                    self.loadMapView(temp: projects!)
                     Utility.hideLoading()
                         self.arrProjects = [String]()
                         self.arrFilter = [String]()
@@ -488,8 +479,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 let normalText  = "\(project.title)"
                 let attributedString = NSMutableAttributedString(string:normalText)
                 var distance = ""
-                if(tempLocation!.distance(from: currentLocation!) < 1000){
-                    distance = "\(Double(round(tempLocation!.distance(from: currentLocation!) * 100)/100)) mi. away"
+                if(tempLocation!.distance(from: locationManager.location!)/1609.34 < 1000){
+                    distance = "\(Double(round(tempLocation!.distance(from: locationManager.location!)/1609.34 * 100)/100)) m. away"
                 }else{
                     distance = "1000+ mi. away"
                 }
@@ -523,8 +514,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 let attributedString = NSMutableAttributedString(string:normalText)
                 
                 var distance = ""
-                if(tempLocation!.distance(from: currentLocation!) < 1000){
-                    distance = "\(Double(round(tempLocation!.distance(from: currentLocation!) * 100)/100)) mi. away"
+                if(tempLocation!.distance(from: locationManager.location!)/1609.34 < 1000){
+                    distance = "\(Double(round(tempLocation!.distance(from: locationManager.location!)/1609.34 * 100)/100)) mi. away"
                 }else{
                     distance = "1000+ mi. away"
                 }
@@ -605,7 +596,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                        options: .curveEaseOut,
                        animations: {
                         //self.navigationController?.navigationBar.barTintColor = UIColor.white
-                        self.navigationItem.rightBarButtonItems = nil
+                        
                         self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -667,12 +658,13 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     func didPresentSearchController(_ searchController: UISearchController) {
         self.tableView.isHidden = false
+        Utility.hideToast()
         if(locationManager.location != nil){
             self.currentLocation = locationManager.location
         }else{
             self.currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
         }
-     self.navigationItem.rightBarButtonItems = nil
+     
         if(self.isLarger == true){
             self.searchedProjects = [Project]()
             self.projects = [Project]()
@@ -685,13 +677,11 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             self.tableView.reloadData()
         }
         self.searchBar.resignFirstResponder()
-        self.searchBar.showsCancelButton = false
         selected_searchbar = "searchcontroller"
         slideUpView.isHidden = true
     }
     
-    func didDismissSearchController(_ searchController: UISearchController) {
-        mapViewTopConstraint.constant = 0
+    func didDismissSearchController(_ searchController: UISearchController) {        
         self.tableView.isHidden = true
         DispatchQueue.main.async {
             self.makeNavigationBarButtons()
@@ -700,11 +690,31 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         //slideUpView.isHidden = false
         self.arrProjects = [String]()
         arrFilter = [String]()
-        self.navigationItem.rightBarButtonItems = nil
+        
         self.allDownloaded = false
         self.from = 0
         self.projects = [Project]()
-        self.loadProjectsElasticUsingLocation(search: searchController.searchBar.text!, category: "All", lat: self.queryingLat, lng: self.queryingLng, distance: queryingDistance)
+        let distanceinKms = Double(self.mapView.getRadius()/1000)/1.3
+        DispatchQueue.main.async {
+            if(distanceinKms <= 500){
+                Apimanager.shared.stopAllSessions()
+                self.queryingLat = self.mapView.camera.target.latitude
+                self.queryingLng = self.mapView.camera.target.longitude
+                self.queryingDistance = distanceinKms
+                self.allDownloaded = false
+                self.from = 0
+                self.size = 500
+                self.markerArray = [GMSMarker]()
+                self.projects = [Project]()
+                self.isLarger = false
+                self.loadProjectsElasticUsingLocation(search: searchController.searchBar.text!, category: "All", lat: self.queryingLat, lng: self.queryingLng, distance: distanceinKms)
+            }else{
+                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "Use precised region to explore projects")
+                self.allDownloaded = true
+                Apimanager.shared.stopAllSessions()
+                self.mapView.clear()
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -724,7 +734,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.searchBar.layer.borderColor = searchBar.barTintColor?.cgColor
         for family in UIFont.familyNames {
             print("\(family)")
             
@@ -756,7 +766,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             if(UserDefaults.standard.object(forKey: "searchText") != nil){
                 controller.searchBar.text = UserDefaults.standard.object(forKey: "searchText") as! String
             }
-            
+            controller.searchBar.delegate = self
             controller.searchBar.showsScopeBar = true
             (controller.searchBar.value(forKey: "searchField") as? UITextField)?.font = UIFont.AktivGrotesk_Md(size: 14)
             controller.hidesNavigationBarDuringPresentation = false;
@@ -926,6 +936,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         Apimanager.shared.stopAllSessions()
         projectsListTab.category = category
         projectsListTab.totalCount = totalCount
+        Utility.hideToast()
         projectsListTab.selectedfilter = selectedfilter
         projectsListTab.certificationsarray = self.certificationsarray
         projectsListTab.ratingsarray = self.ratingsarray
@@ -938,12 +949,12 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         projectsListTab.filterProjects = [Project]()
         projectsListTab.projects = [Project]()
         self.searchController.delegate = nil
-        if(isLarger == false){
-            projectsListTab.projects = self.projects
-            projectsListTab.totalCount = self.totalRecords
-            projectsListTab.totalRecords = self.totalRecords
-            projectsListTab.filterProjects = self.projects
-        }
+//        if(isLarger == false){
+//            projectsListTab.projects = self.projects
+//            projectsListTab.totalCount = self.totalRecords
+//            projectsListTab.totalRecords = self.totalRecords
+//            projectsListTab.filterProjects = self.projects
+//        }
         UserDefaults.standard.set(self.searchController.searchBar.text!, forKey: "searchText")
         navigationController?.viewControllers[0] = projectsListTab
     }
@@ -986,11 +997,13 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         }else if segue.identifier == "ProjectDetailsViewController" {
             if let vc = segue.destination as? ProjectDetailsViewController {
                 if(frominfoView == true){
-                    vc.node_id = self.searchedProjects[((sender as! GMSMarker).userData as! ClusterItem).index].node_id
-                    vc.projectID = self.searchedProjects[((sender as! GMSMarker).userData as! ClusterItem).index].ID
-                    vc.currentProject = self.searchedProjects[((sender as! GMSMarker).userData as! ClusterItem).index]
+                    //Crash
+                    vc.node_id = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
+                    vc.projectID = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!].ID
+                    vc.currentProject = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!]
                     vc.navigationItem.title = vc.currentProject.title
                 }else{
+                    
                     vc.node_id = searchedProjects[sender as! Int].node_id
                     vc.projectID = searchedProjects[sender as! Int].ID
                     vc.currentProject = searchedProjects[sender as! Int]
@@ -1078,6 +1091,7 @@ extension ViewController: CLLocationManagerDelegate {
             mapView.isHidden = false
             mapView.camera = camera
         } else {
+            print(currentPosition.target.latitude)
             if(currentPosition.target.latitude != 0.0 &&  currentPosition.target.longitude != 0.0){
                 self.mapView.animate(to: currentPosition)
             }else{
@@ -1086,7 +1100,6 @@ extension ViewController: CLLocationManagerDelegate {
         }
         locationManager.delegate = nil
         //self.loadProjectsElastic(search: self.searchText, category: self.category)
-        self.loadMapView()
         print(location.coordinate.latitude,location.coordinate.longitude)
     }
     
@@ -1149,8 +1162,23 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     
-    func loadMapView(){
-        var i = 0
+    func loadMapView(temp : [Project]){
+        DispatchQueue.main.async
+            {
+                for project in self.projects{
+                // 2. Perform UI Operations.
+                var position = CLLocationCoordinate2DMake(Double(project.lat)!,Double(project.long)!)
+                var marker = GMSMarker(position: position)
+                    marker.icon = UIImage(named: "pin_new")
+                    marker.title = project.title
+                    marker.appearAnimation = GMSMarkerAnimation.pop ;
+                    marker.snippet = project.address.trimmingCharacters(in: .whitespacesAndNewlines)
+                    marker.map = self.mapView
+                    self.markerArray.append(marker)
+                }
+        }
+        
+        /*var i = 0
         let iconGenerator = GMUDefaultClusterIconGenerator()
         let algorithm = GMUNonHierarchicalDistanceBasedAlgorithm()
         let renderer = GMUDefaultClusterRenderer(mapView: mapView, clusterIconGenerator: iconGenerator)
@@ -1166,13 +1194,13 @@ extension ViewController: CLLocationManagerDelegate {
                 }
             }
             self.mapView.clear()
-            clusterManager?.cluster()
+            clusterManager?.cluster()*/
             //mapView.animate(with: GMSCameraUpdate.fit(bounds!, withPadding: 30.0))
-        }else{
-            if(self.navigationController != nil){
-                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Map not loaded, try again later!")
-            }
-        }
+//        }else{
+//            if(self.navigationController != nil){
+//                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Map not loaded, try again later!")
+//            }
+//        }
     }
     
 }
@@ -1201,13 +1229,8 @@ extension ViewController: GMUClusterManagerDelegate {
 
 extension ViewController : GMSMapViewDelegate{
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        if marker.userData is ClusterItem{
-            markerTapped = true
-            return false
-        }else if (marker.userData is GMUStaticCluster){
-            mapView.animate(toZoom: mapView.camera.zoom + 2.0)
-        }
-        return false
+        mapView.selectedMarker = marker;
+        return true
     }
 }
 
@@ -1228,7 +1251,6 @@ extension ViewController: GMUClusterRendererDelegate {
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-        print(self.projects[(marker.userData as! ClusterItem).index].node_id)
         frominfoView = true
         performSegue(withIdentifier: "ProjectDetailsViewController", sender: marker)
     }
@@ -1307,13 +1329,14 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     
     func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {        
       //loadData()
+        if(markerTapped == false){
         DispatchQueue.main.async {
-        var  bottomLeftCoord = mapView.projection.visibleRegion().nearLeft;
-        var bottomRightCoord = mapView.projection.visibleRegion().nearRight;
-        var distanceinKms = GMSGeometryDistance(bottomLeftCoord, bottomRightCoord)
-        distanceinKms = distanceinKms/1000
+            self.searchBar.resignFirstResponder()
+        let distanceinKms = Double(self.mapView.getRadius()/1000)/1.3
         //self.currentPosition = self.mapView.camera
-        self.queryingDistance = distanceinKms
+            if(distanceinKms <= 500){
+            self.queryingDistance = distanceinKms
+                self.mapView.clear()
             if(self.markerTapped == false){
             self.allDownloaded = false
             self.from = 0
@@ -1325,6 +1348,15 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
             }else{
                 self.markerTapped = false
             }
+            }else{
+                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "Use precised region to explore projects")
+                self.allDownloaded = true
+                Apimanager.shared.stopAllSessions()
+                self.mapView.clear()
+            }
+            }
+        }else{
+            markerTapped = false
         }
     }
     
@@ -1355,7 +1387,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
                 t.removeAllObjects()
                 DispatchQueue.main.async {
                     Utility.hideLoading()
-                    self.loadMapView()
+                    
                 }
                 
                 break
@@ -1367,7 +1399,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         var  bottomLeftCoord = mapView.projection.visibleRegion().nearLeft;
         var bottomRightCoord = mapView.projection.visibleRegion().nearRight;
         var distanceMetres = GMSGeometryDistance(bottomLeftCoord, bottomRightCoord)
-        distanceMetres = distanceMetres/1000
+        distanceMetres = Double(self.mapView.getRadius()/1000)/1.3
         let point = mapView.center;
         var  coordinate = self.mapView.projection.coordinate(for: point)
         if(locationManager.location != nil){
@@ -1384,6 +1416,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
             self.allDownloaded = false
             self.from = 0
             self.size = 500
+            self.markerArray = [GMSMarker]()
             self.projects = [Project]()
             self.isLarger = false
             if(self.searchController.searchBar.text?.count == 0){
@@ -1414,44 +1447,21 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
 extension ViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.searchController.dismiss(animated: true, completion: nil)
-        searchBar.tintColor = UIColor.black
-        let attributes = [NSAttributedStringKey.foregroundColor : self.searchController.searchBar.tintColor]
-        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
-        searchBar.showsCancelButton = true
-        selected_searchbar = "searchbar"
-        self.arrCountry.removeAll()
-        self.arrFilter.removeAll()
-        self.arrCountry.append("Current location")
-        self.tableView.reloadData()
-        slideUpView.isHidden = true
-        
+       
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        slideUpView.isHidden = false
+       searchBar.showsCancelButton = true
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        request = MKLocalSearchRequest()
         searchBar.showsCancelButton = false
-        searchBar.text = ""
-        searchText = ""
-        locationsearchTxt = ""
-        searchBar.resignFirstResponder()
-        if(selected_searchbar == "searchbar"){
-            self.tableView.isHidden = true
-        }
-        slideUpView.isHidden = false
-        hideSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if(searchBar == self.searchBar){
         
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
-        
+        let searchTxt = searchBar.text!
         request.naturalLanguageQuery = searchTxt
         
         let search = MKLocalSearch(request: request)
@@ -1459,20 +1469,68 @@ extension ViewController: UISearchBarDelegate {
             guard let response = response else {
                 return
             }
-            self.arrCountry.removeAll()
-            self.arrCountry.append("Current location")
+            
             for i in response.mapItems{
-                print(i.placemark.name)
-                self.arrCountry.append(i.placemark.name!)
-                print(i.placemark.coordinate.latitude)
-                print(i.placemark.coordinate.longitude)
+                i.placemark.coordinate.latitude
             }
-            if(self.mapViewTopConstraint.constant != 0){
-                self.tableView.isHidden = false
-                self.tableView.reloadData()
+            
+            if(response.mapItems.count == 0){
+                print("Not found")
+            }else{
+                let position = GMSCameraPosition.camera(withLatitude: response.mapItems.first!.placemark.coordinate.latitude,
+                                                      longitude: response.mapItems.first!.placemark.coordinate.longitude,
+                                                      zoom: 16)
+                self.mapView.animate(to: position)
+                
             }
         }
+        }else{
+            if((searchController.searchBar.text?.count)! > 0){
+                arrFilter.removeAll(keepingCapacity: false)
+                self.arrCountry.removeAll()
+                arrProjects = [String]()
+                let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+                let array = (arrCountry as NSArray).filtered(using: searchPredicate)
+                self.arrProjects = [String]()
+                arrFilter = array as! [String]
+                
+                if(searchController.isActive){
+                    timer.invalidate()
+                    Apimanager.shared.stopAllSessions()
+                    timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
+                }
+            }
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
+        
+       
         
     }
     
+}
+
+extension GMSMapView {
+    func getCenterCoordinate() -> CLLocationCoordinate2D {
+        let centerPoint = self.center
+        let centerCoordinate = self.projection.coordinate(for: centerPoint)
+        return centerCoordinate
+    }
+    
+    func getTopCenterCoordinate() -> CLLocationCoordinate2D {
+        // to get coordinate from CGPoint of your map
+        let topCenterCoor = self.convert(CGPoint(x: self.frame.size.width, y: 0), from: self)
+        let point = self.projection.coordinate(for: topCenterCoor)
+        return point
+    }
+    
+    func getRadius() -> CLLocationDistance {
+        let centerCoordinate = getCenterCoordinate()
+        let centerLocation = CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude)
+        let topCenterCoordinate = self.getTopCenterCoordinate()
+        let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
+        let radius = CLLocationDistance(centerLocation.distance(from: topCenterLocation))
+        return round(radius)
+    }
 }

@@ -34,7 +34,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FavouritesHeader") as! FavouritesHeader
-        cell.label.text = "Projects(\(self.favourites.count))"
+        cell.label.text = "Projects (\(self.favourites.count))"
         if(isEdited == false){
             cell.button.setTitle("Edit", for: .normal)
         }else{
@@ -260,7 +260,14 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                     vc.currentProject = favourites[sender as! Int]
                     let currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
                     vc.currentLocation = currentLocation
-                    vc.navigationItem.title = vc.currentProject.title
+                    let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+                    label.backgroundColor = .clear
+                    label.numberOfLines = 0
+                    label.textAlignment = .center
+                    label.font = UIFont.AktivGrotesk_Md(size: 15)
+                    label.text = vc.currentProject.title
+                    vc.navigationItem.titleView = label
+                    //vc.navigationItem.title =
                 }
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title
             }

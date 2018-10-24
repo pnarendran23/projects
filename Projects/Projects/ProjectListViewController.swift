@@ -11,7 +11,7 @@ import SwiftyJSON
 import MapKit
 import SDWebImage
 
-class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
+class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, UIPopoverPresentationControllerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, CLLocationManagerDelegate {
     var selected_searchbar = ""
     var zoomLevel = 0.0
     var currentPosition = GMSCameraPosition()
@@ -23,6 +23,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     var locationsearchTxt = ""
     var selected_tags = [String]()
     var tagarray = NSMutableArray()
+    let locationManager = CLLocationManager()
     var tags = NSMutableArray()
     var arrCountry = ["Afghanistan", "Algeria", "Bahrain","Brazil", "Cuba", "Denmark","Denmark", "Georgia", "Hong Kong", "Iceland", "India", "Japan", "Kuwait", "Nepal"];
     var arrFilter:[String] = []
@@ -67,19 +68,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     func updateSearchResults(for searchController: UISearchController) {
         // To show another search view controller mapViewTopConstraint.constant = 54
         //mapView.isHidden = true
-        arrFilter.removeAll(keepingCapacity: false)
-        self.arrCountry.removeAll()
-        arrProjects = [String]()
-        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-        let array = (arrCountry as NSArray).filtered(using: searchPredicate)
-        self.arrProjects = [String]()
-        arrFilter = array as! [String]
-        self.navigationItem.rightBarButtonItems = nil
-        timer.invalidate()
-        if(self.searchController.isActive){
-            Apimanager.shared.stopAllSessions()
-            timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
-        }
+
         
         //self.tableView.reloadData()
     }
@@ -91,7 +80,8 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         filterProjects = [Project]()
         
         DispatchQueue.main.async {
-            self.searchProjectUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentLocation.coordinate.latitude , lng: self.currentLocation.coordinate.longitude, distance: self.queryingDistance)
+            print(self.category)
+            self.searchProjectUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
         }
     }
     
@@ -109,7 +99,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
 
     func didPresentSearchController(_ searchController: UISearchController) {
         self.tableView.isHidden = false
-        self.navigationItem.rightBarButtonItems = nil
+        
         if(self.searchController.searchBar.text?.count == 0){
             self.arrFilter = [String]()
             self.arrCountry = [String]()
@@ -130,15 +120,25 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         //slideUpView.isHidden = false
         self.arrProjects = [String]()
         arrFilter = [String]()
-        self.navigationItem.rightBarButtonItems = nil
+        
         self.allDownloaded = false
         self.from = 0
         self.projects = [Project]()
         self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.currentLocation = locations.first!
+        locationManager.delegate = nil        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.locationManager.requestAlwaysAuthorization()
+        
+        // For use in foreground
+        self.locationManager.requestWhenInUseAuthorization()
+        
         self.tableView.contentInset = UIEdgeInsetsMake(0,0,0,0);
         self.tableView.estimatedRowHeight = 80
         self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -155,6 +155,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             controller.dimsBackgroundDuringPresentation = false
             controller.searchResultsUpdater = self
             controller.searchBar.showsCancelButton = false
+            controller.searchBar.delegate = self
             controller.searchBar.sizeToFit()
             if(UserDefaults.standard.object(forKey: "searchText") != nil){
                 controller.searchBar.text = UserDefaults.standard.object(forKey: "searchText") as! String
@@ -218,9 +219,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             self.initViews()
             self.nodata.isHidden = true
             self.loading = true
-            if(self.filterProjects.count == 0){
-            Utility.showLoading()
-            self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+           if(self.filterProjects.count == 0){
+                Utility.showLoading()
+                self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
             }
         }
         
@@ -325,6 +326,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     self.searchedProjects = projects!
                     self.filterProjects = self.searchedProjects
                     self.totalCount = totalRecords!
+                    for i in self.filterProjects{
+                        print(i.title)
+                    }
                     self.tableView.reloadData()
                         //self.lastRecordsCount = projects!.count
                 }
@@ -381,6 +385,11 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
         tabBarController?.title = "Projects"
         loadType = "init"
         pageNumber = 0
@@ -409,8 +418,8 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         //Refresh control for UICollectionView
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.hex(hex: Colors.primaryColor)
-        refreshControl.addTarget(self, action: #selector(ProjectListViewController.handleRefresh(_:)), for: .valueChanged)
-        tableView.addSubview(refreshControl)
+        //refreshControl.addTarget(self, action: #selector(ProjectListViewController.handleRefresh(_:)), for: .valueChanged)
+        //tableView.addSubview(refreshControl)
         tableView.alwaysBounceVertical = true
     }
     
@@ -798,8 +807,8 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
             let normalText  = "\(project.title)"
             let attributedString = NSMutableAttributedString(string:normalText)
             var distance = ""
-            if(tempLocation.distance(from: currentLocation) < 1000){
-                distance = "\(Double(round(tempLocation.distance(from: currentLocation) * 100)/100)) mi. away"
+            if(tempLocation.distance(from: locationManager.location!)/1609.34 < 1000){
+                distance = "\(Double(round(tempLocation.distance(from: locationManager.location!)/1609.34 * 100)/100)) mi. away"
             }else{
                 distance = "1000+ mi. away"
             }
@@ -834,8 +843,8 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
             let attributedString = NSMutableAttributedString(string:normalText)
             
             var distance = ""
-            if(tempLocation.distance(from: currentLocation) < 1000){
-                distance = "\(Double(round(tempLocation.distance(from: currentLocation) * 100)/100)) mi. away"
+            if(tempLocation.distance(from: locationManager.location!)/1609.34 < 1000){
+                distance = "\(Double(round(tempLocation.distance(from: locationManager.location!)/1609.34 * 100)/100)) mi. away"
             }else{
                 distance = "1000+ mi. away"
             }
@@ -892,7 +901,7 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                     self.loading = true
                     //Apimanager.shared.stopAllSessions()
                     //Utility.showLoading()
-                self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude , distance: self.queryingDistance)
+                //self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude , distance: self.queryingDistance)
                 }
             })
         }
@@ -932,39 +941,57 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
 //MARK: - UISearchBar Delegate
 extension ProjectListViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.tintColor = UIColor.black
-        let attributes = [NSAttributedStringKey.foregroundColor : self.searchController.searchBar.tintColor]
-        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
-        searchBar.showsCancelButton = true
-        makeNavigationBarButtons()
-        selected_searchbar = "searchbar"
-        self.arrCountry.removeAll()
-        self.arrCountry.append("Current location")
-        self.locationtableView.reloadData()
-        self.searchController.dismiss(animated: true, completion: nil)
+//        searchBar.tintColor = UIColor.black
+//        let attributes = [NSAttributedStringKey.foregroundColor : self.searchController.searchBar.tintColor]
+//        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
+//        searchBar.showsCancelButton = true
+//        makeNavigationBarButtons()
+//        selected_searchbar = "searchbar"
+//        self.arrCountry.removeAll()
+//        self.arrCountry.append("Current location")
+//        self.locationtableView.reloadData()
+//        self.searchController.dismiss(animated: true, completion: nil)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.showsCancelButton = false
-        searchBar.text = ""
-        searchText = ""
         searchBar.resignFirstResponder()
-        tableViewTopConstraint.constant = 0
         
-        request = MKLocalSearchRequest()
-        searchBar.showsCancelButton = false
-        searchBar.text = ""
-        searchText = ""
-        locationsearchTxt = ""
-        searchBar.resignFirstResponder()
-        if(selected_searchbar == "searchbar"){
-            self.locationtableView.isHidden = true
-        }
-        hideSearch()
+//        searchBar.showsCancelButton = false
+//        searchBar.text = ""
+//        searchText = ""
+//        searchBar.resignFirstResponder()
+//        tableViewTopConstraint.constant = 0
+//
+//        request = MKLocalSearchRequest()
+//        searchBar.showsCancelButton = false
+//        searchBar.text = ""
+//        searchText = ""
+//        locationsearchTxt = ""
+//        searchBar.resignFirstResponder()
+//        if(selected_searchbar == "searchbar"){
+//            self.locationtableView.isHidden = true
+//        }
+//        hideSearch()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+        if(searchBar == self.searchBar){
+            
+        }else{
+            arrFilter.removeAll(keepingCapacity: false)
+            self.arrCountry.removeAll()
+            arrProjects = [String]()
+            let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+            let array = (arrCountry as NSArray).filtered(using: searchPredicate)
+            self.arrProjects = [String]()
+            arrFilter = array as! [String]
+            
+            timer.invalidate()
+            if(self.searchController.isActive){
+                Apimanager.shared.stopAllSessions()
+                timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
+            }
+        }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {

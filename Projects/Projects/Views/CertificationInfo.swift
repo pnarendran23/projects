@@ -26,6 +26,8 @@ class CertificationInfo: UITableViewCell {
     @IBOutlet weak var certifiedLabel: UILabel!
     @IBOutlet weak var walkscoreLabel: UILabel!
     @IBOutlet weak var energystarLabel: UILabel!
+    @IBOutlet weak var stack1: UIStackView!
+    @IBOutlet weak var stack2: UIStackView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

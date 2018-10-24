@@ -174,6 +174,7 @@ class Apimanager{
     func getProjectScorecard(id:String, callback: @escaping ([Scorecard]?, Int?) -> ()){
         let url = "\(baseUSGBCURL)/scorecard"
         let parameters = ["project_id" : id]
+        print(parameters)
         a = Alamofire.request(url, method: .get, parameters: parameters)
             .validate()
             .responseJSON { response in
@@ -192,6 +193,7 @@ class Apimanager{
                         if(type == "Error"){
                             let status = response.response?.statusCode
                             print("STATUS \(status)")
+                            print(json)
                             callback(nil, status)
                         }else{
                             for (_,subJson):(String, JSON) in json {
@@ -256,6 +258,11 @@ class Apimanager{
                                 projectDetails.description_full = subJson["description"].stringValue
                                 projectDetails.address = subJson["address"].stringValue
                                 projectDetails.state = subJson["state"].stringValue
+                                projectDetails.image = subJson["profile_image"].stringValue
+                                print(projectDetails.image)
+                                
+                                projectDetails.city = subJson["city"].stringValue
+                                projectDetails.country = subJson["country"].stringValue
                                 projectDetails.address = projectDetails.address.components(separatedBy: "[").first!
                                 projectDetails.country = projectDetails.country.components(separatedBy: "[").first!
                                 projectDetails.state = projectDetails.state.components(separatedBy: "[").first!
@@ -268,9 +275,7 @@ class Apimanager{
                                         }
                                     }
                                 }
-                                    
-                                projectDetails.city = subJson["city"].stringValue
-                                projectDetails.country = subJson["country"].stringValue
+
                                 break
                             }
                         }
@@ -510,19 +515,35 @@ class Apimanager{
     
     
     
-    func getProjectsCount(category: String, callback: @escaping (Int?, Int?) -> () ){
+    func getProjectsCount(category: [[String : [String : String]]], callback: @escaping (Int?, Int?) -> () ){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
-        var url = projectURL //elasticbaseURL + "projects_ios/_search"
         var params: [String: Any] = [:]
-        if(category == ""){
-            
-        }else{
-            //let cat = "\"\(category)\""
-            url += "?q=\(category)"
-            //url = url.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        var url = projectURL + "?size=500000"
+        var header = [String : Any]()
+        var matchTitle = [String : Any]()
+        
+        header = [
+            "_source": ["title","certification_level","geocode", "country", "state","rating_system_version","rating_system","city","node_id", "address","profile_image","prjt_id"],
+        ]
+        if(category.count > 0){
+            header["query"] = [String : Any]()
+            var query = header["query"] as! [String : Any]
+            query["bool"] = [String : Any]()
+            var bool = query["bool"] as! [String : Any]
+            if(category.count > 0){
+                bool["should"] = category
+                bool["minimum_should_match"] = 1
+            }
+            query["bool"] = bool
+            header["query"] = query
             
         }
-        a = Alamofire.request(url, method: .get)
+        
+        print(header)
+        
+        
+        url = projectURL
+        a = Alamofire.request(url, method: .post, parameters: header, encoding : JSONEncoding.default)
             .validate()
             .responseJSON { response in
                 print(response.request ?? "Error in request")
