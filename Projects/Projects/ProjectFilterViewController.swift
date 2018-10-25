@@ -44,6 +44,8 @@ class ProjectFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 44
         self.totalResultsLabel.font = UIFont.AktivGrotesk_Md(size: 14)
         self.clearFilterButton.titleLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
         self.navigationController?.navigationBar.barTintColor = UIColor.white//hex(hex: Colors.primaryColor)
@@ -76,9 +78,14 @@ class ProjectFilterViewController: UIViewController {
             self.countriesarray = NSMutableArray()
             self.statesarray = NSMutableArray()
             self.tagarray = NSMutableArray()
-            self.states = NSMutableArray()
-            self.filterChanged = true
+            self.statesarray = NSMutableArray()
+            
+            self.certifications = NSMutableArray()
+            self.ratings = NSMutableArray()
+            self.versions = NSMutableArray()
             self.countries = NSMutableArray()
+            self.states = NSMutableArray()
+            self.filterChanged = true            
             Utility.showLoading()
             self.loadFilters()
         }
@@ -368,7 +375,7 @@ class ProjectFilterViewController: UIViewController {
                 }
             }}
         
-        var dict = [[String : [String : String]]]()
+        var dict = [[String : Any]]()
         dict = constructCategory()
         
         Apimanager.shared.getProjectsCount(category: dict) { count, code in
@@ -398,42 +405,64 @@ class ProjectFilterViewController: UIViewController {
         }
     }
     
-    func constructCategory() -> [[String : [String : String]]]{
-        var dict = [[String : [String : String]]]()
+    func constructCategory() -> [[String : Any]]{
+        var dict = [[String : Any]]()
+        var temp = [String]()
         for i in certificationsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "certification_level" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["certification_level.raw" : temp ]])
+        }
+        temp = [String]()
         for i in countriesarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "country" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["country.raw" : temp ]])
+        }
         
+        temp = [String]()
         for i in statesarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "state" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["state.raw" : temp ]])
+        }
         
+        temp = [String]()
         for i in ratingsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "rating_system" : i as! String ]])
+                temp.append(i as! String)
             }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system.raw" : temp ]])
         }
         
+        temp = [String]()
         for i in versionsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "rating_system_version" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system_version.raw" : temp ]])
+        }
+        print(dict)
+        
         return dict
     }
     
     
     func loadProjectsMaxCount(){
-        var dict = [[String : [String : String]]]()
+        var dict = [[String : Any]]()
         Apimanager.shared.getProjectsCount(category: dict) { count, code in
             if(code == -1 && count != nil){
                 DispatchQueue.main.async {
@@ -503,6 +532,12 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         if(temp.count > 0){
             var str = temp.componentsJoined(by: ", ")
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+            cell.textLabel?.numberOfLines = 0
+            cell.detailTextLabel?.numberOfLines = 0
+            cell.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
+            cell.detailTextLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.detailTextLabel?.font = UIFont.AktivGrotesk_Rg(size: 13)
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             cell.accessoryType = .disclosureIndicator
             if(indexPath.row == 0){
@@ -523,6 +558,7 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
+        cell.filterLabel?.numberOfLines = 0
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         if(indexPath.row == 0){
             cell.filterLabel?.text = "Certification Level"

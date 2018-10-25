@@ -16,6 +16,19 @@ class expandCollapseCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            var frame = newValue
+            frame.origin.x += 25
+            frame.size.width -= 2 * 25
+            
+            super.frame = frame
+        }
+    }
 
     
     override func setSelected(_ selected: Bool, animated: Bool) {

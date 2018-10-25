@@ -1238,7 +1238,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1252,8 +1252,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
+				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1268,7 +1268,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1282,8 +1282,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
+				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

@@ -38,6 +38,44 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     var expandNearby = false
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        //Temporary starts
+        
+                isFavourite = false
+                if(UserDefaults.standard.object(forKey: "favourites") != nil){
+                    self.favourites = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "favourites") as! Data) as! [Project]
+                    for i in self.favourites{
+                        if(i.ID == self.currentProject.ID){
+                            isFavourite = true
+                            break
+                        }
+                        print(i.title)
+                    }
+                    self.tableView.reloadData()
+                }
+                let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
+                navigationController?.navigationBar.titleTextAttributes = textAttributes
+                self.navigationController?.navigationBar.tintColor = UIColor.black
+
+        self.node_id = (favourites[1] as! Project).node_id
+        self.projectID = (favourites[1] as! Project).ID
+        self.currentProject = (favourites[1] as! Project)
+        let currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
+        self.currentLocation = currentLocation
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
+        label.backgroundColor = .clear
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = UIFont.AktivGrotesk_Md(size: 15)
+        label.text = self.currentProject.title
+        self.navigationItem.titleView = label
+        
+        
+        //temporary ends
+        
+        
+        tableView.separatorInset = UIEdgeInsetsMake(0, 24, 0, 0)
         print("Selected node ID is ", node_id)
         tableView.register(UINib(nibName: "ProjectCellwithImage", bundle: nil), forCellReuseIdentifier: "ProjectCellwithImage")
         tableView.register(UINib(nibName: "OperationsCell", bundle: nil), forCellReuseIdentifier: "OperationsCell")
@@ -78,21 +116,21 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         UserDefaults.standard.synchronize()
-        isFavourite = false
-        if(UserDefaults.standard.object(forKey: "favourites") != nil){
-            self.favourites = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "favourites") as! Data) as! [Project]
-            for i in self.favourites{
-                if(i.ID == self.currentProject.ID){
-                    isFavourite = true
-                    break
-                }
-                print(i.title)
-            }
-            self.tableView.reloadData()
-        }
-        let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes        
-        self.navigationController?.navigationBar.tintColor = UIColor.black
+//        isFavourite = false
+//        if(UserDefaults.standard.object(forKey: "favourites") != nil){
+//            self.favourites = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "favourites") as! Data) as! [Project]
+//            for i in self.favourites{
+//                if(i.ID == self.currentProject.ID){
+//                    isFavourite = true
+//                    break
+//                }
+//                print(i.title)
+//            }
+//            self.tableView.reloadData()
+//        }
+//        let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
+//        navigationController?.navigationBar.titleTextAttributes = textAttributes
+//        self.navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     
@@ -155,7 +193,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 }else if(indexPath.row == 1){
                     return UITableViewAutomaticDimension
                 }else if(indexPath.row == 2){
-                    UIScreen.main.bounds.size.height * 0.12
+                    return UIScreen.main.bounds.size.height * 0.12
                 }else if(indexPath.row == 3){
                     return UITableViewAutomaticDimension
                 }
@@ -163,7 +201,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 if(indexPath.row == 0){
                     return UITableViewAutomaticDimension
                 }else if(indexPath.row == 1){
-                    UIScreen.main.bounds.size.height * 0.12
+                    return UIScreen.main.bounds.size.height * 0.12
                 }else if(indexPath.row == 2){
                     return UITableViewAutomaticDimension
                 }
@@ -200,7 +238,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(section == 1 || section == 2 || section == 3 || section == 4 || section == 5){
-            return UIScreen.main.bounds.size.height * 0.05
+            return 44
         }
         
         return 0
@@ -211,6 +249,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         var title = ""
         if(section > 0){
             let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "expandCollapse") as! expandCollapse
+            cell.contentView.frame.origin.x = 24
+            cell.contentView.frame.size.width -= 2 * 24
             //let cell = tableView.dequeueReusableCell(withIdentifier: "expandCollapseCell") as! expandCollapseCell
             cell.tag = 10 + section
             cell.addTapGesture(tapNumber: 1, target: self, action: #selector(headerTapped(view:)))
@@ -484,7 +524,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
     }
     
     func getNearbyProjects(){
-        var dict = [[String : [String : String]]]()
+        var dict = [[String : Any]]()
         dict = ViewController().constructCategory()
         Apimanager.shared.getProjectsElasticForMapNew (from: 0, sizee : 6, search : "", category : dict, lat : latitude, lng : longitude, distance : 500, callback: {(totalRecords, projects, code) in
             if(code == -1 && projects != nil){
@@ -851,7 +891,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     AboutprojectView.selectionStyle = .none
                     print(self.Details.description_full)
                     AboutprojectView.webview.loadHTMLString("<html><head><meta name='viewport' content='initial-scale=1.0, user-scalable=no, width=device-width, viewport-fit=cover'/><style>body{font-family: 'Aktiv Grotesk Trial'}</style></head><body>\(self.Details.description_full)</body></html>", baseURL: nil)
-                    AboutprojectView.webview.tag = 70 + indexPath.section
+                    AboutprojectView.webview.tag = 70 + indexPath.section                    
                     AboutprojectView.webview.scrollView.layer.masksToBounds = false
                     AboutprojectView.webview.navigationDelegate = self
                     return AboutprojectView

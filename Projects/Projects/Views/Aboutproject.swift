@@ -14,6 +14,8 @@ class Aboutproject: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.webview.scrollView.bounces = false
+        self.webview.scrollView.isScrollEnabled = false
         // Initialization code
     }
 

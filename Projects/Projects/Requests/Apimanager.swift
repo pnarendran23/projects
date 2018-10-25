@@ -515,7 +515,7 @@ class Apimanager{
     
     
     
-    func getProjectsCount(category: [[String : [String : String]]], callback: @escaping (Int?, Int?) -> () ){
+    func getProjectsCount(category: [[String : Any]], callback: @escaping (Int?, Int?) -> () ){
         //var url = "https://elastic:ZxudNW0EKNpRQc8R6mzJLVhU@85d90afabe7d3656b8dd49a12be4b34e.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_mob/_search"
         var params: [String: Any] = [:]
         var url = projectURL + "?size=500000"
@@ -531,8 +531,7 @@ class Apimanager{
             query["bool"] = [String : Any]()
             var bool = query["bool"] as! [String : Any]
             if(category.count > 0){
-                bool["should"] = category
-                bool["minimum_should_match"] = 1
+                bool["must"] = category                
             }
             query["bool"] = bool
             header["query"] = query
@@ -603,7 +602,7 @@ class Apimanager{
     
     
     
-    func getProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : [String : String]]], lat : Double, lng : Double, distance : Double, callback: @escaping (Int?, [Project]?, Int?) -> () ){
+    func getProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : Any]], lat : Double, lng : Double, distance : Double, callback: @escaping (Int?, [Project]?, Int?) -> () ){
         var url = projectURL + "?size=500000"
         let searchText = search
         var header = [String : Any]()
@@ -721,7 +720,7 @@ class Apimanager{
     
     
     
-    func searchProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : [String : String]]], callback: @escaping (Int?, [Project]?, Int?) -> () ){
+    func searchProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : Any]], callback: @escaping (Int?, [Project]?, Int?) -> () ){
         var url = projectURL + "?size=500000"
         let searchText = search
         var header = [String : Any]()

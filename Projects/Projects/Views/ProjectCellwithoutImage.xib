@@ -13,14 +13,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProjectCellwithoutImage" id="KGk-i7-Jjw" customClass="ProjectCellwithoutImage" customModule="Projects" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="77"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="77"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="76.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="76.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SUA-9t-vHI">
-                        <rect key="frame" x="5" y="7" width="309" height="62"/>
+                        <rect key="frame" x="24" y="7" width="329" height="62"/>
                         <attributedString key="attributedText">
                             <fragment content="Label akjHDASK DAHSDK AHSDK AHSDK JAHSKDJA KSJDHA KSJDHA S">
                                 <attributes>
@@ -31,7 +31,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kq1-yq-Pcy">
-                        <rect key="frame" x="5" y="206" width="259" height="58"/>
+                        <rect key="frame" x="5" y="206" width="304" height="58"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
@@ -39,8 +39,8 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="SUA-9t-vHI" secondAttribute="trailing" constant="6" id="27X-j4-6c9"/>
-                    <constraint firstItem="SUA-9t-vHI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="FZe-fe-PD3"/>
+                    <constraint firstAttribute="trailing" secondItem="SUA-9t-vHI" secondAttribute="trailing" constant="22" id="27X-j4-6c9"/>
+                    <constraint firstItem="SUA-9t-vHI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="24" id="FZe-fe-PD3"/>
                     <constraint firstAttribute="bottom" secondItem="SUA-9t-vHI" secondAttribute="bottom" constant="7.5" id="Nue-Ne-gRn"/>
                     <constraint firstItem="SUA-9t-vHI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="rie-lW-rMb"/>
                 </constraints>
@@ -50,7 +50,7 @@
                 <outlet property="address" destination="Kq1-yq-Pcy" id="Uno-Bj-kOG"/>
                 <outlet property="projectname" destination="SUA-9t-vHI" id="qKC-pa-fCu"/>
             </connections>
-            <point key="canvasLocation" x="34" y="94.5"/>
+            <point key="canvasLocation" x="33.5" y="94.5"/>
         </tableViewCell>
     </objects>
 </document>

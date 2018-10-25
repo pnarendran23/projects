@@ -35,6 +35,7 @@ class ProjectFilterSubViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.estimatedRowHeight = 40        
         self.tableView.keyboardDismissMode = .onDrag
         initViews()
     }
@@ -76,6 +77,11 @@ extension ProjectFilterSubViewController: UITableViewDelegate, UITableViewDataSo
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(title == "Certification Level"){
             return self.certifications.count

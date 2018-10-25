@@ -251,36 +251,58 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         })
     }
     
-    func constructCategory() -> [[String : [String : String]]]{
-        var dict = [[String : [String : String]]]()
+    func constructCategory() -> [[String : Any]]{
+        var dict = [[String : Any]]()
+        var temp = [String]()
         for i in certificationsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "certification_level" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["certification_level.raw" : temp ]])
+        }
+        temp = [String]()
         for i in countriesarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "country" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["country.raw" : temp ]])
+        }
         
+        temp = [String]()
         for i in statesarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "state" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["state.raw" : temp ]])
+        }
         
+        temp = [String]()
         for i in ratingsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "rating_system" : i as! String ]])
+                temp.append(i as! String)
             }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system.raw" : temp ]])
         }
         
+        temp = [String]()
         for i in versionsarray{
             if(i as! String != ""){
-                dict.append([ "match" : [ "rating_system_version" : i as! String ]])
+                temp.append(i as! String)
             }
         }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system_version.raw" : temp ]])
+        }
+        print(dict)
+        
         return dict
     }
     
@@ -289,7 +311,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         //sizee was 500000
         
         if(!allDownloaded){
-            var dict = [[String : [String : String]]]()
+            var dict = [[String : Any]]()
             dict = constructCategory()
         Apimanager.shared.getProjectsElasticForMapNew (from: self.from, sizee : size, search : search, category : dict, lat : lat, lng : lng, distance : distance, callback: {(totalRecords, projects, code) in
             if(code == -1 && projects != nil){
@@ -366,7 +388,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     func searchProjectUsingLocation(search: String, category: String, lat : Double, lng : Double, distance : Double){
         //sizee was 500000
-        var dict = [[String : [String : String]]]()
+        var dict = [[String : Any]]()
         dict = constructCategory()
             Apimanager.shared.searchProjectsElasticForMapNew (from: 0, sizee : 1000, search : search, category : dict, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
@@ -1447,15 +1469,20 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
 extension ViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-       
+        let attributes = [NSAttributedStringKey.foregroundColor : self.tabBarController?.tabBar.tintColor]
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
+        searchBar.tintColor = .darkGray
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .black
+       searchBar.showsCancelButton = true
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-       searchBar.showsCancelButton = true
+       searchBar.showsCancelButton = false
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
+        searchBar.resignFirstResponder()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
