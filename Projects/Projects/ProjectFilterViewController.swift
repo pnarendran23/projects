@@ -15,6 +15,12 @@ protocol ProjectFilterDelegate: class {
 }
 
 class ProjectFilterViewController: UIViewController {
+    
+    @IBAction func handleClose(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
     var tagarray = NSMutableArray()
     var tags = NSMutableArray()
     var filter: String!
@@ -44,6 +50,7 @@ class ProjectFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //self.tableView.contentInset = UIEdgeInsetsMake(0, 24, 0, 24)
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 44
         self.totalResultsLabel.font = UIFont.AktivGrotesk_Md(size: 14)
@@ -191,6 +198,9 @@ class ProjectFilterViewController: UIViewController {
                 viewController.countriesarray = self.countriesarray
                 viewController.countries = self.countries
                 viewController.statesarray = self.statesarray
+                var swiftArray = self.states as AnyObject as! [String]
+                var sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+                self.states =  NSMutableArray.init(array: sortedArray)
                 viewController.states = self.states
                 viewController.certificationsarray = self.certificationsarray.mutableCopy() as! NSMutableArray
                 viewController.ratingsarray = self.ratingsarray.mutableCopy() as! NSMutableArray
@@ -219,6 +229,7 @@ class ProjectFilterViewController: UIViewController {
     func initViews(){
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UINib(nibName: "filterselected", bundle: nil), forCellReuseIdentifier: "filterselected")
         tableView.register(UINib(nibName: "FilterCell", bundle: nil), forCellReuseIdentifier: "FilterCell")
         tableView.register(UINib(nibName: "SubFilterCell", bundle: nil), forCellReuseIdentifier: "SubFilterCell")
         tableView.tableFooterView = UIView()
@@ -229,7 +240,7 @@ class ProjectFilterViewController: UIViewController {
         
         var group = DispatchGroup()
         //var objects = ["field_prjt_certification_level","field_prjt_rating_system_version","field_prjt_version", "field_prjt_country", "field_prjt_state"]
-        var objects = ["certification_level.raw","rating_system_version.raw","country.raw","state.raw","rating_system.raw"]
+        var objects = ["certification_level.raw","rating_system_version.raw","add_country.raw","add_state.raw","rating_system.raw"]
         for i in objects{
             group.enter()
             Apimanager.shared.getProjectobjects(field_name : i, callback: { (dict, code) in
@@ -259,19 +270,19 @@ class ProjectFilterViewController: UIViewController {
                             for i in sortedArray{
                                 self.ratings.add(i as! String)
                             }
-                        }else if(i == "country.raw"){
+                        }else if(i == "add_country.raw"){
                             var s = a["key"] as! String
                             var arr = s.components(separatedBy: " [")
                             s = arr[0] as! String
-                            if(arr.count == 2 && !self.countries.contains(s)){
+                            if(arr.count == 1 && !self.countries.contains(s)){
                                 self.countries.add(s)
                                 self.countriesdict.setValue(a["key"] as! String, forKey: s)
                             }
-                        }else if(i == "state.raw"){
+                        }else if(i == "add_state.raw"){
                             var s = a["key"] as! String
                             var arr = s.components(separatedBy: " [")
                             s = arr[0] as! String
-                            if(arr.count == 2 && !self.states.contains(s)){
+                            if(arr.count == 1 && !self.states.contains(s)){
                                 self.actualstates.add(s)
                                 self.statesdict.setValue(a["key"] as! String, forKey: s)
                             }
@@ -307,6 +318,13 @@ class ProjectFilterViewController: UIViewController {
             })
         }
         group.notify(queue: .main) {
+            var swiftArray = self.actualstates as AnyObject as! [String]
+            var sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+            self.actualstates =  NSMutableArray.init(array: sortedArray)
+            
+            swiftArray = self.countries as AnyObject as! [String]
+            sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+            self.countries =  NSMutableArray.init(array: sortedArray)
             self.loadProjectsMaxCount()
         }
         
@@ -423,7 +441,7 @@ class ProjectFilterViewController: UIViewController {
             }
         }
         if(temp.count > 0){
-            dict.append(["terms": ["country.raw" : temp ]])
+            dict.append(["terms": ["add_country.raw" : temp ]])
         }
         
         temp = [String]()
@@ -433,7 +451,7 @@ class ProjectFilterViewController: UIViewController {
             }
         }
         if(temp.count > 0){
-            dict.append(["terms": ["state.raw" : temp ]])
+            dict.append(["terms": ["add_state.raw" : temp ]])
         }
         
         temp = [String]()
@@ -531,7 +549,7 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         temp = t
         if(temp.count > 0){
             var str = temp.componentsJoined(by: ", ")
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
             cell.textLabel?.numberOfLines = 0
             cell.detailTextLabel?.numberOfLines = 0
             cell.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
@@ -558,20 +576,20 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
-        cell.filterLabel?.numberOfLines = 0
+        cell.textLabel?.numberOfLines = 1
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         if(indexPath.row == 0){
-            cell.filterLabel?.text = "Certification Level"
+            cell.textLabel?.text = "Certification Level"
         }else if(indexPath.row == 3){
-            cell.filterLabel?.text = "Rating system"
+            cell.textLabel?.text = "Rating system"
         }else if(indexPath.row == 4){
-            cell.filterLabel?.text = "Version"
+            cell.textLabel?.text = "Version"
         }else if(indexPath.row == 2){
-            cell.filterLabel?.text = "State"
+            cell.textLabel?.text = "State"
         }else if(indexPath.row == 1){
-            cell.filterLabel?.text = "Country"
+            cell.textLabel?.text = "Country"
         }else if(indexPath.row == 5){
-            cell.filterLabel?.text = "Tags"
+            cell.textLabel?.text = "Tags"
         }
         return cell
         

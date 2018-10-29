@@ -25,6 +25,21 @@ class ProjectCellwithImagemore: UITableViewCell {
         address.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
         // Initialization code
     }
+    
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            var frame = newValue
+            frame.origin.x += 24
+            frame.size.width -= 2 * 24
+            
+            super.frame = frame
+        }
+    }
+    
+    
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

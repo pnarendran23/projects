@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class Project: NSObject, NSCoding{
     var title = ""
+    var city = ""
     var certification_level = ""
     var rating_system_version = ""
     var rating_system = ""
@@ -36,9 +37,11 @@ class Project: NSObject, NSCoding{
         self.certification_level = aDecoder.decodeObject(forKey: "certification_level") as! String
         self.country = aDecoder.decodeObject(forKey: "country") as! String
         self.state = aDecoder.decodeObject(forKey: "state") as! String
+        self.city = aDecoder.decodeObject(forKey: "city") as! String
     }
     
     func encode(with aCoder: NSCoder) {
+        aCoder.encode(city, forKey: "city")
         aCoder.encode(ID, forKey: "ID")
         aCoder.encode(lat, forKey: "lat")
         aCoder.encode(long, forKey: "long")

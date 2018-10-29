@@ -35,7 +35,8 @@ class ProjectFilterSubViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.estimatedRowHeight = 40        
+        self.tableView.separatorInset = .zero
+        tableView.estimatedRowHeight = 40
         self.tableView.keyboardDismissMode = .onDrag
         initViews()
     }

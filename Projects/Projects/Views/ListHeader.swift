@@ -15,7 +15,8 @@ class ListHeader: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        
+        projects.text = ""
+        rightside.text = ""
         projects.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         projects.font = UIFont.AktivGrotesk_Rg(size: 14)
         

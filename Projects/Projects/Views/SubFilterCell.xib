@@ -19,17 +19,17 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zVF-X7-Cnj">
-                        <rect key="frame" x="5" y="7" width="310" height="30"/>
+                        <rect key="frame" x="3" y="11" width="313" height="20"/>
                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="zVF-X7-Cnj" secondAttribute="trailing" constant="5" id="4G1-hQ-Rsd"/>
-                    <constraint firstAttribute="bottom" secondItem="zVF-X7-Cnj" secondAttribute="bottom" constant="6.5" id="5Rs-7C-ov6"/>
-                    <constraint firstItem="zVF-X7-Cnj" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="6kc-2u-TUb"/>
-                    <constraint firstItem="zVF-X7-Cnj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="ggv-44-7O5"/>
+                    <constraint firstAttribute="trailing" secondItem="zVF-X7-Cnj" secondAttribute="trailing" constant="4" id="4G1-hQ-Rsd"/>
+                    <constraint firstAttribute="bottom" secondItem="zVF-X7-Cnj" secondAttribute="bottom" constant="12.5" id="5Rs-7C-ov6"/>
+                    <constraint firstItem="zVF-X7-Cnj" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="3" id="6kc-2u-TUb"/>
+                    <constraint firstItem="zVF-X7-Cnj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="ggv-44-7O5"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

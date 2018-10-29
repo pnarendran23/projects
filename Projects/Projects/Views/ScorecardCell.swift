@@ -33,6 +33,19 @@ class ScorecardCell: UITableViewCell {
         
     }
 
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            var frame = newValue
+            frame.origin.x += 24
+            frame.size.width -= 2 * 24
+            
+            super.frame = frame
+        }
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

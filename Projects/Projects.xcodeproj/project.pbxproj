@@ -105,12 +105,16 @@
 		5660A5472169F21300C70A96 /* Payloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660A53F2169F21300C70A96 /* Payloads.swift */; };
 		5660A5482169F21300C70A96 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660A5402169F21300C70A96 /* Utility.swift */; };
 		5660A5492169F21300C70A96 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660A5412169F21300C70A96 /* Colors.swift */; };
+		5664A77621870068007D0C0B /* titleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5664A77421870068007D0C0B /* titleCell.swift */; };
+		5664A77721870068007D0C0B /* titleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5664A77521870068007D0C0B /* titleCell.xib */; };
 		566C711121799AAE0032EEF1 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 566C711021799AAE0032EEF1 /* FavouritesViewController.swift */; };
 		566C71132179A6050032EEF1 /* AktivGrotesk-Md.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 566C71122179A6050032EEF1 /* AktivGrotesk-Md.ttf */; };
 		566C71152179A7BF0032EEF1 /* AktivGrotesk-Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 566C71142179A7B50032EEF1 /* AktivGrotesk-Rg.ttf */; };
 		566C7117217A1B300032EEF1 /* AktivGrotesk-Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */; };
 		5674088721706F7400FF55D5 /* locationcell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5674088521706F7400FF55D5 /* locationcell.swift */; };
 		5674088821706F7400FF55D5 /* locationcell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5674088621706F7400FF55D5 /* locationcell.xib */; };
+		567D3F8921830BBB0029ACB2 /* filterselected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 567D3F8721830BBB0029ACB2 /* filterselected.swift */; };
+		567D3F8A21830BBB0029ACB2 /* filterselected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 567D3F8821830BBB0029ACB2 /* filterselected.xib */; };
 		56A5FBD7217ADEE000242EF5 /* ProjectCellwithoutImagemore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5FBD5217ADEE000242EF5 /* ProjectCellwithoutImagemore.swift */; };
 		56A5FBD8217ADEE000242EF5 /* ProjectCellwithoutImagemore.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56A5FBD6217ADEE000242EF5 /* ProjectCellwithoutImagemore.xib */; };
 		56A5FBDB217AE0A900242EF5 /* ProjectCellwithImagemore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A5FBD9217AE0A900242EF5 /* ProjectCellwithImagemore.swift */; };
@@ -294,12 +298,16 @@
 		5660A5402169F21300C70A96 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		5660A5412169F21300C70A96 /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		5660A54A2169F28C00C70A96 /* Projects-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Projects-Bridging-Header.h"; sourceTree = "<group>"; };
+		5664A77421870068007D0C0B /* titleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = titleCell.swift; sourceTree = "<group>"; };
+		5664A77521870068007D0C0B /* titleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = titleCell.xib; sourceTree = "<group>"; };
 		566C711021799AAE0032EEF1 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
 		566C71122179A6050032EEF1 /* AktivGrotesk-Md.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AktivGrotesk-Md.ttf"; path = "Projects/AktivGrotesk-Md.ttf"; sourceTree = SOURCE_ROOT; };
 		566C71142179A7B50032EEF1 /* AktivGrotesk-Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AktivGrotesk-Rg.ttf"; path = "Projects/AktivGrotesk-Rg.ttf"; sourceTree = SOURCE_ROOT; };
 		566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AktivGrotesk-Bd.ttf"; sourceTree = "<group>"; };
 		5674088521706F7400FF55D5 /* locationcell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = locationcell.swift; sourceTree = "<group>"; };
 		5674088621706F7400FF55D5 /* locationcell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = locationcell.xib; sourceTree = "<group>"; };
+		567D3F8721830BBB0029ACB2 /* filterselected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filterselected.swift; sourceTree = "<group>"; };
+		567D3F8821830BBB0029ACB2 /* filterselected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = filterselected.xib; sourceTree = "<group>"; };
 		56A5FBD5217ADEE000242EF5 /* ProjectCellwithoutImagemore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellwithoutImagemore.swift; sourceTree = "<group>"; };
 		56A5FBD6217ADEE000242EF5 /* ProjectCellwithoutImagemore.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectCellwithoutImagemore.xib; sourceTree = "<group>"; };
 		56A5FBD9217AE0A900242EF5 /* ProjectCellwithImagemore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCellwithImagemore.swift; sourceTree = "<group>"; };
@@ -308,7 +316,7 @@
 		56A5FBDE217AE3A800242EF5 /* FavouritesHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FavouritesHeader.xib; sourceTree = "<group>"; };
 		56A5FBE1217AF25400242EF5 /* morepopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = morepopoverViewController.swift; sourceTree = "<group>"; };
 		56C39F9E216CA0A8008357EF /* AppUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
-		56CA1BE02169DF2000D94909 /* Projects.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Projects.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56CA1BE02169DF2000D94909 /* Explore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Explore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56CA1BE32169DF2000D94909 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56CA1BE52169DF2000D94909 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		56CA1BE82169DF2000D94909 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -395,6 +403,10 @@
 			isa = PBXGroup;
 			children = (
 				5625DFF3217EF17100E61AB3 /* expandCollapse.swift */,
+				567D3F8721830BBB0029ACB2 /* filterselected.swift */,
+				5664A77421870068007D0C0B /* titleCell.swift */,
+				5664A77521870068007D0C0B /* titleCell.xib */,
+				567D3F8821830BBB0029ACB2 /* filterselected.xib */,
 				5625DFF5217EF22500E61AB3 /* expandCollapse.xib */,
 				565DDB60216B80BA00404B65 /* SubFilterCell.swift */,
 				5625DFF7217EFECC00E61AB3 /* OperationsCell.swift */,
@@ -609,7 +621,7 @@
 		56CA1BE12169DF2000D94909 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56CA1BE02169DF2000D94909 /* Projects.app */,
+				56CA1BE02169DF2000D94909 /* Explore.app */,
 				56CA1BF42169DF2200D94909 /* ProjectsTests.xctest */,
 				56CA1BFF2169DF2200D94909 /* ProjectsUITests.xctest */,
 			);
@@ -710,7 +722,7 @@
 			);
 			name = Projects;
 			productName = Projects;
-			productReference = 56CA1BE02169DF2000D94909 /* Projects.app */;
+			productReference = 56CA1BE02169DF2000D94909 /* Explore.app */;
 			productType = "com.apple.product-type.application";
 		};
 		56CA1BF32169DF2200D94909 /* ProjectsTests */ = {
@@ -806,6 +818,7 @@
 				565DDB84216B80BA00404B65 /* popovercell.xib in Resources */,
 				562720AF216CC976004B3538 /* countries.json in Resources */,
 				5622989C216DFE3B00C2D07B /* ListHeader.xib in Resources */,
+				5664A77721870068007D0C0B /* titleCell.xib in Resources */,
 				562298AA216E297C00C2D07B /* CertificationInfo.xib in Resources */,
 				566C7117217A1B300032EEF1 /* AktivGrotesk-Bd.ttf in Resources */,
 				56CA1BEE2169DF2100D94909 /* LaunchScreen.storyboard in Resources */,
@@ -821,6 +834,7 @@
 				562298A2216E0ADF00C2D07B /* thumbnail.xib in Resources */,
 				56A5FBE0217AE3A800242EF5 /* FavouritesHeader.xib in Resources */,
 				566C71132179A6050032EEF1 /* AktivGrotesk-Md.ttf in Resources */,
+				567D3F8A21830BBB0029ACB2 /* filterselected.xib in Resources */,
 				562720A9216CAAD3004B3538 /* ProjectCellwithImage.xib in Resources */,
 				565DDB81216B80BA00404B65 /* ProjectCompactCell.xib in Resources */,
 				565DDB83216B80BA00404B65 /* SubFilterCell.xib in Resources */,
@@ -999,6 +1013,7 @@
 				562720B1216CD014004B3538 /* exploreViewController.swift in Sources */,
 				565DDD55216B894E00404B65 /* GMULineString.m in Sources */,
 				565DDD48216B894E00404B65 /* GMUDefaultClusterIconGenerator.m in Sources */,
+				5664A77621870068007D0C0B /* titleCell.swift in Sources */,
 				565DDD50216B894E00404B65 /* GMUFeature.m in Sources */,
 				562720A8216CAAD3004B3538 /* ProjectCellwithImage.swift in Sources */,
 				565DDB7A216B80BA00404B65 /* SubFilterCell.swift in Sources */,
@@ -1019,6 +1034,7 @@
 				565DDD3D216B894E00404B65 /* GMUWeightedLatLng.m in Sources */,
 				565DDB89216B80BA00404B65 /* OverviewCell.swift in Sources */,
 				562720BA216CDC2B004B3538 /* exploreCellDecorate.swift in Sources */,
+				567D3F8921830BBB0029ACB2 /* filterselected.swift in Sources */,
 				565DDB4E216B7F9400404B65 /* ProjectFilterViewController.swift in Sources */,
 				56CA1BE42169DF2000D94909 /* AppDelegate.swift in Sources */,
 				5660A5432169F21300C70A96 /* customColors.swift in Sources */,
@@ -1236,9 +1252,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1715CD081E90BE2910B90BC0 /* Pods-Projects.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
+				ASSETCATALOG_COMPILER_APPICON_NAME = explore;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1251,9 +1267,9 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PRODUCT_NAME = Explore;
+				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1266,9 +1282,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0877158B2CE86A1388E6B837 /* Pods-Projects.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon1;
+				ASSETCATALOG_COMPILER_APPICON_NAME = explore;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: U.S. Green Building Council (7F4ARSMTXJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Pradheep Narendran Perambalam (3U6MRFZZ3T)";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 7F4ARSMTXJ;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1281,9 +1297,9 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PRODUCT_NAME = Explore;
+				PROVISIONING_PROFILE = "36b2531d-a226-4c14-b962-941ad432bcbc";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

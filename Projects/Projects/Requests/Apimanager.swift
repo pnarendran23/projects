@@ -13,9 +13,23 @@ import Alamofire
 class Apimanager{
     var maximum = 15
     let elasticbaseURL = "https://elastic:MK3LYTX4Na7P4C0NideSkuZR@bc4873cb03004570b352903584124c54.us-east-1.aws.found.io:9243/elasticsearch_index_pantheon_"
-    let projectURL = "https://elastic:dhLMyQUY4ZnDXVl3qIBDGS4P@b4eac287a05e468b934969945bb6b223.us-east-1.aws.found.io:9243/projects/_search"
-    let projectDetailsURL = "https://elastic:dhLMyQUY4ZnDXVl3qIBDGS4P@b4eac287a05e468b934969945bb6b223.us-east-1.aws.found.io:9243/projects"
-    let baseUSGBCURL: String = "https://dev.usgbc.org/mobile/services"
+//    let projectURL = "https://elastic:dhLMyQUY4ZnDXVl3qIBDGS4P@b4eac287a05e468b934969945bb6b223.us-east-1.aws.found.io:9243/projects/_search"
+    
+    
+    let projectURL = "https://elastic:7v6ttDeE48G7C4GVM3ERMhzF@616da458449344e6ae5e4bc6d69c267c.us-east-1.aws.found.io:9243/projects/_search"
+    
+    
+    //let projectURL = "https://elastic:dhLMyQUY4ZnDXVl3qIBDGS4P@b4eac287a05e468b934969945bb6b223.us-east-1.aws.found.io:9243/projects/_search"
+    
+    let projectDetailsURL = "https://elastic:7v6ttDeE48G7C4GVM3ERMhzF@616da458449344e6ae5e4bc6d69c267c.us-east-1.aws.found.io:9243/projects"
+    
+    
+    
+    
+    //"https://elastic:dhLMyQUY4ZnDXVl3qIBDGS4P@b4eac287a05e468b934969945bb6b223.us-east-1.aws.found.io:9243/projects"
+    let baseUSGBCURL: String = "https://www.usgbc.org/mobile/services"
+    
+    
     var a : DataRequest!
     static let shared = Apimanager()
     let partneralias = "usgbcmobile"
@@ -145,8 +159,8 @@ class Apimanager{
                             project.ID = subJson["_source"]["prjt_id"].stringValue
                             project.certification_level = subJson["_source"]["certification_level"].stringValue
                             
-                            project.lat = subJson["_source"]["geocode"]["lat"].stringValue
-                            project.long = subJson["_source"]["geocode"]["lon"].stringValue
+                            project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                            project.long = subJson["_source"]["geo_code"]["lon"].stringValue
                             
                             project.image = subJson["_source"]["profile_image"].stringValue
                             
@@ -154,8 +168,8 @@ class Apimanager{
 //                            printsubJson["_source"]["node_id"].string
                             project.address = subJson["_source"]["address"].stringValue
                             project.node_id = subJson["_source"]["node_id"].stringValue
-                            project.state = subJson["_source"]["state"].stringValue
-                            project.country = subJson["_source"]["country"].stringValue
+                            project.state = subJson["_source"]["add_state"].stringValue
+                            project.country = subJson["_source"]["add_country"].stringValue
                             projects.append(project)
                         }
                         print("Project count: \(projects.count)")
@@ -240,8 +254,8 @@ class Apimanager{
                                 projectDetails.project_id = subJson["prjt_id"].stringValue
                                 projectDetails.project_certification_level = subJson["certification_level"].stringValue
                                 
-                                projectDetails.lat = subJson["geocode"]["lat"].stringValue
-                                projectDetails.long = subJson["geocode"]["lon"].stringValue
+                                projectDetails.lat = subJson["geo_code"]["lat"].stringValue
+                                projectDetails.long = subJson["geo_code"]["lon"].stringValue
                                 
                                 //projectDetails.p = subJson["profile_image"].stringValue
                                 
@@ -256,16 +270,46 @@ class Apimanager{
                                 projectDetails.energy_star_score = subJson["energy_star_score"].stringValue
                                 projectDetails.site_context = subJson["foundation_statement"].stringValue
                                 projectDetails.description_full = subJson["description"].stringValue
-                                projectDetails.address = subJson["address"].stringValue
-                                projectDetails.state = subJson["state"].stringValue
+                                
+                                if(subJson["geo_full_address"].stringValue == ""){
+                                projectDetails.address = subJson["add_street"].stringValue
+                                }else{
+                                projectDetails.address = subJson["geo_full_address"].stringValue
+                                }
+                                
+                                projectDetails.state = subJson["add_state"].stringValue
                                 projectDetails.image = subJson["profile_image"].stringValue
+                                projectDetails.path = subJson["url"].stringValue
                                 print(projectDetails.image)
                                 
-                                projectDetails.city = subJson["city"].stringValue
-                                projectDetails.country = subJson["country"].stringValue
-                                projectDetails.address = projectDetails.address.components(separatedBy: "[").first!
-                                projectDetails.country = projectDetails.country.components(separatedBy: "[").first!
-                                projectDetails.state = projectDetails.state.components(separatedBy: "[").first!
+                                projectDetails.city = subJson["add_city"].stringValue
+                                projectDetails.country = subJson["add_country"].stringValue
+                                
+                                if(subJson["geo_street_name"].stringValue != ""){
+                                    projectDetails.address = subJson["geo_street_name"].stringValue
+                                }else{
+                                    projectDetails.address = subJson["add_street"].stringValue
+                                }                                
+                                if(subJson["geo_state_name"].stringValue != ""){
+                                    projectDetails.state = subJson["geo_state_name"].stringValue
+                                }else{
+                                    projectDetails.state = subJson["add_state"].stringValue
+                                }
+                                if(subJson["geo_country_name"].stringValue != ""){
+                                    projectDetails.country = subJson["geo_country_name"].stringValue
+                                }else{
+                                    projectDetails.country = subJson["add_country"].stringValue
+                                }
+                                print(projectDetails.address)
+                                print(projectDetails.state)
+                                print(projectDetails.country)
+                                for (key,value) in subJson{
+                                    print(key)
+                                    print(value)
+                                }
+//                                projectDetails.address = projectDetails.address.components(separatedBy: "[").first!
+//                                projectDetails.country = projectDetails.country.components(separatedBy: "[").first!
+//                                projectDetails.state = projectDetails.state.components(separatedBy: "[").first!
                                 projectDetails.project_images = [String]()
                                 for s in subJson["slideshow_images"].arrayValue{
                                     if let category = s.stringValue as? String {
@@ -523,20 +567,25 @@ class Apimanager{
         var matchTitle = [String : Any]()
         
         header = [
-            "_source": ["title","certification_level","geocode", "country", "state","rating_system_version","rating_system","city","node_id", "address","profile_image","prjt_id"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id"],
         ]
+        header["query"] = [String : Any]()
+        var query = header["query"] as! [String : Any]
+        query["bool"] = [String : Any]()
+        var bool = query["bool"] as! [String : Any]
+        /*bool["must_not"] = [
+            "geo_distance" : [
+                "distance" : "1m",
+                "geo_code" : [
+                    "lat" : 0,
+                    "lon" : 0
+                ]]
+        ]*/
         if(category.count > 0){
-            header["query"] = [String : Any]()
-            var query = header["query"] as! [String : Any]
-            query["bool"] = [String : Any]()
-            var bool = query["bool"] as! [String : Any]
-            if(category.count > 0){
-                bool["must"] = category                
-            }
-            query["bool"] = bool
-            header["query"] = query
-            
+                bool["must"] = category
         }
+        query["bool"] = bool
+        header["query"] = query
         
         print(header)
         
@@ -603,21 +652,30 @@ class Apimanager{
     
     
     func getProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : Any]], lat : Double, lng : Double, distance : Double, callback: @escaping (Int?, [Project]?, Int?) -> () ){
+        var cat = category
         var url = projectURL + "?size=500000"
         let searchText = search
         var header = [String : Any]()
         var matchTitle = [String : Any]()
         if(search.count > 0){
-            matchTitle = [ "query" : search ]
+            matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest" ] ]
         }
         header = [
-            "_source": ["title","certification_level","geocode", "country", "state","rating_system_version","rating_system","city","node_id", "address","profile_image","prjt_id"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"],
             "query": [
                 "bool" : [
+                    "must_not":[
+                        "geo_distance" : [
+                            "distance" : "1m",
+                            "geo_code" : [
+                                "lat" : 0,
+                                "lon" : 0
+                            ]]
+                        ],
                     "filter" : [
                         "geo_distance" : [
-                            "distance" : "\(Double(distance))km",
-                            "geocode" : [
+                            "distance" : "\(Double(distance))mi",
+                            "geo_code" : [
                                 "lat" : Double(lat),
                                 "lon" : Double(lng)
                             ]
@@ -628,9 +686,9 @@ class Apimanager{
                 "sort" : [
                     [
                         "_geo_distance" : [
-                            "geocode" : [Double(lng),Double(lat)],
+                            "geo_code" : [Double(lng),Double(lat)],
                             "order" : "asc",
-                            "unit" : "km",
+                            "unit" : "mi",
                             "mode" : "min",
                             "distance_type" : "plane",
                             "ignore_unmapped": true
@@ -638,17 +696,14 @@ class Apimanager{
                     ]
                 ]
             ]
-        if(search.count > 0 || category.count > 0){
+        if(search.count > 0 || cat.count > 0){
             var query = header["query"] as! [String : Any]
             var bool = query["bool"] as! [String : Any]
             if(search.count > 0){
-                bool["must"] = [
-                    [ "multi_match" : matchTitle ]
-                ]
+                cat.append([ "multi_match" : matchTitle ])
             }
-            if(category.count > 0){
-                bool["should"] = category
-                bool["minimum_should_match"] = 1
+            if(cat.count > 0){
+                bool["must"] = cat
             }
             query["bool"] = bool
             header["query"] = query
@@ -674,28 +729,42 @@ class Apimanager{
                             let totalRecords = json["hits"]["total"].intValue
                             for (_,subJson):(String, JSON) in json["hits"]["hits"] {
                                 let project = Project()
-                                var lat = subJson["_source"]["geocode"]["lat"].stringValue
-                                var lng = subJson["_source"]["geocode"]["lon"].stringValue
+                                var lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                                var lng = subJson["_source"]["geo_code"]["lon"].stringValue
                                 if(lat != " " && lng != " " && lat != "0" && lng != "0"){
                                 //print(subJson)
                                     project.title = subJson["_source"]["title"].stringValue
                                     project.ID = subJson["_source"]["prjt_id"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //
-                                    project.lat = subJson["_source"]["geocode"]["lat"].stringValue
-                                    project.long = subJson["_source"]["geocode"]["lon"].stringValue
+                                    project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                                    project.long = subJson["_source"]["geo_code"]["lon"].stringValue
                                     //
                                     //                                    project.image = subJson["_source"]["profile_image"].stringValue
                                     //
                                     project.rating_system_version = subJson["_source"]["rating_system_version"].stringValue
                                     project.rating_system = subJson["_source"]["rating_system"].stringValue
                                     //                                    //                            printsubJson["_source"]["node_id"].string
-                                    
+                                    project.city = subJson["_source"]["geo_city_name"].stringValue
                                     project.image = subJson["_source"]["profile_image"].stringValue
-                                    project.address = subJson["_source"]["address"].stringValue
+                                    
+                                    //["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"]
+                                    if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                        project.address = subJson["_source"]["geo_street_name"].stringValue
+                                    }else{
+                                        project.address = subJson["_source"]["add_street"].stringValue
+                                    }
                                     project.node_id = subJson["_source"]["node_id"].stringValue
-                                    project.state = subJson["_source"]["state"].stringValue
-                                    project.country = subJson["_source"]["country"].stringValue
+                                    if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                        project.state = subJson["_source"]["geo_state_name"].stringValue
+                                    }else{
+                                        project.state = subJson["_source"]["add_state"].stringValue
+                                    }
+                                    if(subJson["_source"]["geo_country_name"].stringValue != ""){
+                                        project.country = subJson["_source"]["geo_country_name"].stringValue
+                                    }else{
+                                        project.country = subJson["_source"]["add_country"].stringValue
+                                    }
                                     project.address = project.address.components(separatedBy: "[").first!
                                     project.country = project.country.components(separatedBy: "[").first!
                                     project.state = project.state.components(separatedBy: "[").first!
@@ -721,34 +790,43 @@ class Apimanager{
     
     
     func searchProjectsElasticForMapNew(from: Int, sizee: Int, search: String, category: [[String : Any]], callback: @escaping (Int?, [Project]?, Int?) -> () ){
+        var cat = category
         var url = projectURL + "?size=500000"
         let searchText = search
         var header = [String : Any]()
         var matchTitle = [String : Any]()
         if(search.count > 0){
-            matchTitle = [ "query" : search ]
+            
+            
+            matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest", "prjt_id.autosuggest" ] ]
         }
         header = [
-            "_source": ["title","certification_level","geocode", "country", "state","rating_system_version","rating_system","city","node_id", "address","profile_image","prjt_id"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"],
         ]
-        if(search.count > 0 || category.count > 0){
-            header["query"] = [String : Any]()
-            var query = header["query"] as! [String : Any]
-            query["bool"] = [String : Any]()
-            var bool = query["bool"] as! [String : Any]
+        header["query"] = [String : Any]()
+        var query = header["query"] as! [String : Any]
+        query["bool"] = [String : Any]()
+        var bool = query["bool"] as! [String : Any]
+        bool["must_not"] = [
+            "geo_distance" : [
+                "distance" : "1m",
+                "geo_code" : [
+                    "lat" : 0,
+                    "lon" : 0
+                ]]]
+        if(search.count > 0 || cat.count > 0){
+            bool = query["bool"] as! [String : Any]
             if(search.count > 0){
-                bool["must"] = [
-                    [ "multi_match" : matchTitle ]
-                ]
+                cat.append([ "multi_match" : matchTitle ])
             }
-            if(category.count > 0){
-                bool["should"] = category
-                bool["minimum_should_match"] = 1
+            if(cat.count > 0){
+                bool["must"] = cat
+                
             }
-            query["bool"] = bool
-            header["query"] = query
             
         }
+        query["bool"] = bool
+        header["query"] = query
         
         print(header)
         
@@ -769,16 +847,18 @@ class Apimanager{
                             let totalRecords = json["hits"]["total"].intValue
                             for (_,subJson):(String, JSON) in json["hits"]["hits"] {
                                 let project = Project()
-                                var lat = subJson["_source"]["geocode"]["lat"].stringValue
-                                var lng = subJson["_source"]["geocode"]["lon"].stringValue
+                                var lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                                var lng = subJson["_source"]["geo_code"]["lon"].stringValue
                                 if(lat != " " && lng != " " && lat != "0" && lng != "0"){
+                                    
+                                }
                                     //print(subJson)
                                     project.title = subJson["_source"]["title"].stringValue
                                     project.ID = subJson["_source"]["prjt_id"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //
-                                    project.lat = subJson["_source"]["geocode"]["lat"].stringValue
-                                    project.long = subJson["_source"]["geocode"]["lon"].stringValue
+                                    project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                                    project.long = subJson["_source"]["geo_code"]["lon"].stringValue
                                     //
                                     //                                    project.image = subJson["_source"]["profile_image"].stringValue
                                     //
@@ -787,15 +867,30 @@ class Apimanager{
                                     //                                    //                            printsubJson["_source"]["node_id"].string
                                     
                                     project.image = subJson["_source"]["profile_image"].stringValue
-                                    project.address = subJson["_source"]["address"].stringValue
+                                
                                     project.node_id = subJson["_source"]["node_id"].stringValue
-                                    project.state = subJson["_source"]["state"].stringValue
-                                    project.country = subJson["_source"]["country"].stringValue
+                                    project.city = subJson["_source"]["geo_city_name"].stringValue
+                                if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                    project.address = subJson["_source"]["geo_street_name"].stringValue
+                                }else{
+                                    project.address = subJson["_source"]["add_street"].stringValue
+                                }
+                                project.node_id = subJson["_source"]["node_id"].stringValue
+                                if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                    project.state = subJson["_source"]["geo_state_name"].stringValue
+                                }else{
+                                    project.state = subJson["_source"]["add_state"].stringValue
+                                }
+                                if(subJson["_source"]["geo_country_name"].stringValue != ""){
+                                    project.country = subJson["_source"]["geo_country_name"].stringValue
+                                }else{
+                                    project.country = subJson["_source"]["add_country"].stringValue
+                                }
+                                    
                                     project.address = project.address.components(separatedBy: "[").first!
                                     project.country = project.country.components(separatedBy: "[").first!
                                     project.state = project.state.components(separatedBy: "[").first!
                                     projects.append(project)
-                                }
                             }
                             //print("Project count: \(projects.count) and data are \(projects)")
                             callback(totalRecords, projects, -1)
@@ -818,7 +913,7 @@ class Apimanager{
         var url = projectURL + "?from=\(from)&size=\(sizee)"
         let searchText = search
         var header = [String : Any]()
-        header = ["_source": ["title","country","certification_level","geocode","address","node_id","state","city"]]
+        header = ["_source": ["title","country","certification_level","geo_code","address","node_id","state","city"]]
         print(url)
         //a = Alamofire.request(url, method: method!, parameters: header, encoding : JSONEncoding.default)
         url = projectURL + "?from=\(from)&size=\(sizee)"
@@ -841,8 +936,8 @@ class Apimanager{
 //                                    project.ID = subJson["_source"]["prjt_id"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
 //
-                                    project.lat = subJson["_source"]["geocode"]["lat"].stringValue
-                                    project.long = subJson["_source"]["geocode"]["lon"].stringValue
+                                    project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
+                                    project.long = subJson["_source"]["geo_code"]["lon"].stringValue
 //
 //                                    project.image = subJson["_source"]["profile_image"].stringValue
 //
@@ -850,8 +945,8 @@ class Apimanager{
 //                                    //                            printsubJson["_source"]["node_id"].string
                                     project.address = subJson["_source"]["address"].stringValue
                                     project.node_id = subJson["_source"]["node_id"].stringValue
-                                    project.state = subJson["_source"]["state"].stringValue
-                                    project.country = subJson["_source"]["country"].stringValue
+                                    project.state = subJson["_source"]["add_state"].stringValue
+                                    project.country = subJson["_source"]["add_country"].stringValue
                                     projects.append(project)                                
                             }
                             //print("Project count: \(projects.count) and data are \(projects)")

@@ -20,7 +20,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W3Z-Wl-2bV">
-                        <rect key="frame" x="78" y="7" width="186" height="62"/>
+                        <rect key="frame" x="78" y="7" width="180" height="62"/>
                         <attributedString key="attributedText">
                             <fragment content="Label">
                                 <attributes>
@@ -49,7 +49,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="W3Z-Wl-2bV" firstAttribute="top" secondItem="r8Z-0G-jc1" secondAttribute="top" constant="7" id="SVv-w1-ndf"/>
-                    <constraint firstAttribute="trailing" secondItem="W3Z-Wl-2bV" secondAttribute="trailing" constant="56" id="bgB-Y7-PVp"/>
+                    <constraint firstAttribute="trailing" secondItem="W3Z-Wl-2bV" secondAttribute="trailing" constant="62" id="bgB-Y7-PVp"/>
                     <constraint firstItem="W3Z-Wl-2bV" firstAttribute="leading" secondItem="r8Z-0G-jc1" secondAttribute="leading" constant="78" id="iaj-Hp-Us2"/>
                     <constraint firstAttribute="bottom" secondItem="W3Z-Wl-2bV" secondAttribute="bottom" constant="7.5" id="wBf-3W-gns"/>
                 </constraints>

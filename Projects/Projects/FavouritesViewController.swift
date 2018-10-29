@@ -20,6 +20,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     var selected_project = Project()
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.tableFooterView = UIView.init(frame: .zero)
         self.tableView.estimatedRowHeight = 80
         self.tableView.rowHeight = UITableViewAutomaticDimension
         tableView.register(UINib(nibName: "ProjectCellwithImagemore", bundle: nil), forCellReuseIdentifier: "ProjectCellwithImagemore")

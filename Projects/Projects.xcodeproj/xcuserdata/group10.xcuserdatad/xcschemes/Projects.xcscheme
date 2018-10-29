@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "56CA1BDF2169DF2000D94909"
-               BuildableName = "Projects.app"
+               BuildableName = "Explore.app"
                BlueprintName = "Projects"
                ReferencedContainer = "container:Projects.xcodeproj">
             </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "56CA1BDF2169DF2000D94909"
-            BuildableName = "Projects.app"
+            BuildableName = "Explore.app"
             BlueprintName = "Projects"
             ReferencedContainer = "container:Projects.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "56CA1BDF2169DF2000D94909"
-            BuildableName = "Projects.app"
+            BuildableName = "Explore.app"
             BlueprintName = "Projects"
             ReferencedContainer = "container:Projects.xcodeproj">
          </BuildableReference>
@@ -95,7 +95,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "56CA1BDF2169DF2000D94909"
-            BuildableName = "Projects.app"
+            BuildableName = "Explore.app"
             BlueprintName = "Projects"
             ReferencedContainer = "container:Projects.xcodeproj">
          </BuildableReference>

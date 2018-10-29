@@ -71,7 +71,7 @@ class ProjectDetails {
         energy_score = json["energy_score"].intValue
         water_score = json["water_score"].intValue
         human_score = json["human_score"].intValue
-        path = json["path"].stringValue
+        path = json["url"].stringValue
     }
     
     func getCertificationLevelImage() -> UIImage {

@@ -27,6 +27,18 @@ let mapKey = "AIzaSyD8mR1hQ-c4XqGyMDl0wX5yAisM3jvsFdI"
 //                openApp()
 //            }
 //        }
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont.AktivGrotesk_Rg(size: 12)], for: .normal)
+        
+        
+        //90,104,114
+        UITabBar.appearance().tintColor = UIColor.init(red: 0.086, green: 0.466, blue: 0.729, alpha: 1)
+        
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.init(red: 0.086, green: 0.466, blue: 0.729, alpha: 1)], for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)], for: .normal)
+        
+        
+        
+        
         return true
     }
     

@@ -14,6 +14,7 @@ class expandCollapse: UITableViewHeaderFooterView {
     
     override func awakeFromNib() {
             self.tintColor = UIColor.white
+        title.text = ""
         self.backgroundView = UIView(frame: self.bounds)
         self.backgroundView?.backgroundColor = UIColor.white
     }

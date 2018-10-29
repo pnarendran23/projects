@@ -66,22 +66,22 @@ class CertificationInfo: UITableViewCell {
         energystar.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
         energystar.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        sizeLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        sizeLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         sizeLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        useLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        useLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         useLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        settingLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        settingLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         settingLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        certifiedLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        certifiedLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         certifiedLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        walkscoreLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        walkscoreLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         walkscoreLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
-        energystarLabel.textColor = UIColor(red:0.53, green:0.6, blue:0.64, alpha:1)
+        energystarLabel.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
         energystarLabel.font = UIFont.AktivGrotesk_Rg(size: 16)
         
         

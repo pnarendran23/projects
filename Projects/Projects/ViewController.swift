@@ -10,6 +10,7 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 import SwiftyJSON
+import Alamofire
 import MapKit
 
 class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDelegate,UISearchResultsUpdating, UITableViewDelegate,UITableViewDataSource, ProjectFilterDelegate, UISearchControllerDelegate {
@@ -31,6 +32,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     override func viewWillDisappear(_ animated: Bool) {
         Apimanager.shared.stopAllSessions()
+        Utility.hideToast()
+        self.view.endEditing(true)
     }
     
     
@@ -114,16 +117,43 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             self.category = Payloads().makePayloadForProject(certificationsarray: certificationsarray, ratingsarray: ratingsarray, versionsarray: versionsarray, statesarray : tempstates, countriesarray : tempcountries)
             self.totalCount = totalCount
             self.mapView.clear()
-            self.loadData()
+            print(self.category)
+            let tempcerts = certificationsarray.mutableCopy() as! NSMutableArray
+            let tempratings = ratingsarray.mutableCopy() as! NSMutableArray
+            let tempversions = versionsarray.mutableCopy() as! NSMutableArray
+            let tempstate = statesarray.mutableCopy() as! NSMutableArray
+            let tempcountry = tempcountries.mutableCopy() as! NSMutableArray
+            tempcerts.remove("")
+            tempratings.remove("")
+            tempversions.remove("")
+            tempstate.remove("")
+            tempcountry.remove("")
+            DispatchQueue.main.async {
+                if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0){
+                    CATransaction.begin()
+                    CATransaction.setValue(2.0, forKey: kCATransactionAnimationDuration)
+                    let camera = GMSCameraPosition.camera(withLatitude: self.mapView.camera.target.latitude , longitude: self.mapView.camera.target.longitude, zoom: 8)
+                    self.mapView.camera = camera
+                    self.navigationItem.rightBarButtonItems = nil
+                    self.makeNavigationBarButtons()
+                    //self.mapView.animate(to: GMSCameraPosition.camera(withTarget: self.mapView.camera.target, zoom: 8))
+                    CATransaction.commit()
+                    //self.mapView.animate(toZoom: 6)
+                    //Apimanager.shared.stopAllSessions()
+                    //self.searchProjects()
+                }else{
+                    self.navigationItem.rightBarButtonItems = nil
+                    self.makeNavigationBarButtons()
+                    self.loadData()
+                }
             //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
             //loadProjectsWithPagination(filterChanged: filterChanged, id: self.scrollId, category: category, loadType: loadType)
-            DispatchQueue.main.async {
                 //Utility.showLoading()
             }
             //self.loadProjectsElastic(search: self.searchText, category: self.category)
         }
-        
     }
+    
     
     //"Schools","Offices","Retail","Case studies"
     let categories = ["Schools","Offices","Retail","Case studies","Schools","Offices","Retail","Case studies","Schools","Offices","Retail","Case studies","Schools","Offices","Retail","Case studies","Schools","Offices","Retail","Case studies","Schools","Offices","Retail","Case studies"]
@@ -189,12 +219,12 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         
         
         var distanceMetres = GMSGeometryDistance(bottomLeftCoord, bottomRightCoord)
-        distanceMetres = distanceMetres/1000
+        distanceMetres = Double(self.mapView.getRadius() * 0.000621371193 * 0.8)
         queryingDistance = distanceMetres
         filterProjects = [Project]()
         coor = self.mapView.projection.coordinate(for: point)
         if(locationManager.location != nil){
-            let region = CLCircularRegion.init(center: coor, radius: distanceMetres * 1000, identifier: "myRegion")
+            let region = CLCircularRegion.init(center: coor, radius: distanceMetres, identifier: "myRegion")
             if(region.contains((locationManager.location?.coordinate)!)){
                 coor = (locationManager.location?.coordinate)!
             }
@@ -269,7 +299,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             }
         }
         if(temp.count > 0){
-            dict.append(["terms": ["country.raw" : temp ]])
+            dict.append(["terms": ["add_country.raw" : temp ]])
         }
         
         temp = [String]()
@@ -279,7 +309,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             }
         }
         if(temp.count > 0){
-            dict.append(["terms": ["state.raw" : temp ]])
+            dict.append(["terms": ["add_state.raw" : temp ]])
         }
         
         temp = [String]()
@@ -313,6 +343,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         if(!allDownloaded){
             var dict = [[String : Any]]()
             dict = constructCategory()
+            self.navigationItem.rightBarButtonItems = nil
+            self.makeNavigationBarButtons()
         Apimanager.shared.getProjectsElasticForMapNew (from: self.from, sizee : size, search : search, category : dict, lat : lat, lng : lng, distance : distance, callback: {(totalRecords, projects, code) in
             if(code == -1 && projects != nil){
                 self.totalRecords = totalRecords!
@@ -328,7 +360,6 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     if(CLLocationManager.locationServicesEnabled()){
                         
                         if(self.from == 0 && totalRecords! == 0){
-                            Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "No projects nearby. Please try some other location")
                             self.loadMapView(temp: projects!)
                         }else{
                                 if(projects!.count > 0 && self.projects.count <= 2000){
@@ -355,6 +386,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
 //                                    self.searchedProjects = temparray
 //                                    self.loadMapView()
 //                                }
+                                    self.tableView.reloadData()
                                 self.allDownloaded = true
                             }
                         }
@@ -390,6 +422,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         //sizee was 500000
         var dict = [[String : Any]]()
         dict = constructCategory()
+        self.navigationItem.rightBarButtonItems = nil
+        self.makeNavigationBarButtons()
             Apimanager.shared.searchProjectsElasticForMapNew (from: 0, sizee : 1000, search : search, category : dict, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
                     DispatchQueue.main.async {
@@ -508,24 +542,39 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 }
                 var boldText = "\n\(project.state), \(project.country)\n\(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
-                // Customize the line spacing for paragraph.
-                mutableParagraphStyle.lineSpacing = CGFloat(5)
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
                 //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
                 
                 let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
                 var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
-                mutableParagraphStyle = NSMutableParagraphStyle()
-                // Customize the line spacing for paragraph.
-                mutableParagraphStyle.lineSpacing = CGFloat(30)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
+                
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count + 1))
+                
                 attributedString.append(boldString)
                 cell.projectname.attributedText = attributedString
                 //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
                 cell.project_image.center.y = cell.contentView.frame.size.height/2
-                cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
+                
+                var url = URL.init(string: project.image)
+                let remoteImageURL = url
+                if(url != nil){
+                    Alamofire.request(remoteImageURL!).responseData { (response) in
+                        if response.error == nil {
+                            if let data = response.data {
+                                cell.project_image.image = UIImage(data: data)
+                            }
+                        }else{
+                            
+                        }
+                    }
+                }
+                
+                //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
                 
                 return cell
             }else{
@@ -543,19 +592,19 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 }
                 var boldText = "\n\(project.state), \(project.country)\n\(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
-                // Customize the line spacing for paragraph.
-                mutableParagraphStyle.lineSpacing = CGFloat(5)
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
                 //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
                 
                 let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
                 var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
-                mutableParagraphStyle = NSMutableParagraphStyle()
-                // Customize the line spacing for paragraph.
-                mutableParagraphStyle.lineSpacing = CGFloat(30)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
+                
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count + 1))
+                
                 attributedString.append(boldString)
                 cell.projectname.attributedText = attributedString
                 //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
@@ -701,6 +750,11 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         self.searchBar.resignFirstResponder()
         selected_searchbar = "searchcontroller"
         slideUpView.isHidden = true
+        if(self.searchedProjects.count == 0 && self.totalRecords > 0){
+            self.searchProjects()
+        }else if(self.searchedProjects.count > 0){
+            self.searchProjects()
+        }
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {        
@@ -716,9 +770,9 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         self.allDownloaded = false
         self.from = 0
         self.projects = [Project]()
-        let distanceinKms = Double(self.mapView.getRadius()/1000)/1.3
+        let distanceinKms = Double(self.mapView.getRadius() * 0.000621371193 * 0.8)
         DispatchQueue.main.async {
-            if(distanceinKms <= 500){
+            if(distanceinKms == distanceinKms){
                 Apimanager.shared.stopAllSessions()
                 self.queryingLat = self.mapView.camera.target.latitude
                 self.queryingLng = self.mapView.camera.target.longitude
@@ -756,6 +810,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.tableFooterView = UIView.init(frame: .zero)
         self.searchBar.layer.borderColor = searchBar.barTintColor?.cgColor
         for family in UIFont.familyNames {
             print("\(family)")
@@ -764,7 +819,6 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 print("   \(name)")
             }
         }
-        self.tableView.keyboardDismissMode = .onDrag
         self.tableView.estimatedRowHeight = 80
         self.tableView.rowHeight = UITableViewAutomaticDimension
         slideUpView.isHidden = true
@@ -797,8 +851,14 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             controller.searchBar.barTintColor = UIColor.white
             controller.searchBar.searchBarStyle = .default
             controller.searchBar.isTranslucent = true
+            controller.searchBar.searchFieldBackgroundPositionAdjustment = UIOffset(horizontal: -13, vertical: 0)
             return controller
         })()
+        
+        searchBar.textField.clearButtonMode = .never
+        self.searchController.searchBar.textField.clearButtonMode = .never
+        
+        (self.searchBar.value(forKey: "searchField") as? UITextField)?.font = UIFont.AktivGrotesk_Md(size: 14)
         
         
         self.searchController.delegate = self
@@ -896,7 +956,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         //self.navigationController?.navigationBar.isTranslucent = true
         //searchBar.barTintColor = UIColor.hex(hex: Colors.primaryColor)
         searchBar.layer.borderWidth = 1
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.barTintColor = UIColor.white        
         //searchBar.layer.borderColor = UIColor.hex(hex: Colors.primaryColor).cgColor
         //right nav buttons
         //self.navigationController?.navigationBar.isTranslucent = true
@@ -915,14 +975,32 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         searchButton.addTarget(self, action: #selector(self.handleSearch(_:)), for: .touchUpInside)
         let searchBarButton = UIBarButtonItem(customView: searchButton)
         
-        let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 24))
-        filterButton.setImage(UIImage(named: "Filter_BU"), for: .normal)
+        let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
+        let tempcerts = certificationsarray.mutableCopy() as! NSMutableArray
+        let tempratings = ratingsarray.mutableCopy() as! NSMutableArray
+        let tempversions = versionsarray.mutableCopy() as! NSMutableArray
+        let tempstate = statesarray.mutableCopy() as! NSMutableArray
+        let tempcountry = countriesarray.mutableCopy() as! NSMutableArray
+        tempcerts.remove("")
+        tempratings.remove("")
+        tempversions.remove("")
+        tempstate.remove("")
+        tempcountry.remove("")
+        if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0){
+            filterButton.setImage(UIImage(named: "filtered"), for: .normal)
+            let tintedImage = filterButton.imageView?.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            filterButton.imageView?.image = tintedImage
+        }else{
+            filterButton.setImage(UIImage(named: "Filter_BU"), for: .normal)
+        }
+        
         filterButton.imageView?.contentMode = .scaleAspectFit
         filterButton.addTarget(self, action: #selector(self.handleFilter(_:)), for: .touchUpInside)
         let filterBarButton = UIBarButtonItem(customView: filterButton)
         
-        let listButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 24))
-        listButton.setImage(UIImage(named: "ListView_BU"), for: .normal)        
+        
+        let listButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
+        listButton.setImage(UIImage(named: "ListView_BU"), for: .normal)
         listButton.imageView?.contentMode = .scaleAspectFit
         listButton.addTarget(self, action:#selector(self.handleList(_:)), for: .touchUpInside)
         let listBarButton = UIBarButtonItem(customView: listButton)
@@ -1088,6 +1166,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             loadData()
         }
     }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -1345,7 +1425,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         var  bottomLeftCoord = mapView.projection.visibleRegion().nearLeft;
         var bottomRightCoord = mapView.projection.visibleRegion().nearRight;
         var distanceMetres = GMSGeometryDistance(bottomLeftCoord, bottomRightCoord)
-        distanceMetres = distanceMetres/1000
+        distanceMetres = distanceMetres *  0.000621371193 * 0.8
         print("Entered region", distanceMetres)
     }
     
@@ -1354,9 +1434,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         if(markerTapped == false){
         DispatchQueue.main.async {
             self.searchBar.resignFirstResponder()
-        let distanceinKms = Double(self.mapView.getRadius()/1000)/1.3
+        let distanceinKms = Double(self.mapView.getRadius() * 0.000621371193 * 0.8)
         //self.currentPosition = self.mapView.camera
-            if(distanceinKms <= 500){
+            if(distanceinKms <= 2500){
+                Utility.hideToast()
             self.queryingDistance = distanceinKms
                 self.mapView.clear()
             if(self.markerTapped == false){
@@ -1371,7 +1452,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
                 self.markerTapped = false
             }
             }else{
-                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "Use precised region to explore projects")
+                Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height + self.searchBar.frame.size.height, message: "Please zoom in to view your results")
                 self.allDownloaded = true
                 Apimanager.shared.stopAllSessions()
                 self.mapView.clear()
@@ -1381,6 +1462,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
             markerTapped = false
         }
     }
+    
+    
+    
     
     
     func useDownloadedData(){
@@ -1421,11 +1505,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
         var  bottomLeftCoord = mapView.projection.visibleRegion().nearLeft;
         var bottomRightCoord = mapView.projection.visibleRegion().nearRight;
         var distanceMetres = GMSGeometryDistance(bottomLeftCoord, bottomRightCoord)
-        distanceMetres = Double(self.mapView.getRadius()/1000)/1.3
+        distanceMetres = Double(self.mapView.getRadius() * 0.000621371193 * 0.8)
         let point = mapView.center;
         var  coordinate = self.mapView.projection.coordinate(for: point)
         if(locationManager.location != nil){
-            let region = CLCircularRegion.init(center: coordinate, radius: distanceMetres * 1000, identifier: "myRegion")
+            let region = CLCircularRegion.init(center: coordinate, radius: distanceMetres, identifier: "myRegion")
             if(region.contains((locationManager.location?.coordinate)!)){
                 coordinate = (locationManager.location?.coordinate)!
             }
@@ -1474,15 +1558,39 @@ extension ViewController: UISearchBarDelegate {
         searchBar.tintColor = .darkGray
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .black
        searchBar.showsCancelButton = true
+        for subview in searchBar.subviews {
+            for innerSubview in subview.subviews {
+                if innerSubview is UITextField {
+                    innerSubview.backgroundColor = UIColor(red:0.945, green:0.945, blue:0.945, alpha:1.0)
+                    break
+                }
+            }
+        }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
        searchBar.showsCancelButton = false
+        for subview in searchBar.subviews {
+            for innerSubview in subview.subviews {
+                if innerSubview is UITextField {
+                    innerSubview.backgroundColor = UIColor(red:1, green:1, blue:1, alpha:1.0)
+                    break
+                }
+            }
+        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
         searchBar.resignFirstResponder()
+        for subview in searchBar.subviews {
+            for innerSubview in subview.subviews {
+                if innerSubview is UITextField {
+                    innerSubview.backgroundColor = UIColor(red:1, green:1, blue:1, alpha:1.0)
+                    break
+                }
+            }
+        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -1559,5 +1667,12 @@ extension GMSMapView {
         let topCenterLocation = CLLocation(latitude: topCenterCoordinate.latitude, longitude: topCenterCoordinate.longitude)
         let radius = CLLocationDistance(centerLocation.distance(from: topCenterLocation))
         return round(radius)
+    }
+}
+
+
+extension UISearchBar{
+    var textField : UITextField{
+        return self.value(forKey: "_searchField") as! UITextField
     }
 }
