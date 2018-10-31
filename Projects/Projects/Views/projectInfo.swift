@@ -9,18 +9,18 @@
 import UIKit
 
 class projectInfo: UITableViewCell {
-    @IBOutlet weak var saveButton: UIButton!
-    @IBOutlet weak var directionButton: UIButton!
-    @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var line1: UILabel!
-    @IBOutlet weak var line2: UILabel!
-    @IBOutlet weak var saveView: UIView!
-    @IBOutlet weak var directionsView: UIView!
-    @IBOutlet weak var shareView: UIView!
+    
     
     override func awakeFromNib() {
-        super.awakeFromNib()        
+        super.awakeFromNib()
+        
+        name.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        name.font = UIFont.AktivGrotesk_Md(size: 20)
+
+
+        
+        
         // Initialization code
     }
 

@@ -14,10 +14,14 @@ class expandCollapseCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        let tintedImage = self.expandButton.imageView?.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        expandButton.setImage(tintedImage, for: .normal)
+        expandButton.tintColor = UIColor.red
+        title.text = ""
         // Initialization code
     }
-
     
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

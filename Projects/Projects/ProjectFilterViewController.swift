@@ -15,6 +15,12 @@ protocol ProjectFilterDelegate: class {
 }
 
 class ProjectFilterViewController: UIViewController {
+    
+    @IBAction func handleClose(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
     var tagarray = NSMutableArray()
     var tags = NSMutableArray()
     var filter: String!
@@ -44,11 +50,18 @@ class ProjectFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        self.tableView.separatorInset =  UIEdgeInsetsMake(0, 24, 0, 24)
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 44
+        self.totalResultsLabel.font = UIFont.AktivGrotesk_Md(size: 14)
+        self.clearFilterButton.titleLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
         self.navigationController?.navigationBar.barTintColor = UIColor.white//hex(hex: Colors.primaryColor)
 //        let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white, kCTFontAttributeName : UIFont.gothamBook(size: 18) ] as [AnyHashable : NSObject]
 //        navigationController?.navigationBar.titleTextAttributes = textAttributes as! [NSAttributedStringKey : Any]        
         
-        clearFilterButton.tintColor = UIColor.hex(hex: Colors.primaryColor)
+        
+        
         if(UserDefaults.standard.object(forKey: "tagdict") != nil){
             var keyed = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "tagdict") as! Data) as! NSMutableDictionary
             self.tags = (keyed.allKeys as! NSArray).mutableCopy() as! NSMutableArray
@@ -60,25 +73,31 @@ class ProjectFilterViewController: UIViewController {
         DispatchQueue.main.async {
             Utility.showLoading()
             self.loadFilters()
-            self.loadProjectsCount()
+            self.loadProjectsMaxCount()
         }
         
     }
     @IBAction func handleclearfilter(_ sender: Any) {
-        self.certificationsarray = NSMutableArray()
-        self.ratingsarray = NSMutableArray()
-        self.versionsarray = NSMutableArray()
-        self.countriesarray = NSMutableArray()
-        self.statesarray = NSMutableArray()
-        self.tagarray = NSMutableArray()
-        self.states = NSMutableArray()
-        self.countries = NSMutableArray()
-        filterChanged = true
         //selectedFilter = ""
         DispatchQueue.main.async {
+            self.certificationsarray = NSMutableArray()
+            self.ratingsarray = NSMutableArray()
+            self.versionsarray = NSMutableArray()
+            self.countriesarray = NSMutableArray()
+            self.statesarray = NSMutableArray()
+            self.tagarray = NSMutableArray()
+            self.statesarray = NSMutableArray()
+            
+            self.certifications = NSMutableArray()
+            self.ratings = NSMutableArray()
+            self.versions = NSMutableArray()
+            self.countries = NSMutableArray()
+            self.states = NSMutableArray()
+            self.filterChanged = true            
             Utility.showLoading()
+            self.loadFilters()
         }
-        self.loadFilters()
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -180,6 +199,9 @@ class ProjectFilterViewController: UIViewController {
                 viewController.countriesarray = self.countriesarray
                 viewController.countries = self.countries
                 viewController.statesarray = self.statesarray
+                var swiftArray = self.states as AnyObject as! [String]
+                var sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+                self.states =  NSMutableArray.init(array: sortedArray)
                 viewController.states = self.states
                 viewController.certificationsarray = self.certificationsarray.mutableCopy() as! NSMutableArray
                 viewController.ratingsarray = self.ratingsarray.mutableCopy() as! NSMutableArray
@@ -208,6 +230,7 @@ class ProjectFilterViewController: UIViewController {
     func initViews(){
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UINib(nibName: "filterselected", bundle: nil), forCellReuseIdentifier: "filterselected")
         tableView.register(UINib(nibName: "FilterCell", bundle: nil), forCellReuseIdentifier: "FilterCell")
         tableView.register(UINib(nibName: "SubFilterCell", bundle: nil), forCellReuseIdentifier: "SubFilterCell")
         tableView.tableFooterView = UIView()
@@ -218,7 +241,7 @@ class ProjectFilterViewController: UIViewController {
         
         var group = DispatchGroup()
         //var objects = ["field_prjt_certification_level","field_prjt_rating_system_version","field_prjt_version", "field_prjt_country", "field_prjt_state"]
-        var objects = ["certification_level.raw","rating_system_version.raw","country.raw","state.raw","rating_system.raw"]
+        var objects = ["certification_level.raw","rating_system_version.raw","add_country.raw","add_state.raw","rating_system.raw"]
         for i in objects{
             group.enter()
             Apimanager.shared.getProjectobjects(field_name : i, callback: { (dict, code) in
@@ -248,19 +271,19 @@ class ProjectFilterViewController: UIViewController {
                             for i in sortedArray{
                                 self.ratings.add(i as! String)
                             }
-                        }else if(i == "country.raw"){
+                        }else if(i == "add_country.raw"){
                             var s = a["key"] as! String
                             var arr = s.components(separatedBy: " [")
                             s = arr[0] as! String
-                            if(arr.count == 2 && !self.countries.contains(s)){
+                            if(arr.count == 1 && !self.countries.contains(s)){
                                 self.countries.add(s)
                                 self.countriesdict.setValue(a["key"] as! String, forKey: s)
                             }
-                        }else if(i == "state.raw"){
+                        }else if(i == "add_state.raw"){
                             var s = a["key"] as! String
                             var arr = s.components(separatedBy: " [")
                             s = arr[0] as! String
-                            if(arr.count == 2 && !self.states.contains(s)){
+                            if(arr.count == 1 && !self.states.contains(s)){
                                 self.actualstates.add(s)
                                 self.statesdict.setValue(a["key"] as! String, forKey: s)
                             }
@@ -296,7 +319,14 @@ class ProjectFilterViewController: UIViewController {
             })
         }
         group.notify(queue: .main) {
-            self.loadProjectsCount()
+            var swiftArray = self.actualstates as AnyObject as! [String]
+            var sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+            self.actualstates =  NSMutableArray.init(array: sortedArray)
+            
+            swiftArray = self.countries as AnyObject as! [String]
+            sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
+            self.countries =  NSMutableArray.init(array: sortedArray)
+            self.loadProjectsMaxCount()
         }
         
     }
@@ -364,12 +394,14 @@ class ProjectFilterViewController: UIViewController {
                 }
             }}
         
-        var parameter = Payloads().makePayloadForProject(certificationsarray: certificationsarray, ratingsarray: ratingsarray, versionsarray: versionsarray, statesarray : tempstates, countriesarray : tempcountries)
-        Apimanager.shared.getProjectsCount(category: parameter) { count, code in
+        var dict = [[String : Any]]()
+        dict = constructCategory()
+        
+        Apimanager.shared.getProjectsCount(category: dict) { count, code in
             if(code == -1 && count != nil){
                 self.isloading = false
                 Utility.hideLoading()
-                if(parameter == ""){
+                if(dict.count == 0){
                     self.totalCount = count!
                 }
                 self.totalResultsLabel.text = "\(count!) of \(self.totalCount) Projects"
@@ -386,6 +418,91 @@ class ProjectFilterViewController: UIViewController {
                     Utility.hideLoading()
                     if(self.navigationController != nil){
                     Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                    }
+                }
+            }
+        }
+    }
+    
+    func constructCategory() -> [[String : Any]]{
+        var dict = [[String : Any]]()
+        var temp = [String]()
+        for i in certificationsarray{
+            if(i as! String != ""){
+                temp.append(i as! String)
+            }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["certification_level.raw" : temp ]])
+        }
+        temp = [String]()
+        for i in countriesarray{
+            if(i as! String != ""){
+                temp.append(i as! String)
+            }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["add_country.raw" : temp ]])
+        }
+        
+        temp = [String]()
+        for i in statesarray{
+            if(i as! String != ""){
+                temp.append(i as! String)
+            }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["add_state.raw" : temp ]])
+        }
+        
+        temp = [String]()
+        for i in ratingsarray{
+            if(i as! String != ""){
+                temp.append(i as! String)
+            }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system.raw" : temp ]])
+        }
+        
+        temp = [String]()
+        for i in versionsarray{
+            if(i as! String != ""){
+                temp.append(i as! String)
+            }
+        }
+        if(temp.count > 0){
+            dict.append(["terms": ["rating_system_version.raw" : temp ]])
+        }
+        print(dict)
+        
+        return dict
+    }
+    
+    
+    func loadProjectsMaxCount(){
+        var dict = [[String : Any]]()
+        Apimanager.shared.getProjectsCount(category: dict) { count, code in
+            if(code == -1 && count != nil){
+                DispatchQueue.main.async {
+                    self.isloading = false
+                    if(dict.count == 0){
+                        self.totalCount = count!
+                    }
+                    self.loadProjectsCount()                    
+                }
+            }else{
+                self.isloading = false
+                if(code == 401){
+                    if(self.opened == false){
+                        self.opened = true
+                        Utility.hideLoading()
+                        Utility.revokeduser(viewcontroller: self, name: "")
+                    }
+                }else if(code != -999 && code != nil && code != 0){
+                    Utility.hideLoading()
+                    if(self.navigationController != nil){
+                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -433,40 +550,47 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         temp = t
         if(temp.count > 0){
             var str = temp.componentsJoined(by: ", ")
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! UITableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
+            cell.detaillbl.numberOfLines = 0
+            cell.lbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.lbl.font = UIFont.AktivGrotesk_Md(size: 16)
+            cell.detaillbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.detaillbl.font = UIFont.AktivGrotesk_Rg(size: 13)
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             cell.accessoryType = .disclosureIndicator
             if(indexPath.row == 0){
-                cell.textLabel?.text = "Certification Level"
+                cell.lbl.text = "Certification Level"
             }else if(indexPath.row == 3){
-                cell.textLabel?.text = "Rating system"
+                cell.lbl.text = "Rating system"
             }else if(indexPath.row == 4){
-                cell.textLabel?.text = "Version"
+                cell.lbl.text = "Version"
             }else if(indexPath.row == 2){
-                cell.textLabel?.text = "State"
+                cell.lbl.text = "State"
             }else if(indexPath.row == 1){
-                cell.textLabel?.text = "Country"
+                cell.lbl.text = "Country"
             }else if(indexPath.row == 5){
-                cell.textLabel?.text = "Tags"
+                cell.lbl.text = "Tags"
             }
-            cell.detailTextLabel?.text = str
+            cell.detaillbl.text = str
             return cell
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
+        cell.lbl.numberOfLines = 1
+        cell.separatorInset =  UIEdgeInsetsMake(0, -5, 0, 15)
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         if(indexPath.row == 0){
-            cell.filterLabel?.text = "Certification Level"
+            cell.lbl.text = "Certification Level"
         }else if(indexPath.row == 3){
-            cell.filterLabel?.text = "Rating system"
+            cell.lbl.text = "Rating system"
         }else if(indexPath.row == 4){
-            cell.filterLabel?.text = "Version"
+            cell.lbl.text = "Version"
         }else if(indexPath.row == 2){
-            cell.filterLabel?.text = "State"
+            cell.lbl.text = "State"
         }else if(indexPath.row == 1){
-            cell.filterLabel?.text = "Country"
+            cell.lbl.text = "Country"
         }else if(indexPath.row == 5){
-            cell.filterLabel?.text = "Tags"
+            cell.lbl.text = "Tags"
         }
         return cell
         
@@ -510,7 +634,7 @@ extension ProjectFilterViewController: ProjectSubFilterDelegate {
             self.ratingsarray = ratingsarray
             self.tableView.reloadData()
             //self.searchText = self.searchBar.text!
-            self.loadProjectsCount()
+            self.loadProjectsMaxCount()
             
         }
     }

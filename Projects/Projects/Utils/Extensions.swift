@@ -149,54 +149,54 @@ extension UIFont{
     }
     
     class func AktivGrotesk_Bd(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Bd", size: size)!
+        return UIFont(name: "AktivGroteskTrial-Bold", size: size)!
     }
     
     class func AktivGrotesk_Blk(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Blk", size: size)!
+        return UIFont(name: "AktivGrotesk-Blk", size: size)!
     }
     
     class func AktivGrotesk_Hair(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Hair", size: size)!
+        return UIFont(name: "AktivGrotesk-Hair", size: size)!
     }
     
     class func AktivGrotesk_Lt(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Lt", size: size)!
+        return UIFont(name: "AktivGrotesk-Lt", size: size)!
     }
     
     class func AktivGrotesk_Md(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Md", size: size)!
+        return UIFont(name: "AktivGroteskTrial-Medium", size: size)!
     }
     
     class func AktivGrotesk_Rg(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Rg", size: size)!
+        return UIFont(name: "AktivGroteskTrial-Regular", size: size)!
     }
     
     class func AktivGrotesk_Th(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_Th", size: size)!
+        return UIFont(name: "AktivGrotesk-Th", size: size)!
     }
     class func AktivGrotesk_XBd(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGrotesk_Trial_XBd", size: size)!
+        return UIFont(name: "AktivGrotesk-XBd", size: size)!
     }
     class func AktivGroteskCd_Blk(size: CGFloat) -> UIFont{
-        return UIFont(name: "AktivGroteskCd_Trial_Blk", size: size)!
+        return UIFont(name: "AktivGroteskCd-Blk", size: size)!
     }
 
     
-    /*AktivGroteskCd_Trial_Hair.ttf
-    AktivGroteskCd_Trial_Lt.ttf
-    AktivGroteskCd_Trial_Md.ttf
-    AktivGroteskCd_Trial_Rg.ttf
-    AktivGroteskCd_Trial_Th.ttf
-    AktivGroteskCd_Trial_XBd.ttf
-    AktivGroteskEx_Trial_Bd.ttf
-    AktivGroteskEx_Trial_Blk.ttf
-    AktivGroteskEx_Trial_Hair.ttf
-    AktivGroteskEx_Trial_Lt.ttf
-    AktivGroteskEx_Trial_Md.ttf
-    AktivGroteskEx_Trial_Rg.ttf
-    AktivGroteskEx_Trial_Th.ttf
-    AktivGroteskEx_Trial_XBd.ttf*/
+    /*AktivGroteskCd-Hair.ttf
+    AktivGroteskCd-Lt.ttf
+    AktivGroteskCd-Md.ttf
+    AktivGroteskCd-Rg.ttf
+    AktivGroteskCd-Th.ttf
+    AktivGroteskCd-XBd.ttf
+    AktivGroteskEx-Bd.ttf
+    AktivGroteskEx-Blk.ttf
+    AktivGroteskEx-Hair.ttf
+    AktivGroteskEx-Lt.ttf
+    AktivGroteskEx-Md.ttf
+    AktivGroteskEx-Rg.ttf
+    AktivGroteskEx-Th.ttf
+    AktivGroteskEx-XBd.ttf*/
 }
 
 extension UIImage {

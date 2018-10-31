@@ -10,108 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Projects/ViewController.swift"
-            timestampString = "561582902.608899"
+            timestampString = "562701584.277299"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1239"
-            endingLineNumber = "1239"
-            landmarkName = "loadData()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Projects.ViewController.loadData() -&gt; ()"
-                  moduleName = "Projects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/Updated%20apps/Projects/Projects/ViewController.swift"
-                  timestampString = "561580914.850246"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1236"
-                  endingLineNumber = "1236"
-                  offsetFromSymbolStart = "1660">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Projects.ViewController.loadData() -&gt; ()"
-                  moduleName = "Projects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/Updated%20apps/Projects/Projects/ViewController.swift"
-                  timestampString = "561580914.852079"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1236"
-                  endingLineNumber = "1236"
-                  offsetFromSymbolStart = "2156">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Projects/ViewController.swift"
-            timestampString = "561582902.609525"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1238"
-            endingLineNumber = "1238"
-            landmarkName = "loadData()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Projects.ViewController.loadData() -&gt; ()"
-                  moduleName = "Projects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/Updated%20apps/Projects/Projects/ViewController.swift"
-                  timestampString = "561580914.856606"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1235"
-                  endingLineNumber = "1235"
-                  offsetFromSymbolStart = "1424">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Projects.ViewController.loadData() -&gt; ()"
-                  moduleName = "Projects"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/group10/Desktop/Updated%20apps/Projects/Projects/ViewController.swift"
-                  timestampString = "561580914.8583601"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1235"
-                  endingLineNumber = "1235"
-                  offsetFromSymbolStart = "2148">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Projects/ViewController.swift"
-            timestampString = "561582902.609744"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1237"
-            endingLineNumber = "1237"
-            landmarkName = "loadData()"
+            startingLineNumber = "1380"
+            endingLineNumber = "1380"
+            landmarkName = "clusterManager(_:didTap:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -122,12 +26,60 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Projects/ViewController.swift"
-            timestampString = "561582902.609949"
+            timestampString = "562701584.2773581"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1236"
-            endingLineNumber = "1236"
-            landmarkName = "loadData()"
+            startingLineNumber = "1395"
+            endingLineNumber = "1395"
+            landmarkName = "mapView(_:didTap:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projects/ViewController.swift"
+            timestampString = "562701584.277403"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1393"
+            endingLineNumber = "1393"
+            landmarkName = "mapView(_:didTap:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projects/ProjectListViewController.swift"
+            timestampString = "562701584.277447"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1123"
+            endingLineNumber = "1123"
+            landmarkName = "searchBarTextDidBeginEditing(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Projects/ProjectListViewController.swift"
+            timestampString = "562701584.277769"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "didPresentSearchController(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

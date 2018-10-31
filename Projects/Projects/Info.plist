@@ -28,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>4</string>
+	<string>22</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -60,55 +60,55 @@
 	<string>Allow this app to access your location</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>AktivGrotesk_Trial_Bd.ttf</string>
-		<string>AktivGrotesk_Trial_Bd.ttf</string>
-		<string>AktivGrotesk_Trial_BdIt.ttf</string>
-		<string>AktivGrotesk_Trial_Blk.ttf</string>
-		<string>AktivGrotesk_Trial_BlkIt.ttf</string>
-		<string>AktivGrotesk_Trial_Hair.ttf</string>
-		<string>AktivGrotesk_Trial_HairIt.ttf</string>
-		<string>AktivGrotesk_Trial_It.ttf</string>
-		<string>AktivGrotesk_Trial_Lt.ttf</string>
-		<string>AktivGrotesk_Trial_LtIt.ttf</string>
-		<string>AktivGrotesk_Trial_Md.ttf</string>
-		<string>AktivGrotesk_Trial_MdIt.ttf</string>
-		<string>AktivGrotesk_Trial_Rg.ttf</string>
-		<string>AktivGrotesk_Trial_Th.ttf</string>
-		<string>AktivGrotesk_Trial_ThIt.ttf</string>
-		<string>AktivGrotesk_Trial_XBd.ttf</string>
-		<string>AktivGrotesk_Trial_XBdIt.ttf</string>
-		<string>AktivGroteskCd_Trial_Bd.ttf</string>
-		<string>AktivGroteskCd_Trial_BdIt.ttf</string>
-		<string>AktivGroteskCd_Trial_Blk.ttf</string>
-		<string>AktivGroteskCd_Trial_BlkIt.ttf</string>
-		<string>AktivGroteskCd_Trial_Hair.ttf</string>
-		<string>AktivGroteskCd_Trial_HairIt.ttf</string>
-		<string>AktivGroteskCd_Trial_It.ttf</string>
-		<string>AktivGroteskCd_Trial_Lt.ttf</string>
-		<string>AktivGroteskCd_Trial_LtIt.ttf</string>
-		<string>AktivGroteskCd_Trial_Md.ttf</string>
-		<string>AktivGroteskCd_Trial_MdIt.ttf</string>
-		<string>AktivGroteskCd_Trial_Rg.ttf</string>
-		<string>AktivGroteskCd_Trial_Th.ttf</string>
-		<string>AktivGroteskCd_Trial_ThIt.ttf</string>
-		<string>AktivGroteskCd_Trial_XBd.ttf</string>
-		<string>AktivGroteskCd_Trial_XBdIt.ttf</string>
-		<string>AktivGroteskEx_Trial_Bd.ttf</string>
-		<string>AktivGroteskEx_Trial_BdIt.ttf</string>
-		<string>AktivGroteskEx_Trial_Blk.ttf</string>
-		<string>AktivGroteskEx_Trial_BlkIt.ttf</string>
-		<string>AktivGroteskEx_Trial_Hair.ttf</string>
-		<string>AktivGroteskEx_Trial_HairIt.ttf</string>
-		<string>AktivGroteskEx_Trial_It.ttf</string>
-		<string>AktivGroteskEx_Trial_Lt.ttf</string>
-		<string>AktivGroteskEx_Trial_LtIt.ttf</string>
-		<string>AktivGroteskEx_Trial_Md.ttf</string>
-		<string>AktivGroteskEx_Trial_MdIt.ttf</string>
-		<string>AktivGroteskEx_Trial_Rg.ttf</string>
-		<string>AktivGroteskEx_Trial_Th.ttf</string>
-		<string>AktivGroteskEx_Trial_ThIt.ttf</string>
-		<string>AktivGroteskEx_Trial_XBd.ttf</string>
-		<string>AktivGroteskEx_Trial_XBdIt.ttf</string>
+		<string>AktivGrotesk-Bd.ttf</string>
+		<string>AktivGrotesk-Bd.ttf</string>
+		<string>AktivGrotesk-BdIt.ttf</string>
+		<string>AktivGrotesk-Blk.ttf</string>
+		<string>AktivGrotesk-BlkIt.ttf</string>
+		<string>AktivGrotesk-Hair.ttf</string>
+		<string>AktivGrotesk-HairIt.ttf</string>
+		<string>AktivGrotesk-It.ttf</string>
+		<string>AktivGrotesk-Lt.ttf</string>
+		<string>AktivGrotesk-LtIt.ttf</string>
+		<string>AktivGrotesk-Md.ttf</string>
+		<string>AktivGrotesk-MdIt.ttf</string>
+		<string>AktivGrotesk-Rg.ttf</string>
+		<string>AktivGrotesk-Th.ttf</string>
+		<string>AktivGrotesk-ThIt.ttf</string>
+		<string>AktivGrotesk-XBd.ttf</string>
+		<string>AktivGrotesk-XBdIt.ttf</string>
+		<string>AktivGroteskCd-Bd.ttf</string>
+		<string>AktivGroteskCd-BdIt.ttf</string>
+		<string>AktivGroteskCd-Blk.ttf</string>
+		<string>AktivGroteskCd-BlkIt.ttf</string>
+		<string>AktivGroteskCd-Hair.ttf</string>
+		<string>AktivGroteskCd-HairIt.ttf</string>
+		<string>AktivGroteskCd-It.ttf</string>
+		<string>AktivGroteskCd-Lt.ttf</string>
+		<string>AktivGroteskCd-LtIt.ttf</string>
+		<string>AktivGroteskCd-Md.ttf</string>
+		<string>AktivGroteskCd-MdIt.ttf</string>
+		<string>AktivGroteskCd-Rg.ttf</string>
+		<string>AktivGroteskCd-Th.ttf</string>
+		<string>AktivGroteskCd-ThIt.ttf</string>
+		<string>AktivGroteskCd-XBd.ttf</string>
+		<string>AktivGroteskCd-XBdIt.ttf</string>
+		<string>AktivGroteskEx-Bd.ttf</string>
+		<string>AktivGroteskEx-BdIt.ttf</string>
+		<string>AktivGroteskEx-Blk.ttf</string>
+		<string>AktivGroteskEx-BlkIt.ttf</string>
+		<string>AktivGroteskEx-Hair.ttf</string>
+		<string>AktivGroteskEx-HairIt.ttf</string>
+		<string>AktivGroteskEx-It.ttf</string>
+		<string>AktivGroteskEx-Lt.ttf</string>
+		<string>AktivGroteskEx-LtIt.ttf</string>
+		<string>AktivGroteskEx-Md.ttf</string>
+		<string>AktivGroteskEx-MdIt.ttf</string>
+		<string>AktivGroteskEx-Rg.ttf</string>
+		<string>AktivGroteskEx-Th.ttf</string>
+		<string>AktivGroteskEx-ThIt.ttf</string>
+		<string>AktivGroteskEx-XBd.ttf</string>
+		<string>AktivGroteskEx-XBdIt.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -120,6 +120,8 @@
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

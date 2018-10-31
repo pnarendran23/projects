@@ -53,7 +53,7 @@ class exploreViewController: UIViewController, UITableViewDataSource, UITableVie
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "exploreCell", for: indexPath) as! exploreCell
         cell.textLabel?.text = projects[indexPath.row - 1]
-        cell.detailTextLabel?.text = ".7 mi."
+        cell.detailTextLabel?.text = ".7 mi. away"
         return cell
     }
     

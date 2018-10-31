@@ -23,9 +23,11 @@ class initialViewController: UIViewController{
     override func viewDidLoad() {
 
         from = 0
-        projectsArray = NSMutableArray()        
+        projectsArray = NSMutableArray()
+        let str = "District of Columbia"
+        print(str.components(separatedBy: "[").first!)
         DispatchQueue.main.async {
-            self.getData(from: self.from)
+            //self.getData(from: self.from)
         }
     }
     

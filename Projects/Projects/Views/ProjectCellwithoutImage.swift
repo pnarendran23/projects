@@ -10,12 +10,29 @@ import UIKit
 
 class ProjectCellwithoutImage: UITableViewCell {
 
-    @IBOutlet weak var distance: UILabel!
     @IBOutlet weak var address: UILabel!
     @IBOutlet weak var projectname: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        projectname.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        projectname.font = UIFont.AktivGrotesk_Md(size: 16)
+        address.font = UIFont.AktivGrotesk_Rg(size: 12)
+        address.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        
         // Initialization code
+    }
+    
+    override var frame: CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            var frame = newValue
+            frame.origin.x += 24
+            frame.size.width -= 2 * 18
+            
+            super.frame = frame
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

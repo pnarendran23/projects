@@ -14,8 +14,12 @@ class thumbnail: UITableViewCell {
     @IBOutlet weak var thumbnailcount: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        thumbnailcount.font = UIFont.AktivGrotesk_Rg(size: 12)
+        thumbnailcount.textColor = UIColor.white
+        
         // Initialization code
-    }
+    }        
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

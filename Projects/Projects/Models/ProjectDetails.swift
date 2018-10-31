@@ -21,7 +21,7 @@ class ProjectDetails {
     var project_size = ""
     var description_full = ""
     var site_context = ""
-    var feature_image = ""
+    var image = ""
     var energy_star_score = ""
     var project_images = [String]()
     var city = ""
@@ -57,7 +57,7 @@ class ProjectDetails {
         project_walkscore = json["project_walkscore"].stringValue
         project_size = json["project_size"].stringValue
         description_full = json["description_full"].stringValue
-        feature_image = json["feature_image"].stringValue
+        image = json["profile_image"].stringValue
         project_certification_level = json["project_certification_level"].stringValue
         project_rating_system_version = json["project_rating_system_version"].stringValue
         address = json["address"].stringValue
@@ -71,7 +71,7 @@ class ProjectDetails {
         energy_score = json["energy_score"].intValue
         water_score = json["water_score"].intValue
         human_score = json["human_score"].intValue
-        path = json["path"].stringValue
+        path = json["url"].stringValue
     }
     
     func getCertificationLevelImage() -> UIImage {

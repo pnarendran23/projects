@@ -35,9 +35,16 @@ class ProjectFilterSubViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.separatorInset = .zero
+        tableView.estimatedRowHeight = 40
         self.tableView.keyboardDismissMode = .onDrag
         initViews()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print(self.certifications)
+    }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         self.navigationController?.topViewController?.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -71,6 +78,11 @@ extension ProjectFilterSubViewController: UITableViewDelegate, UITableViewDataSo
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(title == "Certification Level"){
             return self.certifications.count
