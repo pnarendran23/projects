@@ -20,8 +20,9 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     var selected_project = Project()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.tableView.tableFooterView = UIView.init(frame: .zero)
-        self.tableView.estimatedRowHeight = 80
+        self.tableView.estimatedRowHeight = 40
         self.tableView.rowHeight = UITableViewAutomaticDimension
         tableView.register(UINib(nibName: "ProjectCellwithImagemore", bundle: nil), forCellReuseIdentifier: "ProjectCellwithImagemore")
         tableView.register(UINib(nibName: "ProjectCellwithoutImagemore", bundle: nil), forCellReuseIdentifier: "ProjectCellwithoutImagemore")
@@ -37,8 +38,10 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         let cell = tableView.dequeueReusableCell(withIdentifier: "FavouritesHeader") as! FavouritesHeader
         cell.label.text = "Projects (\(self.favourites.count))"
         if(isEdited == false){
+            //cell.label.frame.origin.x = 26
             cell.button.setTitle("Edit", for: .normal)
         }else{
+            //cell.label.frame.origin.x = 40
             cell.button.setTitle("Done", for: .normal)
         }
         cell.button.addTarget(self, action: #selector(self.editclicked(button:)), for: .touchUpInside )
@@ -94,16 +97,25 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 let attributedString = NSMutableAttributedString(string:normalText)
                 var distance = ""
                 if(isEdited == true){
-                    tableView.isEditing = true
+                    cell.delbutton.isHidden = false
+                    cell.delbutton.tag = indexPath.row
+                    cell.delbutton.addTarget(self, action: #selector(delbutton(button:)), for: .touchUpInside )
+                    cell.nameConstraint.constant = 85
+                    cell.imageViewConstraint.constant = 25
+                    //tableView.isEditing = true
                     cell.more.isHidden = true
                 }else{
-                    tableView.isEditing = false
+                    cell.delbutton.isHidden = true
+                    cell.nameConstraint.constant = 63
+                    cell.imageViewConstraint.constant = 0
+                    //tableView.isEditing = false
                     cell.more.isHidden = false
                 }
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
                 cell.more.tag = indexPath.row
                 cell.more.addTarget(self, action: #selector(self.moreclicked(button:)), for: .touchUpInside)
                 
-                var boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                var boldText = "\n\(project.state), \(project.country)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 // Customize the line spacing for paragraph.
                 mutableParagraphStyle.lineSpacing = CGFloat(5)
@@ -117,7 +129,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 // Customize the line spacing for paragraph.
                 mutableParagraphStyle.lineSpacing = CGFloat(15)
                 
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
+                //boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
                 attributedString.append(boldString)
                 cell.projectname.attributedText = attributedString
                 //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
@@ -133,12 +145,19 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 saveButton.setImage(UIImage(named: "more"), for: .normal)
                 //cell.accessoryView = saveButton as UIView
                 if(isEdited == true){
-                    tableView.isEditing = true
+                    //tableView.isEditing = true
+                    cell.delbutton.isHidden = false
+                    cell.delbutton.tag = indexPath.row
+                    cell.delbutton.addTarget(self, action: #selector(delbutton(button:)), for: .touchUpInside )
+                    cell.nameConstraint.constant = 25
                     cell.more.isHidden = true
                 }else{
-                    tableView.isEditing = false
+                    cell.delbutton.isHidden = true
+                    cell.nameConstraint.constant = 0
+                    //tableView.isEditing = false
                     cell.more.isHidden = false
                 }
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
                 cell.more.addTarget(self, action: #selector(self.moreclicked(button:)), for: .touchUpInside)
                 //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
                 let normalText  = "\(project.title)"
@@ -147,7 +166,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 
                 var distance = ""
                 
-                var boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                var boldText = "\n\(project.state), \(project.country)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 // Customize the line spacing for paragraph.
                 mutableParagraphStyle.lineSpacing = CGFloat(5)
@@ -161,7 +180,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 // Customize the line spacing for paragraph.
                 mutableParagraphStyle.lineSpacing = CGFloat(15)
                 
-                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
+                //boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count))
                 attributedString.append(boldString)
                 cell.projectname.attributedText = attributedString
                 //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
@@ -172,6 +191,13 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+    
+    @objc func delbutton(button : UIButton){
+        self.favourites.remove(at: button.tag)
+        UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: self.favourites), forKey: "favourites")
+        UserDefaults.standard.synchronize()
+        self.tableView.reloadData()
     }
     
     @objc func moreclicked(button : UIButton){

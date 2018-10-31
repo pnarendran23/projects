@@ -19,8 +19,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="76.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUr-5N-DS8">
-                        <rect key="frame" x="98" y="7" width="253" height="62"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUr-5N-DS8">
+                        <rect key="frame" x="61" y="7" width="309" height="62"/>
                         <attributedString key="attributedText">
                             <fragment content="Label">
                                 <attributes>
@@ -38,14 +38,14 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wCa-gd-xvV">
-                        <rect key="frame" x="23" y="10" width="57" height="57"/>
+                        <rect key="frame" x="1" y="10" width="57" height="57"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                     </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="gUr-5N-DS8" secondAttribute="bottom" constant="7.5" id="0s8-of-OmT"/>
-                    <constraint firstAttribute="trailing" secondItem="gUr-5N-DS8" secondAttribute="trailing" constant="24" id="Gy9-U7-qBg"/>
-                    <constraint firstItem="gUr-5N-DS8" firstAttribute="leading" secondItem="Iqe-Xv-vaD" secondAttribute="leading" constant="98" id="Ld9-Fa-wtS"/>
+                    <constraint firstAttribute="trailing" secondItem="gUr-5N-DS8" secondAttribute="trailing" constant="5" id="Gy9-U7-qBg"/>
+                    <constraint firstItem="gUr-5N-DS8" firstAttribute="leading" secondItem="Iqe-Xv-vaD" secondAttribute="leading" constant="61" id="Ld9-Fa-wtS"/>
                     <constraint firstItem="gUr-5N-DS8" firstAttribute="top" secondItem="Iqe-Xv-vaD" secondAttribute="top" constant="7" id="oWp-rv-hPF"/>
                 </constraints>
             </tableViewCellContentView>

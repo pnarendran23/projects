@@ -9,11 +9,12 @@
 import UIKit
 
 class FilterCell: UITableViewCell {
-
+    @IBOutlet weak var lbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-        self.textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
+        self.lbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        self.lbl.font = UIFont.AktivGrotesk_Md(size: 16)
         // Initialization code
     }
     
@@ -23,8 +24,8 @@ class FilterCell: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 24
-            frame.size.width -= 2 * 24
+            frame.origin.x += 27
+            frame.size.width -= 2 * 19
             
             super.frame = frame
         }

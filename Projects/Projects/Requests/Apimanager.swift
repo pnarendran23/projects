@@ -170,6 +170,7 @@ class Apimanager{
                             project.node_id = subJson["_source"]["node_id"].stringValue
                             project.state = subJson["_source"]["add_state"].stringValue
                             project.country = subJson["_source"]["add_country"].stringValue
+                            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                             projects.append(project)
                         }
                         print("Project count: \(projects.count)")
@@ -258,7 +259,7 @@ class Apimanager{
                                 projectDetails.long = subJson["geo_code"]["lon"].stringValue
                                 
                                 //projectDetails.p = subJson["profile_image"].stringValue
-                                
+                                projectDetails.project_rating_system_version = subJson["rating_system_version"].stringValue
                                 projectDetails.project_rating_system = subJson["rating_system"].stringValue
                                 //                            printsubJson["node_id"].string
                                 projectDetails.story = subJson["hide_story"].stringValue
@@ -266,7 +267,7 @@ class Apimanager{
                                 projectDetails.project_size = subJson["site_size"].stringValue
                                 projectDetails.project_setting = subJson["setting"].stringValue
                                 projectDetails.certification_date = subJson["certification_date"].stringValue
-                                projectDetails.energy_star_score = subJson["walkscore"].stringValue
+                                projectDetails.project_walkscore = subJson["walkscore"].stringValue
                                 projectDetails.energy_star_score = subJson["energy_star_score"].stringValue
                                 projectDetails.site_context = subJson["foundation_statement"].stringValue
                                 projectDetails.description_full = subJson["description"].stringValue
@@ -307,6 +308,7 @@ class Apimanager{
                                     print(key)
                                     print(value)
                                 }
+                                projectDetails.title = projectDetails.title.replacingOccurrences(of: "&amp;", with: "")
 //                                projectDetails.address = projectDetails.address.components(separatedBy: "[").first!
 //                                projectDetails.country = projectDetails.country.components(separatedBy: "[").first!
 //                                projectDetails.state = projectDetails.state.components(separatedBy: "[").first!
@@ -539,6 +541,7 @@ class Apimanager{
                                 project.rating_system_version = (subJson["_source"]["field_prjt_rating_system_version"].arrayValue.first?.stringValue ?? "")
                                 project.node_id = (subJson["_source"]["node_id"].arrayValue.first?.stringValue ?? "")
                                 project.address = (subJson["_source"]["field_prjt_address"].arrayValue.first?.stringValue)!
+                                project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                 projects.append(project)
                             }
                             print("Project count: \(projects.count) and data are \(projects)")
@@ -767,6 +770,7 @@ class Apimanager{
                                     }
                                     project.address = project.address.components(separatedBy: "[").first!
                                     project.country = project.country.components(separatedBy: "[").first!
+                                    project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                     project.state = project.state.components(separatedBy: "[").first!
                                 projects.append(project)
                                 }
@@ -886,7 +890,7 @@ class Apimanager{
                                 }else{
                                     project.country = subJson["_source"]["add_country"].stringValue
                                 }
-                                    
+                                    project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                     project.address = project.address.components(separatedBy: "[").first!
                                     project.country = project.country.components(separatedBy: "[").first!
                                     project.state = project.state.components(separatedBy: "[").first!
@@ -947,6 +951,7 @@ class Apimanager{
                                     project.node_id = subJson["_source"]["node_id"].stringValue
                                     project.state = subJson["_source"]["add_state"].stringValue
                                     project.country = subJson["_source"]["add_country"].stringValue
+                                    project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                     projects.append(project)                                
                             }
                             //print("Project count: \(projects.count) and data are \(projects)")

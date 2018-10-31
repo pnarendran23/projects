@@ -39,8 +39,8 @@ class ScorecardCell: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 24
-            frame.size.width -= 2 * 24
+            frame.origin.x += 18
+            frame.size.width -= 2 * 18
             
             super.frame = frame
         }

@@ -14,6 +14,9 @@ class ProjectCellwithImagemore: UITableViewCell {
     @IBOutlet weak var address: UILabel!
     @IBOutlet weak var projectname: UILabel!
     @IBOutlet weak var project_image: UIImageView!
+    @IBOutlet weak var imageViewConstraint: NSLayoutConstraint! //22
+    @IBOutlet weak var delbutton: UIButton!
+    @IBOutlet weak var nameConstraint: NSLayoutConstraint! //83
     
     override func awakeFromNib() {
         super.awakeFromNib()

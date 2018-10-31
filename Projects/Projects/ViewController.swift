@@ -24,7 +24,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     fileprivate var pageNumber = 0
     var searchedProjects = [Project]()
     var markerTapped = false
-    var size = 500
+    var size = 150
     var allDownloaded = false
     var from = 0
     @IBOutlet weak var arrowimage: UIImageView!
@@ -424,24 +424,20 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         dict = constructCategory()
         self.navigationItem.rightBarButtonItems = nil
         self.makeNavigationBarButtons()
-            Apimanager.shared.searchProjectsElasticForMapNew (from: 0, sizee : 1000, search : search, category : dict, callback: {(totalRecords, projects, code) in
+            Apimanager.shared.searchProjectsElasticForMapNew (from: 0, sizee : size, search : search, category : dict, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
                     DispatchQueue.main.async {
                     self.searchedProjects = projects!
                     self.totalRecords = totalRecords!
                     //self.lastRecordsCount = projects!.count
-                    //self.filterProjects = self.projects
+                    self.filterProjects = self.projects
                     self.projects = self.searchedProjects
                     self.loadMapView(temp: projects!)
                     Utility.hideLoading()
                         self.arrProjects = [String]()
                         self.arrFilter = [String]()
                         self.isLarger = false
-                        if(CLLocationManager.locationServicesEnabled()){                            
-                            self.tableView.reloadData()
-                        }else{
-                            print("Not allowed")
-                        }
+                        self.tableView.reloadData()
                     }
                 }else{
                     if(code == 401){
@@ -551,7 +547,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
                 var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
                 boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-                
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
                 
                 boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)".count, distance.count + 1))
                 
@@ -590,6 +586,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 }else{
                     distance = "1000+ mi. away"
                 }
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
                 var boldText = "\n\(project.state), \(project.country)\n\(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 
@@ -728,32 +725,38 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     }
     
     func didPresentSearchController(_ searchController: UISearchController) {
-        self.tableView.isHidden = false
-        Utility.hideToast()
-        if(locationManager.location != nil){
-            self.currentLocation = locationManager.location
-        }else{
-            self.currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
-        }
-     
-        if(self.isLarger == true){
-            self.searchedProjects = [Project]()
-            self.projects = [Project]()
-        }
-        
-        if(self.searchController.searchBar.text?.count == 0){
-            self.arrFilter = [String]()
-            self.arrCountry = [String]()
+        DispatchQueue.main.async {
+            self.tableView.isHidden = false
+            Utility.hideToast()
+            if(self.locationManager.location != nil){
+                self.currentLocation = self.locationManager.location
+            }else{
+                self.currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
+            }
+         
+            if(self.isLarger == true){
+                self.searchedProjects = [Project]()
+                self.projects = [Project]()
+            }
             
+            if(self.searchController.searchBar.text?.count == 0){
+                self.arrFilter = [String]()
+                self.arrCountry = [String]()
+                
+                self.tableView.reloadData()
+            }
+            Apimanager.shared.stopAllSessions()
+            self.searchBar.resignFirstResponder()
+            self.selected_searchbar = "searchcontroller"
+            self.slideUpView.isHidden = true
+            self.filterProjects = [Project]()
+            self.arrCountry = [String]()
+            self.searchedProjects = [Project]()
             self.tableView.reloadData()
-        }
-        self.searchBar.resignFirstResponder()
-        selected_searchbar = "searchcontroller"
-        slideUpView.isHidden = true
-        if(self.searchedProjects.count == 0 && self.totalRecords > 0){
+            self.totalRecords = 0
+            self.from = 0
             self.searchProjects()
-        }else if(self.searchedProjects.count > 0){
-            self.searchProjects()
+            
         }
     }
     
@@ -1569,7 +1572,11 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-       searchBar.showsCancelButton = false
+       searchBar.showsCancelButton = false        
+        self.filterProjects = [Project]()
+        self.arrCountry = [String]()
+        self.searchedProjects = [Project]()
+        self.tableView.reloadData()
         for subview in searchBar.subviews {
             for innerSubview in subview.subviews {
                 if innerSubview is UITextField {
@@ -1582,6 +1589,7 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = false
+        searchBar.text = ""
         searchBar.resignFirstResponder()
         for subview in searchBar.subviews {
             for innerSubview in subview.subviews {

@@ -28,6 +28,19 @@ class OperationsCell: UITableViewCell {
                 directionsLbl.font = UIFont.AktivGrotesk_Rg(size: 14)
                 shareLbl.textColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
                 shareLbl.font = UIFont.AktivGrotesk_Rg(size: 14)
+        
+        var tintedImage = self.saveImage.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.saveImage.image = tintedImage
+        self.saveImage.tintColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
+        
+        tintedImage = self.directionsImage.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.directionsImage.image = tintedImage
+        self.directionsImage.tintColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
+        
+        tintedImage = self.shareImage.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.shareImage.image = tintedImage
+        self.shareImage.tintColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
+        
         // Initialization code
     }
 

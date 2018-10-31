@@ -50,7 +50,8 @@ class ProjectFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.tableView.contentInset = UIEdgeInsetsMake(0, 24, 0, 24)
+        
+//        self.tableView.separatorInset =  UIEdgeInsetsMake(0, 24, 0, 24)
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 44
         self.totalResultsLabel.font = UIFont.AktivGrotesk_Md(size: 14)
@@ -550,46 +551,46 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         if(temp.count > 0){
             var str = temp.componentsJoined(by: ", ")
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
-            cell.textLabel?.numberOfLines = 0
-            cell.detailTextLabel?.numberOfLines = 0
-            cell.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-            cell.textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
-            cell.detailTextLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-            cell.detailTextLabel?.font = UIFont.AktivGrotesk_Rg(size: 13)
+            cell.detaillbl.numberOfLines = 0
+            cell.lbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.lbl.font = UIFont.AktivGrotesk_Md(size: 16)
+            cell.detaillbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.detaillbl.font = UIFont.AktivGrotesk_Rg(size: 13)
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             cell.accessoryType = .disclosureIndicator
             if(indexPath.row == 0){
-                cell.textLabel?.text = "Certification Level"
+                cell.lbl.text = "Certification Level"
             }else if(indexPath.row == 3){
-                cell.textLabel?.text = "Rating system"
+                cell.lbl.text = "Rating system"
             }else if(indexPath.row == 4){
-                cell.textLabel?.text = "Version"
+                cell.lbl.text = "Version"
             }else if(indexPath.row == 2){
-                cell.textLabel?.text = "State"
+                cell.lbl.text = "State"
             }else if(indexPath.row == 1){
-                cell.textLabel?.text = "Country"
+                cell.lbl.text = "Country"
             }else if(indexPath.row == 5){
-                cell.textLabel?.text = "Tags"
+                cell.lbl.text = "Tags"
             }
-            cell.detailTextLabel?.text = str
+            cell.detaillbl.text = str
             return cell
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
-        cell.textLabel?.numberOfLines = 1
+        cell.lbl.numberOfLines = 1
+        cell.separatorInset =  UIEdgeInsetsMake(0, -5, 0, 15)
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         if(indexPath.row == 0){
-            cell.textLabel?.text = "Certification Level"
+            cell.lbl.text = "Certification Level"
         }else if(indexPath.row == 3){
-            cell.textLabel?.text = "Rating system"
+            cell.lbl.text = "Rating system"
         }else if(indexPath.row == 4){
-            cell.textLabel?.text = "Version"
+            cell.lbl.text = "Version"
         }else if(indexPath.row == 2){
-            cell.textLabel?.text = "State"
+            cell.lbl.text = "State"
         }else if(indexPath.row == 1){
-            cell.textLabel?.text = "Country"
+            cell.lbl.text = "Country"
         }else if(indexPath.row == 5){
-            cell.textLabel?.text = "Tags"
+            cell.lbl.text = "Tags"
         }
         return cell
         

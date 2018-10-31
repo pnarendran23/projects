@@ -94,7 +94,7 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
                 }
                 print(i.title)
             }
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
         }
         let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
@@ -412,8 +412,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 for i in self.scoreCard{
                     self.currentScore = self.currentScore + Int(i.awarded)!
                     self.maxScore = self.maxScore + Int(i.possible)!
-                }
-                self.tableView.reloadData()
+                }                
                 self.getNearbyProjects()
             }else{
                 var temp = [
@@ -651,7 +650,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     print(height!)
                     print(h)
                     self.heights[0] = h
-                    self.tableView.reloadData()
+                    let currentrow = self.titleArray.index(of: "details")
+                    self.tableView.reloadRows(at: [IndexPath(row: currentrow!, section: 0)], with: .automatic)
                 })
             }
             
@@ -749,9 +749,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             style.lineBreakMode = .byWordWrapping
             
             //projectInfoView.name.text = self.Details.title
-            self.Details.title.replacingOccurrences(of: "\n", with: ", ")
-            self.Details.title.replacingOccurrences(of: "\u{00A0}", with: "\u{0020}")
-            self.Details.address.replacingOccurrences(of: "\n", with: ", ")
+            self.Details.title = self.Details.title.replacingOccurrences(of: "\n", with: ", ")
+            self.Details.title = self.Details.title.replacingOccurrences(of: "\u{00A0}", with: "\u{0020}")
+            self.Details.address = self.Details.address.replacingOccurrences(of: "\n", with: ", ")
             
             
             var t = ""
@@ -764,7 +764,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             }
             
             if(self.Details.country.count > 0){
-                //t = t + self.Details.country
+                t = t + self.Details.country
             }
             
             if(t[t.index(before: t.endIndex)] != "\n"){
@@ -774,9 +774,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             }
             
             var attr = NSMutableAttributedString.init(string: "")
-            let attributed = NSMutableAttributedString.init(string: "\(nobr(Details.title))\n\(self.Details.address),\n\(t)")
+            let attributed = NSMutableAttributedString.init(string: "\(Details.title)\n\(self.Details.address),\n\(t)")
             
-            attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(nobr(Details.title))".count, "\n\(self.Details.address),\n\(t)".count ))
+            attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(self.Details.address),\n\(t)".count ))
             
             attr.append(attributed)
 //            projectInfoView.name.minimumScaleFactor = 0.9
@@ -827,7 +827,10 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             if(CertificationInfoView.certification_level.text?.replacingOccurrences(of: " ", with: "").count == 0){
                 CertificationInfoView.certification_level.text = "NONE"
             }
-            CertificationInfoView.rating_system.text = self.Details.project_rating_system == "" ? "NA" : self.Details.project_rating_system
+            CertificationInfoView.rating_system.text = self.Details.project_rating_system == "" ? "" : self.Details.project_rating_system
+            if(self.Details.project_rating_system != "" && self.Details.project_rating_system_version != ""){
+                CertificationInfoView.rating_system.text = "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
+            }
             CertificationInfoView.use.text = "\(self.Details.project_type)"
             CertificationInfoView.setting.text = "\(self.Details.project_setting)"
             CertificationInfoView.certification_score_max.text = "/\(self.maxScore)"
@@ -879,7 +882,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 CertificationInfoView.walkscoreLabel.text = ""
             }else{
                 i = i+1
-                CertificationInfoView.settingLabel.text = "Walk Score®"
+                CertificationInfoView.walkscoreLabel.text = "Walk Score®"
             }
             
             if(CertificationInfoView.certified.text == ""){
@@ -934,11 +937,11 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         if(titleArray[indexPath.row] == "details"){
             let AboutprojectView = tableView.dequeueReusableCell(withIdentifier: "Aboutproject", for: indexPath) as! Aboutproject
             
-                AboutprojectView.separatorInset = UIEdgeInsetsMake(0, 0, 0, UIScreen.main.bounds.width)
+                AboutprojectView.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
             
                                 AboutprojectView.selectionStyle = .none
                                 print(self.Details.description_full)
-            AboutprojectView.webview.loadHTMLString("<html><head><meta name='viewport' content='initial-scale=1.0, user-scalable=no, width=device-width, viewport-fit=cover'/><style> a {color : #1677BA;}</style></head><body style=\"font-family: 'HelveticaNeue';\">\(self.Details.description_full)</body></html>", baseURL: nil)
+            AboutprojectView.webview.loadHTMLString("<html><head><meta name='viewport' content='initial-scale=1.0, user-scalable=no, width=device-width, viewport-fit=cover'/><style> a {color : #1677BA;} p {line-height: 1.5;}</style></head><body style=\"font-family: 'HelveticaNeue'; color : #28323B\">\(self.Details.description_full)</body></html>", baseURL: nil)
                                 AboutprojectView.webview.tag = 70 + indexPath.section
                                 AboutprojectView.webview.scrollView.layer.masksToBounds = false
                                 AboutprojectView.webview.navigationDelegate = self
@@ -986,11 +989,11 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     j = j + 1
                 }
             }
-            scorecardcellView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+            scorecardcellView.separatorInset = UIEdgeInsetsMake(0, 6, 0, 6)
             if(j > 0){
                 print((titleArray.index(of: "scorecard heading")! + j ))
                 if(indexPath.row == (titleArray.index(of: "scorecard heading")! + j )){
-                    scorecardcellView.separatorInset = UIEdgeInsetsMake(0, 0, 0, UIScreen.main.bounds.width)
+                    scorecardcellView.separatorInset = UIEdgeInsetsMake(0, -48, 0, UIScreen.main.bounds.width)
                 }
             }
             
@@ -1059,6 +1062,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                     }else{
                                         cell.contentView.isHidden = true
                                     }
+                                    cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
                                     //cell.projectname.text = "\(project.title)"
                                     let normalText  = "\(project.title)"
                                     let attributedString = NSMutableAttributedString(string:normalText)
@@ -1167,7 +1171,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                     // *** set LineSpacing property in points ***
                                     mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
                                     //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-            
+                                    cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
             
                                     let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
                                     var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
@@ -1215,7 +1219,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             self.currentProject.node_id = node_id
             self.favourites.append(self.currentProject)
         }
-        self.tableView.reloadData()
+        let currentrow = self.titleArray.index(of: "operations")
+        self.tableView.reloadRows(at: [IndexPath(row: currentrow!, section: 0)], with: .automatic)
         UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: self.favourites), forKey: "favourites")        
     }
     
@@ -1269,6 +1274,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             //If you tap outside the UIAlertController action buttons area, then also this handler gets called.
         }))
         
+        if let presenter = actionSheet.popoverPresentationController {
+            let index = self.titleArray.index(of: "operations")
+            let cell = self.tableView.cellForRow(at: IndexPath.init(row: index!, section: 0)) as! OperationsCell
+            presenter.sourceView = cell.directionsLbl
+            presenter.sourceRect = cell.directionsLbl.bounds
+        }
+        
         
         //self.presentViewController(shareMenu, animated: true, completion: nil)
         self.present(actionSheet, animated: true, completion: nil)
@@ -1284,12 +1296,20 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         // set up activity view controller
         let textToShare = [ url! ]
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        //activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // exclude some activity types from the list (optional)
         activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
         
         // present the view controller
+        
+        if let presenter = activityViewController.popoverPresentationController {
+            let index = self.titleArray.index(of: "operations")
+            let cell = self.tableView.cellForRow(at: IndexPath.init(row: index!, section: 0)) as! OperationsCell
+            presenter.sourceView = cell.shareLbl
+            presenter.sourceRect = cell.shareLbl.bounds
+        }
+        
         self.present(activityViewController, animated: true, completion: nil)
     }
 }

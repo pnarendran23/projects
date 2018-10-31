@@ -109,7 +109,15 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         self.searchBar.resignFirstResponder()
         self.searchBar.showsCancelButton = false
         selected_searchbar = "searchcontroller"
-        
+        Apimanager.shared.stopAllSessions()
+        self.loading = true
+        self.allDownloaded = false
+        self.from = 0
+        self.filterProjects = [Project]()
+        self.searchedProjects = [Project]()
+        self.totalCount = 0
+        self.tableView.reloadData()
+        self.searchProjects()
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
@@ -125,7 +133,22 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         self.allDownloaded = false
         self.from = 0
         self.projects = [Project]()
+        
+        let tempcerts = self.certificationsarray.mutableCopy() as! NSMutableArray
+        let tempratings = self.ratingsarray.mutableCopy() as! NSMutableArray
+        let tempversions = self.versionsarray.mutableCopy() as! NSMutableArray
+        let tempstate = self.statesarray.mutableCopy() as! NSMutableArray
+        let tempcountry = self.countriesarray.mutableCopy() as! NSMutableArray
+        tempcerts.remove("")
+        tempratings.remove("")
+        tempversions.remove("")
+        tempstate.remove("")
+        tempcountry.remove("")
+        if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.searchController.searchBar.text?.count)! > 0){
+            self.searchProjects()
+        }else{
         self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -872,6 +895,7 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
         let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImage", for: indexPath) as! ProjectCellwithImage
             cell.accessoryType = .disclosureIndicator
             //cell.projectname.text = "\(project.title)"
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
             project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
             let normalText  = "\(project.title)"
             let attributedString = NSMutableAttributedString(string:normalText)
@@ -978,7 +1002,7 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
             if(t[t.index(before: t.endIndex)] == ","){
                 t = String(t.prefix(t.count - 1))
             }
-            
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
             var boldText = "\n\(t)\n\(distance)"
             //var boldText = "\n\(project.city), \(project.country)\n\(distance)"
             var mutableParagraphStyle = NSMutableParagraphStyle()
@@ -1035,11 +1059,11 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                     //Utility.showLoading()
                 //self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude , distance: self.queryingDistance)
                     
-                    let tempcerts = self.certificationsarray
-                    let tempratings = self.ratingsarray
-                    let tempversions = self.versionsarray
-                    let tempstate = self.statesarray
-                    let tempcountry = self.countriesarray
+                    let tempcerts = self.certificationsarray.mutableCopy() as! NSMutableArray
+                    let tempratings = self.ratingsarray.mutableCopy() as! NSMutableArray
+                    let tempversions = self.versionsarray.mutableCopy() as! NSMutableArray
+                    let tempstate = self.statesarray.mutableCopy() as! NSMutableArray
+                    let tempcountry = self.countriesarray.mutableCopy() as! NSMutableArray
                     tempcerts.remove("")
                     tempratings.remove("")
                     tempversions.remove("")
@@ -1308,11 +1332,11 @@ extension ProjectListViewController: ProjectFilterDelegate {
                     self.filterProjects = [Project]()
                     self.searchedProjects = [Project]()
                 
-                let tempcerts = certificationsarray
-                let tempratings = ratingsarray
-                let tempversions = versionsarray
-                let tempstate = statesarray
-                let tempcountry = tempcountries
+                let tempcerts = certificationsarray.mutableCopy() as! NSMutableArray
+                let tempratings = ratingsarray.mutableCopy() as! NSMutableArray
+                let tempversions = versionsarray.mutableCopy() as! NSMutableArray
+                let tempstate = statesarray.mutableCopy() as! NSMutableArray
+                let tempcountry = tempcountries.mutableCopy() as! NSMutableArray
                 tempcerts.remove("")
                 tempratings.remove("")
                 tempversions.remove("")

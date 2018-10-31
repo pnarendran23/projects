@@ -9,7 +9,9 @@
 import UIKit
 
 class filterselected: UITableViewCell {
-
+    @IBOutlet weak var lbl: UILabel!
+    @IBOutlet weak var detaillbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -22,16 +24,16 @@ class filterselected: UITableViewCell {
     }
     
     override var frame: CGRect {
-    get {
-    return super.frame
+        get {
+            return super.frame
+        }
+        set {
+            var frame = newValue
+            frame.origin.x += 24
+            frame.size.width -= 2 * 19
+            
+            super.frame = frame
+        }
     }
-    set {
-    var frame = newValue
-    frame.origin.x += 24
-    frame.size.width -= 2 * 24
-    
-    super.frame = frame
-    }
-}
     
 }
