@@ -1364,4 +1364,36 @@ extension ProjectListViewController: ProjectFilterDelegate {
     }
 }
 
+extension ProjectListViewController{
+    
+    func getDistanceinMiles(location : CLLocation) -> Double{
+        
+        let distance = location.distance(from: currentLocation)/1609.34
+        return distance
+    }
+    
+    func sortData(data : [Project]) -> [Project]{
+        var temparray = [Project]()
+        var distanceDictionary = NSMutableDictionary()
+        var sortedKeys = [String]()
+        if(data.count == 0){
+            return data
+        }else{
+            for i in 1 ..< data.count{
+                let currentData = data[i]
+                let tempLocation = CLLocation.init(latitude: Double(currentData.lat)!, longitude: Double(currentData.long)!)
+                let thisDistance = self.getDistanceinMiles(location: tempLocation)
+                distanceDictionary["\(thisDistance)"] = currentData
+            }
+            sortedKeys = (distanceDictionary.allKeys as! [String]).sorted()
+            for i in sortedKeys{
+                temparray.append(distanceDictionary[i] as! Project)
+            }
+        }
+        
+        return temparray
+    }
+}
+
+
 

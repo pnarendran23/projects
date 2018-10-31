@@ -1062,6 +1062,8 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         navigationController?.viewControllers[0] = projectsListTab
     }
     
+    
+    
     @objc func handleFilter(_ sender: Any){
         let viewController = ProjectFilterViewController()
 //        viewController.delegate = self
@@ -1101,9 +1103,9 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
             if let vc = segue.destination as? ProjectDetailsViewController {
                 if(frominfoView == true){
                     //Crash
-                    vc.node_id = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
-                    vc.projectID = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!].ID
-                    vc.currentProject = self.searchedProjects[self.markerArray.index(of: sender as! GMSMarker)!]
+                    vc.node_id = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
+                    vc.projectID = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].ID
+                    vc.currentProject = self.projects[self.markerArray.index(of: sender as! GMSMarker)!]
                     vc.navigationItem.title = vc.currentProject.title
                 }else{
                     
