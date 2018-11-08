@@ -9,8 +9,8 @@
 import UIKit
 
 class filterselected: UITableViewCell {
-    @IBOutlet weak var lbl: UILabel!
-    @IBOutlet weak var detaillbl: UILabel!
+    //@IBOutlet weak var lbl: UILabel!
+    //@IBOutlet weak var detaillbl: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,7 +29,7 @@ class filterselected: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 24
+            frame.origin.x += 13
             frame.size.width -= 2 * 19
             
             super.frame = frame

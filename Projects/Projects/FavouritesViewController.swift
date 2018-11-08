@@ -91,51 +91,72 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         
         
         if(project.image.count > 0 && !project.image.contains("project_placeholder")){
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImagemore", for: indexPath) as! ProjectCellwithImagemore
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImagemore") as! ProjectCellwithImagemore
             //cell.projectname.text = "\(project.title)"
-            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
             let normalText  = "\(project.title)"
             let attributedString = NSMutableAttributedString(string:normalText)
             var distance = ""
-            var location = CLLocation()
-            var t = ""
-            if(project.city.count > 0){
-                t = t + project.city + ", "
-            }
-            
-            if(project.state.count > 0){
-                t = t + project.state + ", "
-            }
-            
-            if(project.country.count > 0){
-                t = t + project.country
-            }
-            
-            if(t[t.index(before: t.endIndex)] != ","){
-                t = String(t.prefix(t.count ))
-            }
-            
-            var boldText = "\n\(t)"
+            var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
             var mutableParagraphStyle = NSMutableParagraphStyle()
             
             // *** set LineSpacing property in points ***
             mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
             //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
             
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
             
+            var cert_color = UIColor()
+            if(project.certification_level.lowercased() == "certified" && distance.count > 0){
+                cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
+                cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
+                cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
+                cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "" && distance.count > 0){
+                cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(distance)"
+            }else if(project.certification_level.lowercased() == "" && distance.count == 0){
+                cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)"
+            }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
+                cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
+                cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
+                cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
+                cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }
             let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
             var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
             boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
             
-            
-            //boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1 ))
-            
+            if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                
+                boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+            }else{
+                if(distance.count > 0){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                }
+            }
             attributedString.append(boldString)
             cell.projectname.attributedText = attributedString
             //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
             cell.project_image.center.y = cell.contentView.frame.size.height/2
-            cell.project_image.image = nil
+            
             var url = URL.init(string: project.image)
             let remoteImageURL = url
             if(url != nil){
@@ -149,6 +170,9 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                     }
                 }
             }
+            cell.projectname.preferredMaxLayoutWidth = 200
+            
+            //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
             if(isEdited == true){
                 cell.delbutton.isHidden = false
                 cell.delbutton.tag = indexPath.row
@@ -174,32 +198,13 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImagemore", for: indexPath) as! ProjectCellwithoutImagemore
             //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
-            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+      
             let normalText  = "\(project.title)"
             
             let attributedString = NSMutableAttributedString(string:normalText)
-            
             var distance = ""
-
-            var t = ""
-            if(project.city.count > 0){
-                t = t + project.city + ", "
-            }
-            
-            if(project.state.count > 0){
-                t = t + project.state + ", "
-            }
-            
-            if(project.country.count > 0){
-                t = t + project.country
-            }
-            
-            if(t[t.index(before: t.endIndex)] == ","){
-                t = String(t.prefix(t.count - 1))
-            }
             cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-            var boldText = "\n\(t)"
-            //var boldText = "\n\(project.city), \(project.country)\n\(distance)"
+            var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
             var mutableParagraphStyle = NSMutableParagraphStyle()
             
             // *** set LineSpacing property in points ***
@@ -207,16 +212,58 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
             //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
             
             
-            let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
+            var cert_color = UIColor()
+            if(project.certification_level.lowercased() == "certified" && distance.count > 0){
+                cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
+                cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
+                cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
+                cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+            }else if(project.certification_level.lowercased() == "" && distance.count > 0){
+                cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(distance)"
+            }else if(project.certification_level.lowercased() == "" && distance.count == 0){
+                cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)"
+            }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
+                cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
+                cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
+                cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
+                cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+            }
+            let attrs = [NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 12)] as [NSAttributedStringKey : Any]
             var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
             boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
             
-            
-            //boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1))
+            if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                
+                boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                
+                boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+            }else{
+                if(distance.count > 0){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                }
+            }
             
             attributedString.append(boldString)
-            cell.projectname.numberOfLines = 0
             cell.projectname.attributedText = attributedString
+            //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
+            
             if(isEdited == true){
                 //tableView.isEditing = true
                 cell.delbutton.isHidden = false

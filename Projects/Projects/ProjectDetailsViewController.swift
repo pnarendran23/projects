@@ -548,7 +548,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -609,7 +609,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                         Utility.hideLoading()
                     }
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
                 
@@ -649,6 +649,18 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 self.tableView.isUserInteractionEnabled = false
                 self.titleArray.removeAll()
                 self.tableView.reloadData()
+                if(UserDefaults.standard.object(forKey: "favourites") != nil){
+                    self.favourites = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "favourites") as! Data) as! [Project]
+                    self.isFavourite = false
+                    for i in self.favourites{
+                        if(i.ID == self.currentProject.ID){
+                            self.isFavourite = true
+                            break
+                        }
+                        print(i.title)
+                    }
+                    //self.tableView.reloadData()
+                }
                 self.getDetails(nodeid: self.node_id)
             }
         }
@@ -921,6 +933,19 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             }else{
                 s = "CERTIFICATION \(tempLevel)\(temprating)"
             }
+            var cert_color = UIColor()
+            if(self.Details.project_certification_level.lowercased() == "certified"){
+                cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+            }else if(self.Details.project_certification_level.lowercased() == "gold"){
+                cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+            }else if(self.Details.project_certification_level.lowercased() == "platinum"){
+                cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+            }else if(self.Details.project_certification_level.lowercased() == "silver"){
+                cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+            }else if(self.Details.project_certification_level.lowercased() == ""){
+                cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+            }
+            
             var string = NSMutableAttributedString(string: s)
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineSpacing = 3
@@ -928,10 +953,10 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 12), range: NSMakeRange(0, "CERTIFICATION".count))
             
-            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.35, green:0.41, blue:0.45, alpha:1), range: NSMakeRange(0, "CERTIFICATION".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.35, green:0.41, blue:0.45, alpha:1), range: NSMakeRange(0, "CERTIFICATION ".count))
             
             string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION ".count, "\(tempLevel)".count))
-            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black, range: NSMakeRange("CERTIFICATION ".count, "\(tempLevel)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: cert_color, range: NSMakeRange("CERTIFICATION ".count, "\(tempLevel)".count))
             
             string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION \(tempLevel)".count, "\(tempscore)".count))
             string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black, range: NSMakeRange("CERTIFICATION \(tempLevel)".count, "\(tempscore)".count))

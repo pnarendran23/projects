@@ -127,6 +127,8 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nodata.text = "No results found"
+        self.searchBar.isHidden = true
         self.tableView.keyboardDismissMode = .onDrag
         self.tableView.tableFooterView = UIView.init(frame: .zero)
         self.locationManager.requestAlwaysAuthorization()
@@ -172,7 +174,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             }
             //self.tableView.keyboardDismissMode = .onDrag
             self.initViews()
-            self.nodata.isHidden = true
+            //self.nodata.isHidden = true
             self.loading = true
            if(self.filterProjects.count == 0){
             }
@@ -211,7 +213,6 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                 if(code == -1 && projects != nil){
                     self.totalRecords = totalRecords!
                     self.totalCount = totalRecords!
-                    self.from = self.from + self.size
                     for i in projects!{
                         self.projects.append(i)
                     }
@@ -224,8 +225,13 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                         self.arrProjects = [String]()
                         self.arrFilter = [String]()
                         self.arrCountry = [String]()
+                        if(projects!.count == 0 && self.from == 0 && self.filterProjects.count == 0){
+                            self.tableView.isHidden = true
+                        }
+                        self.from = self.from + self.size
                         if(CLLocationManager.locationServicesEnabled()){
                             if(projects!.count > 0  && self.filterProjects.count < 5001){
+                                self.tableView.isHidden = false
                                 self.loading = false
                                 self.tableView.reloadData()
                             }else{
@@ -245,7 +251,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                             Utility.hideLoading()
                         }
                         if(self.navigationController != nil){
-                            Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                            //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                         }
                     }
                     
@@ -329,6 +335,11 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     self.filterProjects = self.searchedProjects
                     self.loading = false
                     self.totalCount = totalRecords!
+                    if(projects!.count == 0 && self.from == 0 && self.filterProjects.count == 0){
+                        self.tableView.isHidden = true
+                    }else{
+                        self.tableView.isHidden = false
+                    }
                     self.from = self.from + projects!.count
                     self.tableView.reloadData()
                     if(projects!.count == 0){
@@ -344,7 +355,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                         Utility.hideLoading()
                     }
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
                 
@@ -669,9 +680,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     self.tableView.reloadData()
                     print("init")
                     if(self.filterProjects.count == 0){
-                        self.nodata.isHidden = false
+                        //self.nodata.isHidden = false
                     }else{
-                        self.nodata.isHidden = true
+                        //self.nodata.isHidden = true
                     }
                     DispatchQueue.main.async {
                         if(tempp.count < 15 /* New count */){
@@ -697,9 +708,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     self.loading = false
                     print("more")
                     if(self.filterProjects.count == 0){
-                        self.nodata.isHidden = false
+                        //self.nodata.isHidden = false
                     }else{
-                        self.nodata.isHidden = true
+                        //self.nodata.isHidden = true
                     }
                     print(self.filterProjects.count)
                 }
@@ -713,7 +724,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -754,9 +765,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     self.pageNumber += projects!.count
                     DispatchQueue.main.async {
                         if(self.filterProjects.count > 0){
-                            self.nodata.isHidden = true
+                            //self.nodata.isHidden = true
                         }else{
-                            self.nodata.isHidden = false
+                            //self.nodata.isHidden = false
                         }
                         Utility.hideLoading()
                     }
@@ -774,9 +785,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                         self.from += projects!.count
                         DispatchQueue.main.async {
                             if(self.filterProjects.count > 0){
-                                self.nodata.isHidden = true
+                                //self.nodata.isHidden = true
                             }else{
-                                self.nodata.isHidden = false
+                                //self.nodata.isHidden = false
                             }
                             Utility.hideLoading()
                         }
@@ -785,9 +796,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                         DispatchQueue.main.async {
                             Utility.hideLoading()
                             if(self.filterProjects.count > 0){
-                                self.nodata.isHidden = true
+                                //self.nodata.isHidden = true
                             }else{
-                                self.nodata.isHidden = false
+                                //self.nodata.isHidden = false
                             }
                             if(self.navigationController != nil){
                                 print("vcx ", self.from,self.pageNumber,self.projects.count)
@@ -806,7 +817,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -1216,19 +1227,20 @@ extension ProjectListViewController: UISearchBarDelegate {
 //            self.search.becomeFirstResponder()
 //        }
         
-        
+        DispatchQueue.main.async {
                 if((searchBar.text?.count)! == 0){
                     self.arrFilter = [String]()
                     self.arrCountry = [String]()
                     self.tableView.reloadData()
                 }
-        
-                selected_searchbar = "searchcontroller"
+                self.tableView.isHidden = false
+                self.selected_searchbar = "searchcontroller"
                 Apimanager.shared.stopAllSessions()
                 self.loading = true
                 self.allDownloaded = false
                 self.from = 0
                 self.searchProjects()
+        }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -1261,6 +1273,7 @@ extension ProjectListViewController: UISearchBarDelegate {
         }
         searchBar.resignFirstResponder()
         searchBar.showsCancelButton = false
+        self.tableView.isHidden = false
         DispatchQueue.main.async {
         self.makeNavigationBarButtons()
         //slideUpView.isHidden = false

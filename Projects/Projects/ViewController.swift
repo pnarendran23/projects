@@ -288,7 +288,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
                 
@@ -383,8 +383,10 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
 //                    }
                         if(self.from == 0 && totalRecords! == 0 && self.markerArray.count == 0){
                             self.progressView.isHidden = true
+                            self.tableView.isHidden = true
                             self.loadMapView(temp: projects!)
                         }else{
+                            self.tableView.isHidden = false
                             print("Progress",Float(self.projects.count/self.totalRecords))
                                 if(projects!.count > 0 && self.totalRecords <= self.limit){
                                 self.from = self.from + self.size
@@ -437,7 +439,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     if(self.navigationController != nil){
                         self.allDownloaded = false
                         self.isLarger = false
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
                 
@@ -474,6 +476,11 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                         self.arrFilter = [String]()
                         self.isLarger = false
                         print(self.progressView.progress)
+                        if(self.from == 0 && totalRecords! == 0 && self.searchedProjects.count == 0){
+                            self.tableView.isHidden = true
+                        }else{
+                            self.tableView.isHidden = false
+                        }
                         self.tableView.reloadData()
                     }
                 }else{
@@ -484,7 +491,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                             Utility.hideLoading()
                         }
                         if(self.navigationController != nil){
-                            Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                            //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                         }
                     }
                     
@@ -2082,6 +2089,7 @@ extension ViewController: UISearchBarDelegate {
                 //self.searchBar.resignFirstResponder()
                 self.selected_searchbar = "searchcontroller"
                 searchBar.becomeFirstResponder()
+                self.tableView.isHidden = false
                 self.slideUpView.isHidden = true
                 self.from = 0
                 self.searchProjects()

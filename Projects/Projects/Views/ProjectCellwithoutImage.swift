@@ -32,8 +32,8 @@ class ProjectCellwithoutImage: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 7
-            frame.size.width -= 2 * 7
+            frame.origin.x += 10
+            frame.size.width -= 2 * 10
             
             super.frame = frame
         }

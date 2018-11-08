@@ -310,7 +310,7 @@ class ProjectFilterViewController: UIViewController {
                         }else if(code != -999 && code != nil && code != 0){
                             Utility.hideLoading()
                             if(self.navigationController != nil){
-                            Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                            //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                             }
                         }
                         group.leave()
@@ -423,7 +423,7 @@ class ProjectFilterViewController: UIViewController {
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                    Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                    //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -508,7 +508,7 @@ class ProjectFilterViewController: UIViewController {
                 }else if(code != -999 && code != nil && code != 0){
                     Utility.hideLoading()
                     if(self.navigationController != nil){
-                        Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
+                        //Utility.showToast(y: self.navigationController!.navigationBar.frame.size.height, message: "Something went wrong")
                     }
                 }
             }
@@ -557,28 +557,28 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         if(temp.count > 0){
             var str = temp.componentsJoined(by: ", ")
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
-            cell.detaillbl.numberOfLines = 0
+            cell.detailTextLabel?.numberOfLines = 0
             cell.separatorInset =  UIEdgeInsetsMake(0, 6, 0, 15)
-            cell.lbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-            cell.lbl.font = UIFont.AktivGrotesk_Md(size: 16)
-            cell.detaillbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-            cell.detaillbl.font = UIFont.AktivGrotesk_Rg(size: 13)
+            cell.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
+            cell.detailTextLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+            cell.detailTextLabel?.font = UIFont.AktivGrotesk_Rg(size: 13)
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             cell.accessoryType = .disclosureIndicator
             if(indexPath.row == 0){
-                cell.lbl.text = "Certification Level"
+                cell.textLabel?.text = "Certification Level"
             }else if(indexPath.row == 3){
-                cell.lbl.text = "Rating system"
+                cell.textLabel?.text = "Rating system"
             }else if(indexPath.row == 4){
-                cell.lbl.text = "Version"
+                cell.textLabel?.text = "Version"
             }else if(indexPath.row == 2){
-                cell.lbl.text = "State"
+                cell.textLabel?.text = "State"
             }else if(indexPath.row == 1){
-                cell.lbl.text = "Country"
+                cell.textLabel?.text = "Country"
             }else if(indexPath.row == 5){
-                cell.lbl.text = "Tags"
+                cell.textLabel?.text = "Tags"
             }
-            cell.detaillbl.text = str
+            cell.detailTextLabel?.text = str
             return cell
         }
         

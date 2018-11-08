@@ -36,8 +36,8 @@ class ProjectCellwithImage: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 24
-            frame.size.width -= 2 * 18
+            frame.origin.x += 27
+            frame.size.width -= 2 * 21
             
             super.frame = frame
         }
