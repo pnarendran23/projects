@@ -326,6 +326,12 @@ class ProjectFilterViewController: UIViewController {
             swiftArray = self.countries as AnyObject as! [String]
             sortedArray = swiftArray.sorted { $0.localizedCaseInsensitiveCompare($1) == ComparisonResult.orderedAscending }
             self.countries =  NSMutableArray.init(array: sortedArray)
+            if(sortedArray.index(of: "United States")! > -1){
+                print(sortedArray.index(of: "United States")!)
+                sortedArray.remove(at: sortedArray.index(of: "United States")!)
+                sortedArray.insert("United States", at: 0)
+                self.countries =  NSMutableArray.init(array: sortedArray)
+            }
             self.loadProjectsMaxCount()
         }
         
@@ -552,6 +558,7 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
             var str = temp.componentsJoined(by: ", ")
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
             cell.detaillbl.numberOfLines = 0
+            cell.separatorInset =  UIEdgeInsetsMake(0, 6, 0, 15)
             cell.lbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
             cell.lbl.font = UIFont.AktivGrotesk_Md(size: 16)
             cell.detaillbl.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
@@ -577,7 +584,7 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FilterCell", for: indexPath) as! FilterCell
         cell.lbl.numberOfLines = 1
-        cell.separatorInset =  UIEdgeInsetsMake(0, -5, 0, 15)
+        cell.separatorInset =  UIEdgeInsetsMake(0, 6, 0, 15)
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         if(indexPath.row == 0){
             cell.lbl.text = "Certification Level"

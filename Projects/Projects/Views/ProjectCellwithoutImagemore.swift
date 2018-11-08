@@ -21,6 +21,8 @@ class ProjectCellwithoutImagemore: UITableViewCell {
         projectname.font = UIFont.AktivGrotesk_Md(size: 16)
         address.font = UIFont.AktivGrotesk_Rg(size: 12)
         address.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        sizeToFit()
+        layoutIfNeeded()
         // Initialization code
     }
 

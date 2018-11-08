@@ -12,15 +12,15 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProjectCellwithImage" rowHeight="77" id="clj-te-17c" customClass="ProjectCellwithImage" customModule="Explore" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProjectCellwithImage" id="clj-te-17c" customClass="ProjectCellwithImage" customModule="Explore" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="77"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="clj-te-17c" id="Iqe-Xv-vaD">
                 <rect key="frame" x="0.0" y="0.0" width="375" height="76.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gUr-5N-DS8">
-                        <rect key="frame" x="61" y="7" width="309" height="62"/>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="gUr-5N-DS8">
+                        <rect key="frame" x="62" y="7" width="308" height="62"/>
                         <attributedString key="attributedText">
                             <fragment content="Label">
                                 <attributes>
@@ -37,16 +37,21 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wCa-gd-xvV">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wCa-gd-xvV">
                         <rect key="frame" x="1" y="10" width="57" height="57"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="57" id="OJw-ns-V77"/>
+                            <constraint firstAttribute="height" constant="57" id="jgI-2I-VRv"/>
+                        </constraints>
                     </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="gUr-5N-DS8" secondAttribute="bottom" constant="7.5" id="0s8-of-OmT"/>
+                    <constraint firstAttribute="bottom" secondItem="gUr-5N-DS8" secondAttribute="bottom" constant="7" id="0s8-of-OmT"/>
                     <constraint firstAttribute="trailing" secondItem="gUr-5N-DS8" secondAttribute="trailing" constant="5" id="Gy9-U7-qBg"/>
-                    <constraint firstItem="gUr-5N-DS8" firstAttribute="leading" secondItem="Iqe-Xv-vaD" secondAttribute="leading" constant="61" id="Ld9-Fa-wtS"/>
+                    <constraint firstItem="wCa-gd-xvV" firstAttribute="centerY" secondItem="Iqe-Xv-vaD" secondAttribute="centerY" id="LkP-sz-Gcm"/>
+                    <constraint firstItem="wCa-gd-xvV" firstAttribute="leading" secondItem="Iqe-Xv-vaD" secondAttribute="leading" constant="1" id="ZtO-5g-8hW"/>
                     <constraint firstItem="gUr-5N-DS8" firstAttribute="top" secondItem="Iqe-Xv-vaD" secondAttribute="top" constant="7" id="oWp-rv-hPF"/>
+                    <constraint firstItem="gUr-5N-DS8" firstAttribute="leading" secondItem="wCa-gd-xvV" secondAttribute="trailing" constant="4" id="unb-Cl-Daq"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="Prs-N7-ZYx"/>

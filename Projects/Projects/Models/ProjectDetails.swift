@@ -11,8 +11,10 @@ import SwiftyJSON
 
 class ProjectDetails {
     var title = ""
+    var zip_code = ""
     var post_date = ""
     var certification_date = ""
+    var registration_date = ""
     var certificate_date_medium = ""
     var project_id = ""
     var project_setting = ""
@@ -48,6 +50,8 @@ class ProjectDetails {
     init(json: JSON) {
         print(json)
         title = json["Title"].stringValue
+        zip_code = json["zip_code"].stringValue
+        registration_date = json["registration_date"].stringValue
         post_date = json["post_date"].stringValue
         certification_date = json["certification_date"].stringValue
         certificate_date_medium = json["certificate_date_medium"].stringValue

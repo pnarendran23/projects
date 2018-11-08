@@ -113,6 +113,7 @@
 		566C7117217A1B300032EEF1 /* AktivGrotesk-Bd.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */; };
 		5674088721706F7400FF55D5 /* locationcell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5674088521706F7400FF55D5 /* locationcell.swift */; };
 		5674088821706F7400FF55D5 /* locationcell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5674088621706F7400FF55D5 /* locationcell.xib */; };
+		56766F7F2194464000F9EDA9 /* customCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56766F7E2194464000F9EDA9 /* customCluster.swift */; };
 		567D3F8921830BBB0029ACB2 /* filterselected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 567D3F8721830BBB0029ACB2 /* filterselected.swift */; };
 		567D3F8A21830BBB0029ACB2 /* filterselected.xib in Resources */ = {isa = PBXBuildFile; fileRef = 567D3F8821830BBB0029ACB2 /* filterselected.xib */; };
 		568AB12E218839C7007CE4E5 /* stackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568AB12C218839C7007CE4E5 /* stackCell.swift */; };
@@ -308,6 +309,7 @@
 		566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AktivGrotesk-Bd.ttf"; sourceTree = "<group>"; };
 		5674088521706F7400FF55D5 /* locationcell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = locationcell.swift; sourceTree = "<group>"; };
 		5674088621706F7400FF55D5 /* locationcell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = locationcell.xib; sourceTree = "<group>"; };
+		56766F7E2194464000F9EDA9 /* customCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = customCluster.swift; sourceTree = "<group>"; };
 		567D3F8721830BBB0029ACB2 /* filterselected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = filterselected.swift; sourceTree = "<group>"; };
 		567D3F8821830BBB0029ACB2 /* filterselected.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = filterselected.xib; sourceTree = "<group>"; };
 		568AB12C218839C7007CE4E5 /* stackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = stackCell.swift; sourceTree = "<group>"; };
@@ -320,7 +322,7 @@
 		56A5FBDE217AE3A800242EF5 /* FavouritesHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FavouritesHeader.xib; sourceTree = "<group>"; };
 		56A5FBE1217AF25400242EF5 /* morepopoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = morepopoverViewController.swift; sourceTree = "<group>"; };
 		56C39F9E216CA0A8008357EF /* AppUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
-		56CA1BE02169DF2000D94909 /* Explore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Explore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56CA1BE02169DF2000D94909 /* USGBC Explore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "USGBC Explore.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56CA1BE32169DF2000D94909 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56CA1BE52169DF2000D94909 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		56CA1BE82169DF2000D94909 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -627,7 +629,7 @@
 		56CA1BE12169DF2000D94909 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56CA1BE02169DF2000D94909 /* Explore.app */,
+				56CA1BE02169DF2000D94909 /* USGBC Explore.app */,
 				56CA1BF42169DF2200D94909 /* ProjectsTests.xctest */,
 				56CA1BFF2169DF2200D94909 /* ProjectsUITests.xctest */,
 			);
@@ -643,6 +645,7 @@
 				566C71142179A7B50032EEF1 /* AktivGrotesk-Rg.ttf */,
 				566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */,
 				56A5FBE1217AF25400242EF5 /* morepopoverViewController.swift */,
+				56766F7E2194464000F9EDA9 /* customCluster.swift */,
 				565DDB4A216B7F4300404B65 /* ProjectListViewController.swift */,
 				566C711021799AAE0032EEF1 /* FavouritesViewController.swift */,
 				5622989D216E006700C2D07B /* ProjectDetailsViewController.swift */,
@@ -728,7 +731,7 @@
 			);
 			name = Projects;
 			productName = Projects;
-			productReference = 56CA1BE02169DF2000D94909 /* Explore.app */;
+			productReference = 56CA1BE02169DF2000D94909 /* USGBC Explore.app */;
 			productType = "com.apple.product-type.application";
 		};
 		56CA1BF32169DF2200D94909 /* ProjectsTests */ = {
@@ -1055,6 +1058,7 @@
 				568AB12E218839C7007CE4E5 /* stackCell.swift in Sources */,
 				562298AD216E2EC400C2D07B /* Aboutproject.swift in Sources */,
 				565DDB7C216B80BA00404B65 /* CustomInfoWindow.swift in Sources */,
+				56766F7F2194464000F9EDA9 /* customCluster.swift in Sources */,
 				562720C1216CE024004B3538 /* exploreGridCell.swift in Sources */,
 				56C39F9F216CA0A8008357EF /* AppUtility.swift in Sources */,
 				565DDD40216B894E00404B65 /* GQTPointQuadTree.m in Sources */,
@@ -1275,7 +1279,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
-				PRODUCT_NAME = Explore;
+				PRODUCT_NAME = "USGBC Explore";
 				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
 				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
@@ -1305,7 +1309,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
-				PRODUCT_NAME = Explore;
+				PRODUCT_NAME = "USGBC Explore";
 				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
 				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";

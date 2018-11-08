@@ -19,8 +19,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="76.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRE-uX-Md7">
-                        <rect key="frame" x="24" y="7" width="231" height="62"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jRE-uX-Md7">
+                        <rect key="frame" x="24" y="7" width="275" height="62.5"/>
                         <attributedString key="attributedText">
                             <fragment content="Label akjHDASK DAHSDK AHSDK AHSDK JAHSKDJA KSJDHA KSJDHA S">
                                 <attributes>
@@ -38,7 +38,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2bg-4x-hEf">
-                        <rect key="frame" x="286" y="21" width="34" height="32"/>
+                        <rect key="frame" x="298" y="27" width="21" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <state key="normal" image="more"/>
                     </button>
@@ -49,8 +49,8 @@
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="jRE-uX-Md7" secondAttribute="bottom" constant="7.5" id="12b-Kg-dla"/>
-                    <constraint firstAttribute="trailing" secondItem="jRE-uX-Md7" secondAttribute="trailing" constant="65" id="Nyf-NJ-zqO"/>
+                    <constraint firstAttribute="bottom" secondItem="jRE-uX-Md7" secondAttribute="bottom" constant="7" id="12b-Kg-dla"/>
+                    <constraint firstAttribute="trailing" secondItem="jRE-uX-Md7" secondAttribute="trailing" constant="21" id="Nyf-NJ-zqO"/>
                     <constraint firstItem="jRE-uX-Md7" firstAttribute="top" secondItem="zMh-DM-Jml" secondAttribute="top" constant="7" id="bOX-5r-9In"/>
                     <constraint firstItem="jRE-uX-Md7" firstAttribute="leading" secondItem="zMh-DM-Jml" secondAttribute="leading" constant="24" id="p5C-Hr-kuC"/>
                 </constraints>

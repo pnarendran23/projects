@@ -36,6 +36,8 @@ class Scorecard {
                 image = "mr"
             case "Indoor environmental quality":
                 image = "iq"
+            case "Location & transportation":
+                image = "lt-border"
             case "Innovation":
                 image = "id"
             case "Regional priority credits":

@@ -167,10 +167,14 @@ class Apimanager{
                             project.rating_system_version = subJson["_source"]["rating_system"].stringValue
 //                            printsubJson["_source"]["node_id"].string
                             project.address = subJson["_source"]["address"].stringValue
+                            project.address = project.address.replacingOccurrences(of: "amp;", with: "&")
+                            project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                             project.node_id = subJson["_source"]["node_id"].stringValue
                             project.state = subJson["_source"]["add_state"].stringValue
                             project.country = subJson["_source"]["add_country"].stringValue
                             project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+                            project.country = project.country.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                            project.state = project.state.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                             projects.append(project)
                         }
                         print("Project count: \(projects.count)")
@@ -252,6 +256,7 @@ class Apimanager{
                                 print(subJson)
                                 projectDetails = ProjectDetails()
                                 projectDetails.title = subJson["title"].stringValue
+                                projectDetails.zip_code = subJson["add_postal_code"].stringValue
                                 projectDetails.project_id = subJson["prjt_id"].stringValue
                                 projectDetails.project_certification_level = subJson["certification_level"].stringValue
                                 
@@ -267,6 +272,7 @@ class Apimanager{
                                 projectDetails.project_size = subJson["site_size"].stringValue
                                 projectDetails.project_setting = subJson["setting"].stringValue
                                 projectDetails.certification_date = subJson["certification_date"].stringValue
+                                projectDetails.registration_date = subJson["registration_date"].stringValue
                                 projectDetails.project_walkscore = subJson["walkscore"].stringValue
                                 projectDetails.energy_star_score = subJson["energy_star_score"].stringValue
                                 projectDetails.site_context = subJson["foundation_statement"].stringValue
@@ -290,7 +296,17 @@ class Apimanager{
                                     projectDetails.address = subJson["geo_street_name"].stringValue
                                 }else{
                                     projectDetails.address = subJson["add_street"].stringValue
-                                }                                
+                                }
+                                projectDetails.address = projectDetails.address.replacingOccurrences(of: "amp;", with: "&")
+                                let a = projectDetails.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                
+                                projectDetails.title = projectDetails.title.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                
+                                projectDetails.title = projectDetails.title.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                
+                                
+                                projectDetails.address = a
+                                
                                 if(subJson["geo_state_name"].stringValue != ""){
                                     projectDetails.state = subJson["geo_state_name"].stringValue
                                 }else{
@@ -301,13 +317,9 @@ class Apimanager{
                                 }else{
                                     projectDetails.country = subJson["add_country"].stringValue
                                 }
-                                print(projectDetails.address)
-                                print(projectDetails.state)
-                                print(projectDetails.country)
-                                for (key,value) in subJson{
-                                    print(key)
-                                    print(value)
-                                }
+                                projectDetails.country = projectDetails.country.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                projectDetails.state = projectDetails.state.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                
                                 projectDetails.title = projectDetails.title.replacingOccurrences(of: "&amp;", with: "")
 //                                projectDetails.address = projectDetails.address.components(separatedBy: "[").first!
 //                                projectDetails.country = projectDetails.country.components(separatedBy: "[").first!
@@ -541,6 +553,10 @@ class Apimanager{
                                 project.rating_system_version = (subJson["_source"]["field_prjt_rating_system_version"].arrayValue.first?.stringValue ?? "")
                                 project.node_id = (subJson["_source"]["node_id"].arrayValue.first?.stringValue ?? "")
                                 project.address = (subJson["_source"]["field_prjt_address"].arrayValue.first?.stringValue)!
+                                project.address = project.address.replacingOccurrences(of: "amp;", with: "&")
+                                let a = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                project.title = project.title.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                project.address = a
                                 project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                 projects.append(project)
                             }
@@ -664,7 +680,7 @@ class Apimanager{
             matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest" ] ]
         }
         header = [
-            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
             "query": [
                 "bool" : [
                     "must_not":[
@@ -750,13 +766,18 @@ class Apimanager{
                                     //                                    //                            printsubJson["_source"]["node_id"].string
                                     project.city = subJson["_source"]["geo_city_name"].stringValue
                                     project.image = subJson["_source"]["profile_image"].stringValue
-                                    
+                                    project.certification_date = subJson["_source"]["certification_date"].stringValue
+                                    project.registration_date = subJson["_source"]["registration_date"].stringValue
+                                    project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"]
                                     if(subJson["_source"]["geo_street_name"].stringValue != ""){
                                         project.address = subJson["_source"]["geo_street_name"].stringValue
                                     }else{
                                         project.address = subJson["_source"]["add_street"].stringValue
                                     }
+                                    project.address = project.address.replacingOccurrences(of: "amp;", with: "&")
+                                    let a = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                    project.address = a
                                     project.node_id = subJson["_source"]["node_id"].stringValue
                                     if(subJson["_source"]["geo_street_name"].stringValue != ""){
                                         project.state = subJson["_source"]["geo_state_name"].stringValue
@@ -768,7 +789,10 @@ class Apimanager{
                                     }else{
                                         project.country = subJson["_source"]["add_country"].stringValue
                                     }
+                                    project.title = project.title.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.address = project.address.components(separatedBy: "[").first!
+                                    project.address = project.address.replacingOccurrences(of: "amp;", with: "&")
+                                    project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.country = project.country.components(separatedBy: "[").first!
                                     project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
                                     project.state = project.state.components(separatedBy: "[").first!
@@ -805,19 +829,19 @@ class Apimanager{
             matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest", "prjt_id.autosuggest" ] ]
         }
         header = [
-            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
         ]
         header["query"] = [String : Any]()
         var query = header["query"] as! [String : Any]
         query["bool"] = [String : Any]()
         var bool = query["bool"] as! [String : Any]
-        bool["must_not"] = [
-            "geo_distance" : [
-                "distance" : "1m",
-                "geo_code" : [
-                    "lat" : 0,
-                    "lon" : 0
-                ]]]
+//        bool["must_not"] = [
+//            "geo_distance" : [
+//                "distance" : "1m",
+//                "geo_code" : [
+//                    "lat" : 0,
+//                    "lon" : 0
+//                ]]]
         if(search.count > 0 || cat.count > 0){
             bool = query["bool"] as! [String : Any]
             if(search.count > 0){
@@ -863,7 +887,10 @@ class Apimanager{
                                     //
                                     project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
                                     project.long = subJson["_source"]["geo_code"]["lon"].stringValue
-                                    //
+                                    project.certification_date = subJson["_source"]["certification_date"].stringValue
+                                project.registration_date = subJson["_source"]["registration_date"].stringValue
+                                
+                                    project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //                                    project.image = subJson["_source"]["profile_image"].stringValue
                                     //
                                     project.rating_system_version = subJson["_source"]["rating_system_version"].stringValue
@@ -879,6 +906,7 @@ class Apimanager{
                                 }else{
                                     project.address = subJson["_source"]["add_street"].stringValue
                                 }
+                                project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                 project.node_id = subJson["_source"]["node_id"].stringValue
                                 if(subJson["_source"]["geo_street_name"].stringValue != ""){
                                     project.state = subJson["_source"]["geo_state_name"].stringValue
@@ -891,9 +919,15 @@ class Apimanager{
                                     project.country = subJson["_source"]["add_country"].stringValue
                                 }
                                     project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+                                project.title = project.title.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.address = project.address.components(separatedBy: "[").first!
+                                project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.country = project.country.components(separatedBy: "[").first!
                                     project.state = project.state.components(separatedBy: "[").first!
+                                
+                                project.country = project.country.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                project.state = project.state.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                
                                     projects.append(project)
                             }
                             //print("Project count: \(projects.count) and data are \(projects)")
@@ -939,6 +973,7 @@ class Apimanager{
                                     project.title = subJson["_source"]["title"].stringValue
 //                                    project.ID = subJson["_source"]["prjt_id"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
+                                project.registration_date = subJson["_source"]["registration_date"].stringValue
 //
                                     project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
                                     project.long = subJson["_source"]["geo_code"]["lon"].stringValue
@@ -948,10 +983,14 @@ class Apimanager{
 //                                    project.rating_system_version = subJson["_source"]["rating_system"].stringValue
 //                                    //                            printsubJson["_source"]["node_id"].string
                                     project.address = subJson["_source"]["address"].stringValue
+                                project.address = project.address.replacingOccurrences(of: "amp;", with: "&")
+                                project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.node_id = subJson["_source"]["node_id"].stringValue
                                     project.state = subJson["_source"]["add_state"].stringValue
                                     project.country = subJson["_source"]["add_country"].stringValue
                                     project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+                                project.country = project.country.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
+                                project.state = project.state.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     projects.append(project)                                
                             }
                             //print("Project count: \(projects.count) and data are \(projects)")

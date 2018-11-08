@@ -18,7 +18,7 @@ class projectInfo: UITableViewCell {
         name.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
         name.font = UIFont.AktivGrotesk_Md(size: 20)
 
-
+        name.preferredMaxLayoutWidth = 200
         
         
         // Initialization code

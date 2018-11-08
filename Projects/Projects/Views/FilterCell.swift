@@ -24,7 +24,7 @@ class FilterCell: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 27
+            frame.origin.x += 24
             frame.size.width -= 2 * 19
             
             super.frame = frame

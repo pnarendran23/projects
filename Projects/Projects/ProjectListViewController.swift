@@ -17,6 +17,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     var zoomLevel = 0.0
     var currentPosition = GMSCameraPosition()
     var allDownloaded = false
+    var search = UISearchBar()
     var queryingDistance = 0.0
     var totalRecords = 0
     var  request = MKLocalSearchRequest()
@@ -53,14 +54,14 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     var versionsarray = NSMutableArray()
     var certificationsarray = NSMutableArray()
     var from = 0
-    var size = 500
+    var size = 100
     var filterChanged = false        
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nodata: UILabel!
     
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
-    var searchController = UISearchController()
+    //var searchController = UISearchController()
     var searchController1 = UISearchController()
     
     @IBOutlet weak var locationtableView: UITableView!
@@ -81,14 +82,14 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             self.filterProjects = [Project]()
             self.searchedProjects = [Project]()
             self.tableView.reloadData()
-            self.searchProjectUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+            self.searchProjectUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         // Bounce back to the main thread to update the UI
-        Apimanager.shared.stopAllSessions()
         DispatchQueue.main.async {
+            //Apimanager.shared.stopAllSessions()
             Utility.hideLoading()
             AWBanner.hide()
         }
@@ -98,38 +99,25 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     
 
     func didPresentSearchController(_ searchController: UISearchController) {
-
+        self.tableView.isHidden = false
+        
+//        if(self.searchController.searchBar.text?.count == 0){
+//            self.arrFilter = [String]()
+//            self.arrCountry = [String]()
+//            self.tableView.reloadData()
+//        }
+        
+//        selected_searchbar = "searchcontroller"
+//        Apimanager.shared.stopAllSessions()
+//        self.loading = true
+//        self.allDownloaded = false
+//        self.from = 0
+//        self.searchProjects()
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
         
-        DispatchQueue.main.async {
-            self.makeNavigationBarButtons()
-        }
-        
-        //slideUpView.isHidden = false
-        self.arrProjects = [String]()
-        arrFilter = [String]()
-        
-        self.allDownloaded = false
-        self.from = 0
-        self.projects = [Project]()
-        
-        let tempcerts = self.certificationsarray.mutableCopy() as! NSMutableArray
-        let tempratings = self.ratingsarray.mutableCopy() as! NSMutableArray
-        let tempversions = self.versionsarray.mutableCopy() as! NSMutableArray
-        let tempstate = self.statesarray.mutableCopy() as! NSMutableArray
-        let tempcountry = self.countriesarray.mutableCopy() as! NSMutableArray
-        tempcerts.remove("")
-        tempratings.remove("")
-        tempversions.remove("")
-        tempstate.remove("")
-        tempcountry.remove("")
-        if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.searchController.searchBar.text?.count)! > 0){
-            self.searchProjects()
-        }else{
-        self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
-        }
+
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -139,6 +127,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.keyboardDismissMode = .onDrag
         self.tableView.tableFooterView = UIView.init(frame: .zero)
         self.locationManager.requestAlwaysAuthorization()
         
@@ -155,60 +144,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         locationtableView.register(UINib.init(nibName:"locationcell", bundle: nil), forCellReuseIdentifier: "locationcell")
         self.searchBar.delegate = self
         nodata.text = "No data found"
-        self.searchController = ({
-            let controller = UISearchController(searchResultsController: nil)
-            controller.searchBar.searchBarStyle = .minimal
-            controller.dimsBackgroundDuringPresentation = false
-            controller.searchResultsUpdater = self
-            controller.searchBar.showsCancelButton = false
-            controller.searchBar.delegate = self
-            controller.searchBar.sizeToFit()
-            if(UserDefaults.standard.object(forKey: "searchText") != nil){
-                controller.searchBar.text = UserDefaults.standard.object(forKey: "searchText") as! String
-            }
-            controller.searchBar.showsScopeBar = false
-            (controller.searchBar.value(forKey: "searchField") as? UITextField)?.font = UIFont.AktivGrotesk_Md(size: 14)
-            controller.hidesNavigationBarDuringPresentation = false;
-            controller.searchBar.searchBarStyle = .minimal;
-            controller.searchBar.barTintColor = UIColor.white
-            controller.searchBar.barTintColor = UIColor.white
-            controller.searchBar.searchBarStyle = .default
-            controller.searchBar.isTranslucent = true
-            return controller
-        })()
-        
-        searchBar.textField.clearButtonMode = .never
-        self.searchController.searchBar.textField.clearButtonMode = .never
-        
-        self.searchController.delegate = self
-        
-        
-        
-        self.searchController1 = ({
-            let controller = UISearchController(searchResultsController: nil)
-            controller.searchBar.searchBarStyle = .minimal
-            controller.dimsBackgroundDuringPresentation = false
-            controller.searchBar.placeholder = "Search Location"
-            controller.searchResultsUpdater = self
-            controller.searchBar.sizeToFit()
-            controller.searchBar.showsScopeBar = true
-            controller.hidesNavigationBarDuringPresentation = false;
-            controller.searchBar.searchBarStyle = .minimal;
-            controller.searchBar.barTintColor = UIColor.white
-            return controller
-        })()
-        
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-        
+      
         // Include the search bar within the navigation bar.
-        let v = UIView()
-        v.frame = CGRect(x: -160, y: 0, width: 144, height: 44)
-        v.addSubview(self.searchController.searchBar)
-        v.clipsToBounds = true
-        self.navigationItem.titleView?.clipsToBounds = true
-        self.searchController.searchBar.layer.sublayerTransform = CATransform3DMakeTranslation(5, 0, 0);
-        self.navigationItem.titleView = self.searchController.searchBar
-        
+        //self.navigationItem.titleView = self.searchController.searchBar;
         
         //self.tableView.tableHeaderView = self.searchController1.searchBar;
         
@@ -219,7 +157,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         pageNumber = 0
         //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
         from = 0
-        //self.searchText = self.searchBar.text!
+        self.searchText = self.search.text!
         DispatchQueue.main.async {
             if(UserDefaults.standard.object(forKey: "ProjectOffline") != nil){
                 var unkeyed = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "ProjectOffline") as! Data)
@@ -232,7 +170,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             }else{
                 //Utility.showLoading()
             }
-            self.tableView.keyboardDismissMode = .onDrag
+            //self.tableView.keyboardDismissMode = .onDrag
             self.initViews()
             self.nodata.isHidden = true
             self.loading = true
@@ -249,20 +187,18 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             tempversions.remove("")
             tempstate.remove("")
             tempcountry.remove("")
-            if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.searchController.searchBar.text?.count)! > 0){
+            if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.search.text?.count)! > 0){
                 self.searchProjects()
             }else{
                 Utility.showLoading()
-                self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+                self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
             }
             
             
         }
         
     }
-    override func viewDidLayoutSubviews() {
-        self.searchController.searchBar.sizeToFit()
-    }
+    
     
     func loadProjectsElasticUsingLocation(search: String, category: String, lat : Double, lng : Double, distance : Double){
         //sizee was 500000
@@ -270,7 +206,6 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         if(!allDownloaded){
             var dict = [[String : Any]]()
             dict = self.constructCategory()
-            self.navigationItem.rightBarButtonItems = nil
             self.makeNavigationBarButtons()
             Apimanager.shared.getProjectsElasticForMapNew (from: self.from, sizee : size, search : search, category : dict, lat : lat, lng : lng, distance : distance, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
@@ -379,8 +314,8 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     func searchProjectUsingLocation(search: String, category: String, lat : Double, lng : Double, distance : Double){
         //sizee was 500000f
         var dict = [[String : Any]]()
-        self.navigationItem.rightBarButtonItems = nil
-        self.makeNavigationBarButtons()
+        
+        //self.makeNavigationBarButtons()
         dict = self.constructCategory()
         Apimanager.shared.searchProjectsElasticForMapNew (from: self.from, sizee : 1000, search : search, category : dict, callback: {(totalRecords, projects, code) in
             if(code == -1 && projects != nil){
@@ -454,15 +389,35 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         listButton.addTarget(self, action:#selector(self.handleMap(_:)), for: .touchUpInside)
         let listBarButton = UIBarButtonItem(customView: listButton)
         
+        if(UIDevice.current.userInterfaceIdiom == .pad){
+        search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.91 * UIScreen.main.bounds.size.width, height:20))
+        }else{
+        search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.77 * UIScreen.main.bounds.size.width, height:20))
+        }
+        search.placeholder = "Search"
+        if(UserDefaults.standard.object(forKey: "searchText") != nil){
+           self.searchText = UserDefaults.standard.object(forKey: "searchText") as! String
+           self.search.text = self.searchText
+        }
+        search.barTintColor = UIColor.red
+        search.tag = 23
+        (search.value(forKey: "searchField") as? UITextField)?.font = UIFont.AktivGrotesk_Md(size: 14)
+        search.delegate = self
+        search.showsCancelButton = false
+        let temp = UIBarButtonItem(customView: search)
+        //self.searchController.searchBar;
         
         let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white] as [AnyHashable : NSObject]
         //[NSAttributedStringKey.foregroundColor:UIColor.white, kCTFontAttributeName : UIFont.gothamBook(size: 18) ] as [AnyHashable : NSObject]
         navigationController?.navigationBar.titleTextAttributes = textAttributes as! [NSAttributedStringKey : Any]
-        self.navigationItem.title = "Projects"
-        self.navigationItem.rightBarButtonItems = [listBarButton, filterBarButton]
-        self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+        self.navigationItem.title = "Projects"        
+        self.navigationItem.leftBarButtonItems = [temp, filterBarButton, listBarButton]
+        self.navigationItem.rightBarButtonItem = nil
+        var textField = search.value(forKey: "_searchField") as! UITextField
+        //textField.clearButtonMode = .never
+        //self.navigationItem.leftBarButtonItem =
     }
-    
+
     @objc func loadmore(){
         DispatchQueue.main.async {
             //Utility.showLoading()
@@ -477,6 +432,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         tabBarController?.title = "Projects"
         loadType = "init"
         pageNumber = 0
@@ -491,6 +447,29 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         makeNavigationBarButtons()
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
         //self.loading = true
+        let tempcerts = certificationsarray.mutableCopy() as! NSMutableArray
+        let tempratings = ratingsarray.mutableCopy() as! NSMutableArray
+        let tempversions = versionsarray.mutableCopy() as! NSMutableArray
+        let tempstate = statesarray.mutableCopy() as! NSMutableArray
+        let tempcountry = countriesarray.mutableCopy() as! NSMutableArray
+        tempcerts.remove("")
+        tempratings.remove("")
+        tempversions.remove("")
+        tempstate.remove("")
+        tempcountry.remove("")
+        if((self.search.text?.count)! > 0){
+            //self.search.becomeFirstResponder()
+        }
+        DispatchQueue.main.async {
+            self.viewDidLayoutSubviews()
+            if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || self.search.isFirstResponder){
+                //self.searchedProjects = [Project]()
+                //self.filterProjects = [Project]()
+                //self.searchProjects()
+            }else{
+                
+            }
+        }
     }
 
     
@@ -522,12 +501,23 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             tempstate.remove("")
             tempcountry.remove("")
             var title = "Projects Nearby"
-            if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.searchController.isActive)){
+            if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || self.search.isFirstResponder || (self.search.text?.count)! > 0){
                 title = "Projects"
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "ListHeader")
             (cell as? ListHeader)?.projects.text = "\(title) (\(self.totalCount))"
             (cell as? ListHeader)?.rightside.text = ""
+            
+            if(search.isFirstResponder && (search.text?.count)! == 0 && self.filterProjects.count == 0){
+                (cell as? ListHeader)?.projects.text = ""
+                (cell as? ListHeader)?.rightside.text = ""
+            }
+            
+            if(self.totalCount == 0 && self.filterProjects.count == 0){
+                (cell as? ListHeader)?.projects.text = ""
+                (cell as? ListHeader)?.rightside.text = ""
+            }
+            
             return cell
         }
         return tableView.headerView(forSection: section)
@@ -558,7 +548,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         //loadProjects(category: category, search: searchText, page: pageNumber, loadType: loadType)
         //loadProjectsWithPagination(filterChanged: filterChanged, id: "", category: category, loadType: loadType)
         from = 0
-        size = 500
+        size = 100
         DispatchQueue.main.async{
             self.loadType = "init"
             self.pageNumber = 0
@@ -568,7 +558,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             self.projects = [Project]()
             self.filterProjects = [Project]()
             self.searchedProjects = [Project]()
-            self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+            self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
         }
         
     }
@@ -595,7 +585,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                        initialSpringVelocity: 0.0,
                        options: .curveEaseOut,
                        animations: {
-                        self.view.layoutIfNeeded()
+                        //self.view.layoutIfNeeded()
         }, completion: nil)
         searchOpen = true
     }
@@ -608,9 +598,19 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                        initialSpringVelocity: 0.0,
                        options: .curveEaseIn,
                        animations: {
-                        self.view.layoutIfNeeded()
+                        //self.view.layoutIfNeeded()
         }, completion: nil)
         searchOpen = false
+    }
+
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for view in (self.navigationController?.navigationBar.subviews)! {
+            view.layoutMargins = UIEdgeInsets.zero
+        }
+        self.navigationItem.leftBarButtonItems = nil
+        self.makeNavigationBarButtons()        
     }
     
     @objc func handleMap(_ sender: Any){
@@ -635,8 +635,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         projectsMapTab.statesarray = self.statesarray
         projectsMapTab.zoomLevel = Float(self.zoomLevel)
         projectsMapTab.currentPosition = self.currentPosition
-        UserDefaults.standard.set(self.searchController.searchBar.text!, forKey: "searchText")
+        UserDefaults.standard.set(self.search.text!, forKey: "searchText")
         navigationController?.viewControllers[0] = projectsMapTab
+        self.navigationController?.view.setNeedsLayout()
     }
     var opened = false
     //To load JSON from file
@@ -818,12 +819,15 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.tintColor = self.tabBarController?.tabBar.tintColor
         AppUtility.lockOrientation(.all)
+        self.navigationItem.leftBarButtonItems = nil
+        self.makeNavigationBarButtons()
+        viewDidLayoutSubviews()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ProjectDetailsViewController" {
             if let vc = segue.destination as? ProjectDetailsViewController {
-                if(self.searchController.isActive){
+                if((self.search.text?.count)! > 0){
                     vc.node_id = filterProjects[sender as! Int].node_id
                     vc.projectID = filterProjects[sender as! Int].ID
                     vc.currentProject = filterProjects[sender as! Int]
@@ -896,154 +900,193 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
         if(project.lat != "" && project.long != ""){
            tempLocation = CLLocation.init(latitude: Double(project.lat)!, longitude: Double(project.long)!)
         }
-        if(project.image.count > 0 && project.image.range(of: "placeholder") == nil){
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImage", for: indexPath) as! ProjectCellwithImage
-            cell.accessoryType = .disclosureIndicator
-            //cell.projectname.text = "\(project.title)"
-            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
-            let normalText  = "\(project.title)"
-            let attributedString = NSMutableAttributedString(string:normalText)
-            var distance = ""
-            var location = CLLocation()
-            if(locationManager.location != nil){
-                location = locationManager.location!
-            }else{
-                location = CLLocation.init(latitude: currentPosition.target.latitude, longitude: currentPosition.target.longitude)
-            }
-            if(tempLocation.distance(from: location)/1609.34 < 1000){
-                distance = "\(Double(round(tempLocation.distance(from: location)/1609.34 * 100)/100)) mi. away"
-            }else{
-                distance = "1000+ mi. away"
-            }
-            var t = ""
-            if(project.city.count > 0){
-                t = t + project.city + ", "
-            }
-            
-            if(project.state.count > 0){
-                t = t + project.state + ", "
-            }
-            
-            if(project.country.count > 0){
-                t = t + project.country
-            }
-            
-            if(t[t.index(before: t.endIndex)] != ","){
-                t = String(t.prefix(t.count - 1))
-            }
-            
-            var boldText = "\n\(t)\n\(distance)"
-            var mutableParagraphStyle = NSMutableParagraphStyle()
-            
-            // *** set LineSpacing property in points ***
-            mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
-            //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-            
-            
-            let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
-            var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-            boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-            
-            
-            boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1 ))
-            
-            attributedString.append(boldString)
-            cell.projectname.attributedText = attributedString
-            //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
-            cell.project_image.center.y = cell.contentView.frame.size.height/2
-            cell.project_image.image = nil
-            var url = URL.init(string: project.image)
-            let remoteImageURL = url
-            if(url != nil){
-                Alamofire.request(remoteImageURL!).responseData { (response) in
-                    if response.error == nil {
-                        if let data = response.data {
-                            cell.project_image.image = UIImage(data: data)
-                        }
+            if(project.image.count > 0 && !project.image.contains("project_placeholder")){
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImage") as! ProjectCellwithImage
+                //cell.projectname.text = "\(project.title)"
+                let normalText  = "\(project.title)"
+                let attributedString = NSMutableAttributedString(string:normalText)
+                var distance = ""
+                if(locationManager.location != nil){
+                if(tempLocation.distance(from: locationManager.location!)/1609.34 < 1000){
+                    distance = "\(Double(round(tempLocation.distance(from: locationManager.location!)/1609.34 * 100)/100)) m. away"
+                }else{
+                    distance = "1000+ mi. away"
+                }
+                }
+                var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                var mutableParagraphStyle = NSMutableParagraphStyle()
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+                //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+                
+                var cert_color = UIColor()
+                if(project.certification_level.lowercased() == "certified" && distance.count > 0){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "" && distance.count > 0){
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                }else if(project.certification_level.lowercased() == "" && distance.count == 0){
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)"
+                }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }
+                let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
+                var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                    
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    if(project.certification_level.lowercased() != "" && distance.count == 0){
+                    
                     }else{
-                        
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                    }
+                }else{
+                    if(distance.count > 0){
+                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
                     }
                 }
-            }
-            
-            //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
-            
-            return cell
-        }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImage", for: indexPath) as! ProjectCellwithoutImage
-            cell.accessoryType = .disclosureIndicator
-            //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
-            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
-            let normalText  = "\(project.title)"
-            
-            let attributedString = NSMutableAttributedString(string:normalText)
-            
-            var distance = ""
-            var location = CLLocation()
-            if(locationManager.location != nil){
-                location = locationManager.location!
+                attributedString.append(boldString)
+                cell.projectname.attributedText = attributedString
+                //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                cell.project_image.center.y = cell.contentView.frame.size.height/2
+                
+                var url = URL.init(string: project.image)
+                let remoteImageURL = url
+                if(url != nil){
+                    Alamofire.request(remoteImageURL!).responseData { (response) in
+                        if response.error == nil {
+                            if let data = response.data {
+                                cell.project_image.image = UIImage(data: data)
+                            }
+                        }else{
+                            
+                        }
+                    }
+                }
+                cell.projectname.preferredMaxLayoutWidth = 200
+                
+                //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
+                
+                return cell
             }else{
-                location = CLLocation.init(latitude: currentPosition.target.latitude, longitude: currentPosition.target.longitude)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImage") as! ProjectCellwithoutImage
+                //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                let normalText  = "\(project.title)"
+                
+                let attributedString = NSMutableAttributedString(string:normalText)
+                var distance = ""
+                if(locationManager.location != nil){
+                if(tempLocation.distance(from: locationManager.location!)/1609.34 < 1000){
+                    distance = "\(Double(round(tempLocation.distance(from: locationManager.location!)/1609.34 * 100)/100)) mi. away"
+                }else{
+                    distance = "1000+ mi. away"
+                }
+                }
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+                var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                var mutableParagraphStyle = NSMutableParagraphStyle()
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+                //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                
+                var cert_color = UIColor()
+                if(project.certification_level.lowercased() == "certified" && distance.count > 0){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "" && distance.count > 0){
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                }else if(project.certification_level.lowercased() == "" && distance.count == 0){
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)"
+                }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                }
+                let attrs = [NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 12)] as [NSAttributedStringKey : Any]
+                var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    if(project.certification_level.lowercased() != "" && distance.count == 0){
+                        
+                    }else{
+                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                    }
+                }else{
+                    if(distance.count > 0){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                    }
+                }
+                
+                attributedString.append(boldString)
+                cell.textLabel?.attributedText = attributedString
+                //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                
+                return cell
             }
-            if(tempLocation.distance(from: location)/1609.34 < 1000){
-                distance = "\(Double(round(tempLocation.distance(from: location)/1609.34 * 100)/100)) mi. away"
-            }else{
-                distance = "1000+ mi. away"
-            }
-            var t = ""
-            if(project.city.count > 0){
-                t = t + project.city + ", "
-            }
-            
-            if(project.state.count > 0){
-                t = t + project.state + ", "
-            }
-            
-            if(project.country.count > 0){
-                t = t + project.country
-            }
-            
-            if(t[t.index(before: t.endIndex)] == ","){
-                t = String(t.prefix(t.count - 1))
-            }
-            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-            var boldText = "\n\(t)\n\(distance)"
-            //var boldText = "\n\(project.city), \(project.country)\n\(distance)"
-            var mutableParagraphStyle = NSMutableParagraphStyle()
-            
-            // *** set LineSpacing property in points ***
-            mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
-            //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-            
-            
-            let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
-            var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-            boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-            
-            
-            boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1))
-            
-            attributedString.append(boldString)
-            cell.projectname.attributedText = attributedString
-            //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
-            
-            return cell
         }
-        }
-        if(!self.searchController.isActive && indexPath.row == 0){
-            let cell1 = tableView.dequeueReusableCell(withIdentifier: "locationcell", for: indexPath) as! locationcell
-            return cell1
-        }else{
+        
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             configureCell(cell: cell, forRowAtIndexPath: indexPath)
             return cell
-        }
     }
     
     func configureCell(cell: UITableViewCell, forRowAtIndexPath: IndexPath) {
         // 3
-        if (self.searchController.isActive) {
+        if ((search.text?.count)! > 0) {
             cell.textLabel?.text = arrFilter[forRowAtIndexPath.row]
         } else {
             cell.textLabel?.text = arrCountry[forRowAtIndexPath.row]
@@ -1074,10 +1117,10 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                     tempversions.remove("")
                     tempstate.remove("")
                     tempcountry.remove("")
-                    if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.searchController.searchBar.text?.count)! > 0){
+                    if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.search.text?.count)! > 0){
                         self.searchProjects()
                     }else{
-                        self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+                        self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
                     }
                     
                     
@@ -1095,19 +1138,19 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
             }
             performSegue(withIdentifier: "ProjectDetailsViewController", sender: indexPath.row)
         }else{
-            if (self.searchController.isActive) {
-                self.searchController.searchBar.resignFirstResponder()
+            if ((search.text?.count)! > 0) {
+                self.search.resignFirstResponder()
             }else{
                 self.searchBar.resignFirstResponder()
             }
             
             if(indexPath.row > 0){
-                if (self.searchController.isActive) {
+                if ((search.text?.count)! > 0) {
                 } else {
                     locationsearchTxt = arrCountry[indexPath.row]
                 }
             }else{
-                if(!self.searchController.isActive){
+                if((search.text?.count)! == 0){
                     locationsearchTxt = ""
                 }
             }
@@ -1119,6 +1162,8 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
 //MARK: - UISearchBar Delegate
 extension ProjectListViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        var textField = searchBar.value(forKey: "_searchField") as! UITextField
+        //textField.clearButtonMode = .never
 //        searchBar.tintColor = UIColor.black
 //        let attributes = [NSAttributedStringKey.foregroundColor : self.searchController.searchBar.tintColor]
 //        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
@@ -1129,6 +1174,7 @@ extension ProjectListViewController: UISearchBarDelegate {
 //        self.arrCountry.append("Current location")
 //        self.locationtableView.reloadData()
 //        self.searchController.dismiss(animated: true, completion: nil)
+        searchBar.showsCancelButton = true
         for subview in searchBar.subviews {
             for innerSubview in subview.subviews {
                 if innerSubview is UITextField {
@@ -1137,27 +1183,55 @@ extension ProjectListViewController: UISearchBarDelegate {
                 }
             }
         }
-        self.tableView.isHidden = false
+//        if(self.navigationItem.leftBarButtonItems?.count == 3){
+//            self.navigationItem.leftBarButtonItems = nil
+//            if(UIDevice.current.userInterfaceIdiom == .pad){
+//                self.search = UISearchBar(frame: CGRect(x:-10, y:0, width: UIScreen.main.bounds.size.width, height:20))
+//            }else{
+//                self.search = UISearchBar(frame: CGRect(x:-10, y:0, width: UIScreen.main.bounds.size.width, height:20))
+//            }
+//            self.search.placeholder = "Search"
+//
+//            if(UserDefaults.standard.object(forKey: "searchText") != nil){
+//                self.searchText = UserDefaults.standard.object(forKey: "searchText") as! String
+//                self.search.text = self.searchText
+//            }
+//
+//            self.search.barTintColor = UIColor.red
+//            self.search.tag = 23
+//            (self.search.value(forKey: "searchField") as? UITextField)?.font = UIFont.AktivGrotesk_Md(size: 14)
+//            self.search.delegate = self
+//            self.search.showsCancelButton = false
+//            let temp = UIBarButtonItem(customView: self.search)
+//            //self.searchController.searchBar;
+//
+//            let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white] as [AnyHashable : NSObject]
+//            //[NSAttributedStringKey.foregroundColor:UIColor.white, kCTFontAttributeName : UIFont.gothamBook(size: 18) ] as [AnyHashable : NSObject]
+//            self.navigationController?.navigationBar.titleTextAttributes = textAttributes as! [NSAttributedStringKey : Any]
+//            self.navigationItem.title = "Projects"
+//            temp.customView?.translatesAutoresizingMaskIntoConstraints = true;
+//            var negativeSpace:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: nil, action: nil)
+//            negativeSpace.width = 17.0
+//            self.navigationItem.leftBarButtonItems = [temp]
+//            self.search.becomeFirstResponder()
+//        }
         
-        if(self.searchController.searchBar.text?.count == 0){
-            self.arrFilter = [String]()
-            self.arrCountry = [String]()
-            self.tableView.reloadData()
-        }
-        self.searchBar.resignFirstResponder()
-        self.searchBar.showsCancelButton = false
-        selected_searchbar = "searchcontroller"
-        Apimanager.shared.stopAllSessions()
-        self.loading = true
-        self.allDownloaded = false
-        self.from = 0
-        self.searchProjects()
+        
+                if((searchBar.text?.count)! == 0){
+                    self.arrFilter = [String]()
+                    self.arrCountry = [String]()
+                    self.tableView.reloadData()
+                }
+        
+                selected_searchbar = "searchcontroller"
+                Apimanager.shared.stopAllSessions()
+                self.loading = true
+                self.allDownloaded = false
+                self.from = 0
+                self.searchProjects()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        
-//        searchBar.showsCancelButton = false
 //        searchBar.text = ""
 //        searchText = ""
 //        searchBar.resignFirstResponder()
@@ -1173,6 +1247,10 @@ extension ProjectListViewController: UISearchBarDelegate {
 //            self.locationtableView.isHidden = true
 //        }
 //        hideSearch()
+        DispatchQueue.main.async {
+        searchBar.text = ""
+        self.searchText = ""
+        UserDefaults.standard.set(searchBar.text!, forKey: "searchText")
         for subview in searchBar.subviews {
             for innerSubview in subview.subviews {
                 if innerSubview is UITextField {
@@ -1180,6 +1258,53 @@ extension ProjectListViewController: UISearchBarDelegate {
                     break
                 }
             }
+        }
+        searchBar.resignFirstResponder()
+        searchBar.showsCancelButton = false
+        DispatchQueue.main.async {
+        self.makeNavigationBarButtons()
+        //slideUpView.isHidden = false
+        self.arrProjects = [String]()
+        self.arrFilter = [String]()
+        
+        self.allDownloaded = false
+        self.from = 0
+        self.projects = [Project]()
+        
+        let tempcerts = self.certificationsarray.mutableCopy() as! NSMutableArray
+        let tempratings = self.ratingsarray.mutableCopy() as! NSMutableArray
+        let tempversions = self.versionsarray.mutableCopy() as! NSMutableArray
+        let tempstate = self.statesarray.mutableCopy() as! NSMutableArray
+        let tempcountry = self.countriesarray.mutableCopy() as! NSMutableArray
+        tempcerts.remove("")
+        tempratings.remove("")
+        tempversions.remove("")
+        tempstate.remove("")
+        tempcountry.remove("")
+        if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.search.text?.count)! > 0){
+            self.loadType = "init"
+            self.pageNumber = 0
+            Apimanager.shared.stopAllSessions()
+            //Utility.showLoading()
+            self.loading = true
+            self.projects = [Project]()
+            self.filterProjects = [Project]()
+            self.searchedProjects = [Project]()
+            self.tableView.reloadData()
+            self.searchProjects()
+        }else{
+            self.loadType = "init"
+            self.pageNumber = 0
+            Apimanager.shared.stopAllSessions()
+            //Utility.showLoading()
+            self.loading = true
+            self.projects = [Project]()
+            self.filterProjects = [Project]()
+            self.searchedProjects = [Project]()
+            self.tableView.reloadData()
+            self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+        }
+        }
         }
     }
     
@@ -1192,54 +1317,59 @@ extension ProjectListViewController: UISearchBarDelegate {
                 }
             }
         }
+        self.makeNavigationBarButtons()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if(searchBar == self.searchBar){
             
         }else{
-            arrFilter.removeAll(keepingCapacity: false)
+            DispatchQueue.main.async {
+            UserDefaults.standard.set(searchBar.text!, forKey: "searchText")
+            self.arrFilter.removeAll(keepingCapacity: false)
             self.arrCountry.removeAll()
-            arrProjects = [String]()
-            let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
-            let array = (arrCountry as NSArray).filtered(using: searchPredicate)
             self.arrProjects = [String]()
-            arrFilter = array as! [String]
-            
-            timer.invalidate()
-            if(self.searchController.isActive){
+            self.filterProjects = [Project]()
+            self.tableView.reloadData()
+            let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", self.search.text!)
+            let array = (self.arrCountry as NSArray).filtered(using: searchPredicate)
+            self.arrProjects = [String]()
+            self.arrFilter = array as! [String]
+            self.timer.invalidate()
+                searchBar.resignFirstResponder()
+                searchBar.showsCancelButton = false
                 Apimanager.shared.stopAllSessions()
                 self.loading = true
                 self.allDownloaded = false
                 self.from = 0
                 self.filterProjects = [Project]()
                 self.searchedProjects = [Project]()
-                timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
+                self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.searchProjects), userInfo: nil, repeats: false)
             }
         }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
-        request.naturalLanguageQuery = searchTxt
-        
-        let search = MKLocalSearch(request: request)
-        search.start { response, _ in
-            guard let response = response else {
-                return
-            }
-            self.arrCountry.removeAll()
-            self.arrCountry.append("Current location")
-            for i in response.mapItems{
-                print(i.placemark.name)
-                print(i.placemark.coordinate.latitude)
-                print(i.placemark.coordinate.longitude)
-                self.arrCountry.append(i.placemark.name!)
-            }
-            if(self.tableViewTopConstraint.constant != 0){
-                self.locationtableView.isHidden = false
-                self.locationtableView.reloadData()
-            }
-        }
+//        request.naturalLanguageQuery = searchTxt
+//
+//        let search = MKLocalSearch(request: request)
+//        search.start { response, _ in
+//            guard let response = response else {
+//                return
+//            }
+//            self.arrCountry.removeAll()
+//            self.arrCountry.append("Current location")
+//            for i in response.mapItems{
+//                print(i.placemark.name)
+//                print(i.placemark.coordinate.latitude)
+//                print(i.placemark.coordinate.longitude)
+//                self.arrCountry.append(i.placemark.name!)
+//            }
+//            if(self.tableViewTopConstraint.constant != 0){
+//                self.locationtableView.isHidden = false
+//                self.locationtableView.reloadData()
+//            }
+//        }
     }
     
 }
@@ -1347,7 +1477,7 @@ extension ProjectListViewController: ProjectFilterDelegate {
                     Apimanager.shared.stopAllSessions()
                     self.allDownloaded = false
                     self.from = 0
-                    self.size = 500
+                    self.size = 100
                     self.projects = [Project]()
                     self.filterProjects = [Project]()
                     self.searchedProjects = [Project]()
@@ -1363,11 +1493,11 @@ extension ProjectListViewController: ProjectFilterDelegate {
                 tempstate.remove("")
                 tempcountry.remove("")
                 if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0){
-                    self.navigationItem.rightBarButtonItems = nil
-                    self.makeNavigationBarButtons()
+                    //self.navigationItem.rightBarButtonItems = nil
+                    //self.makeNavigationBarButtons()
                     self.searchProjects()
                 }else{
-                    self.loadProjectsElasticUsingLocation(search: self.searchController.searchBar.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
+                    self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
                 }
 //
 //                    if(self.searchController.isActive){

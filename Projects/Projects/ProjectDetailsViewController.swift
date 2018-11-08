@@ -33,15 +33,16 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     var Details = ProjectDetails()
     var node_id = ""
     var expandSite = false
-    var expandDetails = false
-    var expandScoreCard = false
-    var expandNearby = false
+    var expandDetails = true
+    var expandScoreCard = true
+    var expandNearby = true
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.tableFooterView = UIView.init(frame: .zero)
         tableView.separatorInset = UIEdgeInsetsMake(0, 24, 0, 24)
         print("Selected node ID is ", node_id)
         tableView.register(UINib(nibName: "ProjectCellwithImage", bundle: nil), forCellReuseIdentifier: "ProjectCellwithImage")
+        tableView.register(UINib(nibName: "stackCell", bundle: nil), forCellReuseIdentifier: "stackCell")
         tableView.register(UINib(nibName: "titleCell", bundle: nil), forCellReuseIdentifier: "titleCell")
         
         tableView.register(UINib(nibName: "expandCollapseCell", bundle: nil), forCellReuseIdentifier: "expandCollapseCell")
@@ -72,6 +73,8 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
         
         DispatchQueue.main.async {
             self.tableView.isHidden = true
+            Utility.showLoading()
+            self.tableView.isUserInteractionEnabled = false
             self.getDetails(nodeid: self.node_id)
         }        
         // Do any additional setup after loading the view.
@@ -96,18 +99,18 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
             }
             //self.tableView.reloadData()
         }
-        let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
-        navigationController?.navigationBar.titleTextAttributes = textAttributes
+//        let textAttributes = [NSAttributedStringKey.foregroundColor:UIColor.black]
+//        navigationController?.navigationBar.titleTextAttributes = textAttributes
         self.navigationController?.navigationBar.tintColor = UIColor.black
     }
     
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         
 //        self.navigationController?.navigationBar.isTranslucent = false
 //        self.navigationController?.navigationBar.barTintColor = UIColor.white
 //        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.tintColor = self.tabBarController?.tabBar.tintColor
+        //self.navigationController?.navigationBar.tintColor = self.tabBarController?.tabBar.tintColor
         Apimanager.shared.stopAllSessions()
     }
 
@@ -163,7 +166,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "operations"){
             return UIScreen.main.bounds.size.height * 0.12
-        }else if(titleArray[indexPath.row] == "certification_info"){
+        }else if(titleArray[indexPath.row] == "certification_info" || titleArray[indexPath.row] == "registration_info"){
+            return UITableViewAutomaticDimension
+        }else if(titleArray[indexPath.row] == "size" || titleArray[indexPath.row] == "use" || titleArray[indexPath.row] == "setting" || titleArray[indexPath.row] == "energystar" || titleArray[indexPath.row] == "walkscore" || titleArray[indexPath.row] == "certified"){
             return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "details heading"){
             return 50
@@ -196,7 +201,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 return 0
             }
         }else if(titleArray[indexPath.row] == "nearby heading"){
-            return 50
+            return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "details"){
             if(expandDetails){
                 if(Details.description_full.count == 0){
@@ -587,11 +592,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 //self.filterProjects = self.projects
                 DispatchQueue.main.async {
                     Utility.hideLoading()
-                    //self.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .bottom , animated: false)
+                    //self.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .bottom , animated: false)                    
                     self.tableView.reloadData()
                     let indexPath = IndexPath(row: 0, section: 0)
                     self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                     self.tableView.isHidden = false
+                    Utility.hideLoading()
+                    self.tableView.isUserInteractionEnabled = true
                     self.tableView.layoutIfNeeded()
                 }
             }else{
@@ -611,6 +618,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for view in (self.navigationController?.navigationBar.subviews)! {
+            view.layoutMargins = UIEdgeInsets.zero
+        }
+        //tabbar.invalidateIntrinsicContentSize()
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(indexPath.row)
@@ -624,12 +638,15 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 self.items.removeAll()
                 self.currentScore = 0
                 self.maxScore = 0
-                self.expandDetails = false
-                self.expandNearby = false
-                self.expandScoreCard = false
+                self.expandDetails = true
+                self.expandNearby = true
+                self.expandScoreCard = true
                 let i = Int(self.titleArray[indexPath.row].components(separatedBy: ":")[1])!
                 self.node_id = self.nearbyprojects[i].node_id
                 self.currentProject = self.nearbyprojects[i]
+                self.nearbyprojects.removeAll()
+                Utility.showLoading()
+                self.tableView.isUserInteractionEnabled = false
                 self.titleArray.removeAll()
                 self.tableView.reloadData()
                 self.getDetails(nodeid: self.node_id)
@@ -668,9 +685,37 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         }
         temp.append("info")
         temp.append("operations")
-        if(currentScore > 0 && maxScore > 0){
+        if(self.Details.certification_date.count > 0){
             temp.append("certification_info")
+        }else{
+            temp.append("registration_info")
+        
         }
+        
+        if(self.Details.project_size != ""){
+            temp.append("size")
+        }
+        
+        if(self.Details.project_type != ""){
+            temp.append("use")
+        }
+        if(self.Details.project_setting != ""){
+            temp.append("setting")
+        }
+        
+        if(self.Details.certification_date != ""){
+            temp.append("certified")
+        }
+        
+        if(self.Details.project_walkscore != ""){
+            temp.append("walkscore")
+        }
+        
+        if(self.Details.energy_star_score != ""){
+            temp.append("energystar")
+        }
+        
+        
         
         if(self.Details.description_full.count > 0){
                 temp.append("details heading")
@@ -705,7 +750,54 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if(titleArray[indexPath.row] == "profile_image"){
+        if(titleArray[indexPath.row] == "size"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Size"
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = NumberFormatter.Style.decimal
+            var formattedNumber = ""
+            formattedNumber = numberFormatter.string(from: NSNumber(value:Int(self.Details.project_size)!))!
+            stackCell.detaillbl.text = "\(formattedNumber) sf"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "certified"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Certified on"
+            var dateFormat = DateFormatter()
+            dateFormat.dateFormat = "MM/dd/yyyy"
+            var date = Date()
+            date = dateFormat.date(from: self.Details.certification_date)!
+            dateFormat.dateFormat = "yyyy"
+            var justyear = dateFormat.string(from: date)
+            dateFormat.dateFormat = "MMM dd, yyyy"
+            stackCell.detaillbl.text = "\(dateFormat.string(from: date))"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "use"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Use"
+            stackCell.detaillbl.text = "\(self.Details.project_type)"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "setting"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Setting"
+            stackCell.detaillbl.text = "\(self.Details.project_setting)"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "walkscore"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Walk Score®"
+            stackCell.detaillbl.text = "\(self.Details.project_walkscore)"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "energystar"){
+            let stackCell = tableView.dequeueReusableCell(withIdentifier: "stackCell") as! stackCell
+            stackCell.lbl.text = "Energy star score®"
+            stackCell.detaillbl.text = "\(self.Details.energy_star_score)"
+            stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            return stackCell
+        }else if(titleArray[indexPath.row] == "profile_image"){
             let thumbnailView = tableView.dequeueReusableCell(withIdentifier: "thumbnail", for: indexPath) as! thumbnail
                                 thumbnailView.selectionStyle = .none
                                 if(self.Details.image.count > 0 && self.Details.image.range(of: "placeholder") == nil){
@@ -755,12 +847,12 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             
             var t = ""
-            if(self.Details.city.count > 0){
-                t = t + self.Details.city + ",\n"
+            if(self.Details.city.count > 0 && self.Details.state.count > 0 && self.Details.zip_code.count > 0){
+                t = t + self.Details.city + ", \(self.Details.state), \(self.Details.zip_code)\n"
             }
             
             if(self.Details.state.count > 0){
-                t = t + self.Details.state + ",\n"
+                //t = t + self.Details.state + ",\n"
             }
             
             if(self.Details.country.count > 0){
@@ -792,6 +884,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             if(isFavourite == false){
                 OperationsCellView.saveImage.image = UIImage.init(named: "Favorites_BU")
                 OperationsCellView.saveLbl.text = "Save"
+                let tintedImage = OperationsCellView.saveImage.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+                OperationsCellView.saveImage.image = tintedImage
+                OperationsCellView.saveImage.tintColor = UIColor(red:0.35, green:0.41, blue:0.45, alpha:1)
             }else{
                 OperationsCellView.saveImage.image = UIImage.init(named: "Favorites_Active_BU")
                 OperationsCellView.saveLbl.text = "Saved"
@@ -811,96 +906,104 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         if(titleArray[indexPath.row] == "certification_info"){
             let CertificationInfoView = tableView.dequeueReusableCell(withIdentifier: "CertificationInfo", for: indexPath) as! CertificationInfo
             CertificationInfoView.selectionStyle = .none
+            CertificationInfoView.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
             var justyear = ""
-            if(self.Details.certification_date != ""){
-                var dateFormat = DateFormatter()
-                dateFormat.dateFormat = "MM/dd/yyyy"
-                var date = Date()
-                date = dateFormat.date(from: self.Details.certification_date)!
-                dateFormat.dateFormat = "yyyy"
-                justyear = dateFormat.string(from: date)
-                dateFormat.dateFormat = "MMM dd, yyyy"
-                CertificationInfoView.certified.text = "\(dateFormat.string(from: date))"
-            }
-            CertificationInfoView.certification_level.text = "\(self.Details.project_certification_level.uppercased()) \(justyear)"
-            print(CertificationInfoView.certification_level.text?.replacingOccurrences(of: " ", with: ""))
-            if(CertificationInfoView.certification_level.text?.replacingOccurrences(of: " ", with: "").count == 0){
-                CertificationInfoView.certification_level.text = "NONE"
-            }
-            CertificationInfoView.rating_system.text = self.Details.project_rating_system == "" ? "" : self.Details.project_rating_system
-            if(self.Details.project_rating_system != "" && self.Details.project_rating_system_version != ""){
-                CertificationInfoView.rating_system.text = "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
-            }
-            CertificationInfoView.use.text = "\(self.Details.project_type)"
-            CertificationInfoView.setting.text = "\(self.Details.project_setting)"
-            CertificationInfoView.certification_score_max.text = "/\(self.maxScore)"
-            CertificationInfoView.certification_score.text = "\(self.currentScore)"
-            
-            
-            var attr = NSMutableAttributedString.init(string: "\(currentScore)")
-            let attributed = NSMutableAttributedString.init(string: "/\(maxScore)")
-            attributed.addAttributes([NSAttributedStringKey.foregroundColor: CertificationInfoView.certification_score_max.textColor], range: NSMakeRange(0, "/\(maxScore)".count ))
-            
-            attr.append(attributed)
-            
-            CertificationInfoView.certification_score.attributedText = attr
-            let numberFormatter = NumberFormatter()
-            numberFormatter.numberStyle = NumberFormatter.Style.decimal
-            var formattedNumber = ""
-            if(Details.project_size != ""){
-                formattedNumber = numberFormatter.string(from: NSNumber(value:Int(self.Details.project_size)!))!
-                CertificationInfoView.size.text = self.Details.project_size == "" ? "" : "\(formattedNumber) sf"
+                        if(self.Details.project_certification_level.replacingOccurrences(of: " ", with: "").count == 0){
+                            self.Details.project_certification_level = "NONE"
+                        }
+            let tempLevel = "\n\(self.Details.project_certification_level.uppercased())"
+            let tempscore = "\n\(self.currentScore)"
+            let tempmaxscore = "/\(self.maxScore)"
+            let temprating = "\n\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
+            var s = ""
+            if(self.currentScore > 0 && self.maxScore > 0){
+                s = "CERTIFICATION \(tempLevel)\(tempscore)\(tempmaxscore)\(temprating)"
             }else{
-                CertificationInfoView.size.text = ""
-                CertificationInfoView.sizeLabel.text = ""
+                s = "CERTIFICATION \(tempLevel)\(temprating)"
             }
-            var i = 0
-            if(CertificationInfoView.use.text == ""){
-                CertificationInfoView.useLabel.text = ""
+            var string = NSMutableAttributedString(string: s)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 3
+            string.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, s.count))
+            
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 12), range: NSMakeRange(0, "CERTIFICATION".count))
+            
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.35, green:0.41, blue:0.45, alpha:1), range: NSMakeRange(0, "CERTIFICATION".count))
+            
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION ".count, "\(tempLevel)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black, range: NSMakeRange("CERTIFICATION ".count, "\(tempLevel)".count))
+            
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION \(tempLevel)".count, "\(tempscore)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black, range: NSMakeRange("CERTIFICATION \(tempLevel)".count, "\(tempscore)".count))
+            
+            if(self.currentScore > 0 && self.maxScore > 0){
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n\(self.currentScore)".count, "/\(self.maxScore)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.53, green:0.6, blue:0.64, alpha:1), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n\(self.currentScore)".count, "/\(self.maxScore)".count))
+            
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n\(self.currentScore)/\(self.maxScore)\n".count, "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n\(self.currentScore)/\(self.maxScore)\n".count, "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)".count))
             }else{
-                i = i+1
-                CertificationInfoView.useLabel.text = "Use"
+                string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 16), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n".count, "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)".count))
+                string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), range: NSMakeRange("CERTIFICATION \n\(self.Details.project_certification_level.uppercased())\n".count, "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)".count))
             }
             
-            if(CertificationInfoView.size.text == ""){
-                CertificationInfoView.sizeLabel.text = ""
+            CertificationInfoView.data.attributedText = string
+
+            if(currentScore > 0 && maxScore > 0){
+                var attr = NSMutableAttributedString.init(string: "\(currentScore)")
+                let attributed = NSMutableAttributedString.init(string: "/\(maxScore)")
             }else{
-                i = i+1
-                CertificationInfoView.sizeLabel.text = "Size"
+                var attr = NSMutableAttributedString.init(string: "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)")
+                let t = "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
+                let attributed = NSMutableAttributedString.init(string: t)
+                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor.blue], range: NSMakeRange(0, "/\(t)".count-1))
+                //CertificationInfoView.certification_score.attributedText = attributed
+                
             }
-            CertificationInfoView.setting.text = self.Details.project_setting == "" ? "" : self.Details.project_setting
-            if(CertificationInfoView.setting.text == ""){
-                CertificationInfoView.settingLabel.text = ""
+
+            CertificationInfoView.selectionStyle = .none
+            return CertificationInfoView
+        }
+        
+        if(titleArray[indexPath.row] == "registration_info"){
+            let CertificationInfoView = tableView.dequeueReusableCell(withIdentifier: "CertificationInfo", for: indexPath) as! CertificationInfo
+            CertificationInfoView.selectionStyle = .none
+            CertificationInfoView.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
+            var justyear = ""
+            if(self.Details.project_certification_level.replacingOccurrences(of: " ", with: "").count == 0){
+                self.Details.project_certification_level = "NONE"
+            }
+            let tempLevel = "\nREGISTERED"
+            let tempscore = "\n\(self.currentScore)"
+            let tempmaxscore = "/\(self.maxScore)"
+            let temprating = "\n\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
+            var s = ""
+            if(self.currentScore > 0 && self.maxScore > 0){
+                s = "REGISTERED \(tempLevel)\(tempscore)\(tempmaxscore)\(temprating)"
             }else{
-                i = i+1
-                CertificationInfoView.settingLabel.text = "Setting"
+                s = "REGISTERED \(temprating)"
             }
+            var string = NSMutableAttributedString(string: s)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 3
+            string.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, s.count))
             
-            CertificationInfoView.walkscore.text = self.Details.project_walkscore == "" ? "" : self.Details.project_walkscore
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Md(size: 12), range: NSMakeRange(0, "REGISTERED".count))
             
-            if(CertificationInfoView.walkscore.text == ""){
-                CertificationInfoView.walkscoreLabel.text = ""
-            }else{
-                i = i+1
-                CertificationInfoView.walkscoreLabel.text = "Walk Score®"
-            }
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.35, green:0.41, blue:0.45, alpha:1), range: NSMakeRange(0, "REGISTERED".count))
             
-            if(CertificationInfoView.certified.text == ""){
-                CertificationInfoView.certifiedLabel.text = ""
-            }else{
-                i = i+1
-                CertificationInfoView.certifiedLabel.text = "Certified"
-            }
+            string.addAttribute(NSAttributedStringKey.font, value: UIFont.AktivGrotesk_Rg(size: 14), range: NSMakeRange("REGISTERED ".count, "\(temprating)".count))
+            string.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), range: NSMakeRange("REGISTERED ".count, "\(temprating)".count))
             
-            CertificationInfoView.energystar.text = self.Details.energy_star_score == "" ? "" : self.Details.energy_star_score
-            if(CertificationInfoView.energystar.text == ""){
-                CertificationInfoView.energystarLabel.text = ""
-            }else{
-                i = i+1
-                CertificationInfoView.energystarLabel.text = "ENERGY STAR®"
-            }
-            CertificationInfoView.stack1.spacing = 23
-            CertificationInfoView.stack2.spacing = 23
+            CertificationInfoView.data.attributedText = string
+            
+                var attr = NSMutableAttributedString.init(string: "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)")
+                let t = "\(self.Details.project_rating_system) - \(self.Details.project_rating_system_version)"
+                let attributed = NSMutableAttributedString.init(string: t)
+                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor.blue], range: NSMakeRange(0, "/\(t)".count-1))
+                //CertificationInfoView.certification_score.attributedText = attributed
+            
+            
             CertificationInfoView.selectionStyle = .none
             return CertificationInfoView
         }
@@ -1031,7 +1134,6 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             cell.expandButton.tag = indexPath.row
             var temp = false
             
-            
             cell.title.text = "Projects Nearby"
             if(expandNearby){
                 cell.expandButton.setImage(UIImage.init(named: "arrow_down"), for: .normal)
@@ -1055,137 +1157,147 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                 if(project.lat != "" && project.long != ""){
                                     tempLocation = CLLocation.init(latitude: Double(project.lat)!, longitude: Double(project.long)!)
                                 }
-                                if(project.image.count > 0 && project.image.range(of: "placeholder") == nil){
-                                    let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImage", for: indexPath) as! ProjectCellwithImage
-                                    if(expandNearby){
-                                        cell.contentView.isHidden = false
-                                    }else{
-                                        cell.contentView.isHidden = true
-                                    }
-                                    cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-                                    //cell.projectname.text = "\(project.title)"
-                                    let normalText  = "\(project.title)"
-                                    let attributedString = NSMutableAttributedString(string:normalText)
-                                    var distance = ""
-                                    if(tempLocation!.distance(from: currentLocation!)/1609.34 < 1000){
-                                        distance = "\(Double(round(tempLocation!.distance(from: currentLocation!)/1609.34 * 100)/100)) mi. away"
-                                    }else{
-                                        distance = "1000+ mi. away"
-                                    }
-                                    var t = ""
-                                    if(project.city.count > 0){
-                                        t = t + project.city + ", "
-                                    }
-                                    
-                                    if(project.state.count > 0){
-                                        t = t + project.state + ", "
-                                    }
-                                    
-                                    if(project.country.count > 0){
-                                        t = t + project.country
-                                    }
-                                    
-                                    if(t[t.index(before: t.endIndex)] != ","){
-                                        t = String(t.prefix(t.count))
-                                    }else{
-                                        t = String(t.prefix(t.count - 1))
-                                    }
-                                    var boldText = "\n\(t)\n\(distance)"
-                                    var mutableParagraphStyle = NSMutableParagraphStyle()
-                                    
-                                    // *** set LineSpacing property in points ***
-                                    mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
-                                    //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-                                    
-                                    
-                                    let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
-                                    var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-                                    boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-                                    
-                                    
-                                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1))
-                                    
-                                    attributedString.append(boldString)
-                                    cell.projectname.attributedText = attributedString
-                                    //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
-                                    cell.project_image.center.y = cell.contentView.frame.size.height/2
-                                    
-                                    cell.project_image.image = nil
-                                    var url = URL.init(string: project.image)
-                                    let remoteImageURL = url
-                                    if(url != nil){
-                                        Alamofire.request(remoteImageURL!).responseData { (response) in
-                                            if response.error == nil {
-                                                if let data = response.data {
-                                                    cell.project_image.image = UIImage(data: data)
-                                                }
-                                            }else{
-                                                
-                                            }
-                                        }
-                                    }
-                                    
-                                    //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
-                                    cell.selectionStyle = .none
-                                    return cell
-                                }else{
-                                    let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImage", for: indexPath) as! ProjectCellwithoutImage
-                                    if(expandNearby){
-                                        cell.contentView.isHidden = false
-                                    }else{
-                                        cell.contentView.isHidden = true
-                                    }
-                                    //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
-                                    let normalText  = "\(project.title)"
-            
-                                    let attributedString = NSMutableAttributedString(string:normalText)
-            
-                                    var distance = ""
-            
-                                    if(tempLocation!.distance(from: currentLocation!)/1609.34 < 1000){
-                                        distance = "\(Double(round(tempLocation!.distance(from: currentLocation!)/1609.34 * 100)/100)) mi. away"
-                                    }else{
-                                        distance = "1000+ mi. away"
-                                    }
-                                    var t = ""
-                                    if(project.city.count > 0){
-                                        t = t + project.city + ", "
-                                    }
-                                    
-                                    if(project.state.count > 0){
-                                        t = t + project.state + ", "
-                                    }
-                                    
-                                    if(project.country.count > 0){
-                                        t = t + project.country
-                                    }
-                                    
-                                    if(t[t.index(before: t.endIndex)] != ","){
-                                        t = String(t.prefix(t.count))
-                                    }else{
-                                        t = String(t.prefix(t.count - 1))
-                                    }
-                                    var boldText = "\n\(t)\n\(distance)"
-                                    var mutableParagraphStyle = NSMutableParagraphStyle()
-                                    
-                                    // *** set LineSpacing property in points ***
-                                    mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
-                                    //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-                                    cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
-            
-                                    let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
-                                    var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
-                                    boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
-                                    
-                                    
-                                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1))
-                                    
-                                    attributedString.append(boldString)
-                                    cell.projectname.attributedText = attributedString
-                                    //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
-                                    cell.selectionStyle = .none
-                                    return cell
-                                }
+            if(project.image.count > 0 && !project.image.contains("project_placeholder")){
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImage") as! ProjectCellwithImage
+                //cell.projectname.text = "\(project.title)"
+                let normalText  = "\(project.title)"
+                let attributedString = NSMutableAttributedString(string:normalText)
+                var distance = ""
+                if((tempLocation?.distance(from: currentLocation!))!/1609.34 < 1000){
+                    distance = "\(Double(round((tempLocation?.distance(from: currentLocation!))!/1609.34 * 100)/100)) m. away"
+                }else{
+                    distance = "1000+ mi. away"
+                }
+                var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                var mutableParagraphStyle = NSMutableParagraphStyle()
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+                //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                if(expandNearby){
+                    cell.contentView.isHidden = false
+                }else{
+                    cell.contentView.isHidden = true
+                }
+                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+                
+                var cert_color = UIColor()
+                if(project.certification_level.lowercased() == "certified"){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "gold"){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "platinum"){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "silver"){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else {
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                }
+                let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
+                var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                }else{
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                }
+                attributedString.append(boldString)
+                cell.projectname.attributedText = attributedString
+                //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                cell.project_image.center.y = cell.contentView.frame.size.height/2
+                
+                var url = URL.init(string: project.image)
+                let remoteImageURL = url
+                if(url != nil){
+                    Alamofire.request(remoteImageURL!).responseData { (response) in
+                        if response.error == nil {
+                            if let data = response.data {
+                                cell.project_image.image = UIImage(data: data)
+                            }
+                        }else{
+                            
+                        }
+                    }
+                }
+                cell.projectname.preferredMaxLayoutWidth = 200
+                
+                //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
+                
+                return cell
+            }else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImage") as! ProjectCellwithoutImage
+                //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                let normalText  = "\(project.title)"
+                
+                let attributedString = NSMutableAttributedString(string:normalText)
+                var distance = ""
+                if((tempLocation?.distance(from: currentLocation!))!/1609.34 < 1000){
+                    distance = "\(Double(round((tempLocation?.distance(from: currentLocation!))!/1609.34 * 100)/100)) mi. away"
+                }else{
+                    distance = "1000+ mi. away"
+                }
+                if(expandNearby){
+                    cell.contentView.isHidden = false
+                }else{
+                    cell.contentView.isHidden = true
+                }
+                cell.separatorInset = UIEdgeInsetsMake(0, 14, 0, 14)
+                var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                var mutableParagraphStyle = NSMutableParagraphStyle()
+                
+                // *** set LineSpacing property in points ***
+                mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+                //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                
+                var cert_color = UIColor()
+                if(project.certification_level.lowercased() == "certified"){
+                    cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "gold"){
+                    cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "platinum"){
+                    cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else if(project.certification_level.lowercased() == "silver"){
+                    cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                }else {
+                    cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
+                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                }
+                let attrs = [NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 12)] as [NSAttributedStringKey : Any]
+                var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+                boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+                
+                if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                }else{
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                }
+                
+                attributedString.append(boldString)
+                cell.textLabel?.attributedText = attributedString
+                //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
+                
+                return cell
+            }
         }
 
         

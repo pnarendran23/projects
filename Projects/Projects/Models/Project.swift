@@ -13,6 +13,8 @@ class Project: NSObject, NSCoding{
     var title = ""
     var city = ""
     var certification_level = ""
+    var certification_date = ""
+    var registration_date = ""
     var rating_system_version = ""
     var rating_system = ""
     var image = ""
@@ -38,6 +40,8 @@ class Project: NSObject, NSCoding{
         self.country = aDecoder.decodeObject(forKey: "country") as! String
         self.state = aDecoder.decodeObject(forKey: "state") as! String
         self.city = aDecoder.decodeObject(forKey: "city") as! String
+        self.certification_date = aDecoder.decodeObject(forKey: "certification_date") as! String
+        self.registration_date = aDecoder.decodeObject(forKey: "registration_date") as! String
     }
     
     func encode(with aCoder: NSCoder) {
@@ -52,11 +56,14 @@ class Project: NSObject, NSCoding{
         aCoder.encode(rating_system_version, forKey: "rating_system_version")
         aCoder.encode(country, forKey: "country")
         aCoder.encode(state, forKey: "state")
-        aCoder.encode(certification_level, forKey: "certification_level")        
+        aCoder.encode(certification_level, forKey: "certification_level")
+        aCoder.encode(certification_date, forKey: "certification_date")
+        aCoder.encode(registration_date, forKey: "registration_date")
     }
     
     init(json: JSON) {
-        
+        certification_date = (json["certification_date"].arrayValue.first?.stringValue)!
+        registration_date = (json["registration_date"].arrayValue.first?.stringValue)!
         node_id = (json["node_id"].arrayValue.first?.stringValue)!
         title = (json["title"].arrayValue.first?.stringValue)!
         lat = (json["lat"].arrayValue.first?.stringValue)!

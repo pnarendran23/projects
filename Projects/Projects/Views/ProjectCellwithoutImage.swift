@@ -10,14 +10,18 @@ import UIKit
 
 class ProjectCellwithoutImage: UITableViewCell {
 
-    @IBOutlet weak var address: UILabel!
-    @IBOutlet weak var projectname: UILabel!
+//    @IBOutlet weak var address: UILabel!
+//    @IBOutlet weak var projectname: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        projectname.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
-        projectname.font = UIFont.AktivGrotesk_Md(size: 16)
-        address.font = UIFont.AktivGrotesk_Rg(size: 12)
-        address.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        sizeToFit()
+        layoutIfNeeded()
+        setNeedsLayout()
+        updateConstraints()
+        textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
+        textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
+//        address.font = UIFont.AktivGrotesk_Rg(size: 12)
+//        address.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
         
         // Initialization code
     }
@@ -28,8 +32,8 @@ class ProjectCellwithoutImage: UITableViewCell {
         }
         set {
             var frame = newValue
-            frame.origin.x += 24
-            frame.size.width -= 2 * 18
+            frame.origin.x += 7
+            frame.size.width -= 2 * 7
             
             super.frame = frame
         }

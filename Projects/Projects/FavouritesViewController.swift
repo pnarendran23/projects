@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 protocol moreoption: class
 {
@@ -22,8 +23,8 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         super.viewDidLoad()
         
         self.tableView.tableFooterView = UIView.init(frame: .zero)
-        self.tableView.estimatedRowHeight = 40
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        
+        
         tableView.register(UINib(nibName: "ProjectCellwithImagemore", bundle: nil), forCellReuseIdentifier: "ProjectCellwithImagemore")
         tableView.register(UINib(nibName: "ProjectCellwithoutImagemore", bundle: nil), forCellReuseIdentifier: "ProjectCellwithoutImagemore")
         tableView.register(UINib(nibName: "FavouritesHeader", bundle: nil), forCellReuseIdentifier: "FavouritesHeader")
@@ -87,6 +88,158 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let project = favourites[indexPath.row]
+        
+        
+        if(project.image.count > 0 && !project.image.contains("project_placeholder")){
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithImagemore", for: indexPath) as! ProjectCellwithImagemore
+            //cell.projectname.text = "\(project.title)"
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+            let normalText  = "\(project.title)"
+            let attributedString = NSMutableAttributedString(string:normalText)
+            var distance = ""
+            var location = CLLocation()
+            var t = ""
+            if(project.city.count > 0){
+                t = t + project.city + ", "
+            }
+            
+            if(project.state.count > 0){
+                t = t + project.state + ", "
+            }
+            
+            if(project.country.count > 0){
+                t = t + project.country
+            }
+            
+            if(t[t.index(before: t.endIndex)] != ","){
+                t = String(t.prefix(t.count ))
+            }
+            
+            var boldText = "\n\(t)"
+            var mutableParagraphStyle = NSMutableParagraphStyle()
+            
+            // *** set LineSpacing property in points ***
+            mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+            //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+            
+            
+            let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
+            var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+            boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+            
+            
+            //boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1 ))
+            
+            attributedString.append(boldString)
+            cell.projectname.attributedText = attributedString
+            //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+            cell.project_image.center.y = cell.contentView.frame.size.height/2
+            cell.project_image.image = nil
+            var url = URL.init(string: project.image)
+            let remoteImageURL = url
+            if(url != nil){
+                Alamofire.request(remoteImageURL!).responseData { (response) in
+                    if response.error == nil {
+                        if let data = response.data {
+                            cell.project_image.image = UIImage(data: data)
+                        }
+                    }else{
+                        
+                    }
+                }
+            }
+            if(isEdited == true){
+                cell.delbutton.isHidden = false
+                cell.delbutton.tag = indexPath.row
+                cell.delbutton.addTarget(self, action: #selector(delbutton(button:)), for: .touchUpInside )
+                cell.nameConstraint.constant = 85
+                cell.imageViewConstraint.constant = 25
+                //tableView.isEditing = true
+                cell.more.isHidden = true
+            }else{
+                cell.delbutton.isHidden = true
+                cell.nameConstraint.constant = 63
+                cell.imageViewConstraint.constant = 0
+                //tableView.isEditing = false
+                cell.more.isHidden = false
+            }
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+            cell.more.tag = indexPath.row
+            cell.more.addTarget(self, action: #selector(self.moreclicked(button:)), for: .touchUpInside)
+            
+            //cell.project_image.sd_setImage(with: URL(string: project.image), placeholderImage: UIImage.init(named: "project_placeholder"))
+            
+            return cell
+        }else{
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCellwithoutImagemore", for: indexPath) as! ProjectCellwithoutImagemore
+            //cell.address.text = "\(project.address.replacingOccurrences(of: "\n", with: ""))"
+            project.title = project.title.replacingOccurrences(of: "&amp;", with: "")
+            let normalText  = "\(project.title)"
+            
+            let attributedString = NSMutableAttributedString(string:normalText)
+            
+            var distance = ""
+
+            var t = ""
+            if(project.city.count > 0){
+                t = t + project.city + ", "
+            }
+            
+            if(project.state.count > 0){
+                t = t + project.state + ", "
+            }
+            
+            if(project.country.count > 0){
+                t = t + project.country
+            }
+            
+            if(t[t.index(before: t.endIndex)] == ","){
+                t = String(t.prefix(t.count - 1))
+            }
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+            var boldText = "\n\(t)"
+            //var boldText = "\n\(project.city), \(project.country)\n\(distance)"
+            var mutableParagraphStyle = NSMutableParagraphStyle()
+            
+            // *** set LineSpacing property in points ***
+            mutableParagraphStyle.lineSpacing = 4 // Whatever line spacing you want in points
+            //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+            
+            
+            let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
+            var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
+            boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
+            
+            
+            //boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(t)".count, distance.count + 1))
+            
+            attributedString.append(boldString)
+            cell.projectname.numberOfLines = 0
+            cell.projectname.attributedText = attributedString
+            if(isEdited == true){
+                //tableView.isEditing = true
+                cell.delbutton.isHidden = false
+                cell.delbutton.tag = indexPath.row
+                cell.delbutton.addTarget(self, action: #selector(delbutton(button:)), for: .touchUpInside )
+                cell.nameConstraint.constant = 25
+                cell.more.isHidden = true
+            }else{
+                cell.delbutton.isHidden = true
+                cell.nameConstraint.constant = 0
+                //tableView.isEditing = false
+                cell.more.isHidden = false
+            }
+            cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+            cell.more.tag = indexPath.row
+            cell.projectname.sizeToFit()
+            cell.projectname.layoutIfNeeded()
+            cell.more.addTarget(self, action: #selector(self.moreclicked(button:)), for: .touchUpInside)
+            //cell.projectname.attributedText = "\(project.title)\n\(project.address.replacingOccurrences(of: "\n", with: ""))"
+            
+            return cell
+        }
+        
             project.address = project.address.components(separatedBy: "[").first!
             project.country = project.country.components(separatedBy: "[").first!
             project.state = project.state.components(separatedBy: "[").first!
@@ -96,24 +249,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                 let normalText  = "\(project.title)"
                 let attributedString = NSMutableAttributedString(string:normalText)
                 var distance = ""
-                if(isEdited == true){
-                    cell.delbutton.isHidden = false
-                    cell.delbutton.tag = indexPath.row
-                    cell.delbutton.addTarget(self, action: #selector(delbutton(button:)), for: .touchUpInside )
-                    cell.nameConstraint.constant = 85
-                    cell.imageViewConstraint.constant = 25
-                    //tableView.isEditing = true
-                    cell.more.isHidden = true
-                }else{
-                    cell.delbutton.isHidden = true
-                    cell.nameConstraint.constant = 63
-                    cell.imageViewConstraint.constant = 0
-                    //tableView.isEditing = false
-                    cell.more.isHidden = false
-                }
-                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
-                cell.more.tag = indexPath.row
-                cell.more.addTarget(self, action: #selector(self.moreclicked(button:)), for: .touchUpInside)
+
                 
                 var boldText = "\n\(project.state), \(project.country)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
@@ -189,6 +325,19 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
             }
     }
     
+    func calculateHeight(inString:String) -> CGFloat
+    {
+        let messageString = inString
+        
+        
+        let attributedString : NSAttributedString = NSAttributedString(string: messageString, attributes: [NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 13)])
+        
+        let rect : CGRect = attributedString.boundingRect(with: CGSize(width: 222.0, height: CGFloat.greatestFiniteMagnitude), options: .usesLineFragmentOrigin, context: nil)
+        
+        let requredSize:CGRect = rect
+        return  0.8 * requredSize.height
+    }
+    
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
     }
@@ -260,8 +409,10 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
   
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.title = "Favourites"
+        self.navigationItem.title = "Favorites"
         self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.tableView.estimatedRowHeight = 440.0
+        self.tableView.rowHeight = UITableViewAutomaticDimension
         Apimanager.shared.stopAllSessions()   
     }
     

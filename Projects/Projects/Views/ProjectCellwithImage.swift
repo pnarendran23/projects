@@ -15,6 +15,10 @@ class ProjectCellwithImage: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        sizeToFit()
+        layoutIfNeeded()
+        setNeedsLayout()
+        updateConstraints()
         project_image.layer.cornerRadius = 2.0
         project_image.layer.masksToBounds = true
         projectname.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
