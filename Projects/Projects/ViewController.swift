@@ -1296,8 +1296,10 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         projectsListTab.statesarray = self.statesarray
         projectsListTab.currentPosition = self.mapView.camera
         projectsListTab.zoomLevel = Double(self.zoomLevel)
-        projectsListTab.locationManager = self.locationManager
-        projectsListTab.currentLocation = self.locationManager.location!
+        if(self.locationManager.location != nil){
+            projectsListTab.locationManager = self.locationManager
+            projectsListTab.currentLocation = self.locationManager.location!
+        }
         projectsListTab.filterProjects = [Project]()
         projectsListTab.projects = [Project]()
         projectsListTab.searchedProjects = [Project]()
