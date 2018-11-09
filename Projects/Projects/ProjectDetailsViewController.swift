@@ -33,6 +33,9 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     var Details = ProjectDetails()
     var node_id = ""
     @IBOutlet weak var progressView: UIProgressView!
+    @IBAction func close(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     var expandSite = false
     var expandDetails = true
@@ -487,13 +490,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             if(code == -1 && projectDetails != nil){
                     //self.totalCount = totalCount!
                 DispatchQueue.main.async {
-                    let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
-                    label.backgroundColor = .clear
+                    let label = UILabel(frame: CGRect(x: -40, y: 0, width: UIScreen.main.bounds.width, height: 44))                    
                     label.numberOfLines = 0
                     label.textAlignment = .center
                     label.font = UIFont.AktivGrotesk_Md(size: 15)
                     label.text = self.currentProject.title
-                    self.navigationItem.titleView = label
+                    self.navigationItem.title = "Overview"//self.currentProject.title
+                    //self.navigationItem.titleView = label
                     print(projectDetails!.project_id)
                     print(self.currentProject.long)
                     self.progressView.setProgress(0.4, animated: true)
@@ -628,7 +631,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+        for view in (self.navigationController?.navigationBar.subviews)! {
+            view.layoutMargins = UIEdgeInsets.zero
+        }
         //tabbar.invalidateIntrinsicContentSize()
     }
     

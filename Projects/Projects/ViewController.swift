@@ -148,11 +148,12 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 self.filterProjects = [Project]()
                 self.tableView.reloadData()
                 if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0){
-                    CATransaction.begin()
-                    CATransaction.setValue(2.0, forKey: kCATransactionAnimationDuration)
-                    let camera = GMSCameraPosition.camera(withLatitude: self.mapView.camera.target.latitude , longitude: self.mapView.camera.target.longitude, zoom: 8)
-                    self.mapView.camera = camera
-                    //new change self.navigationItem.rightBarButtonItems = nil
+                    //CATransaction.begin()
+                    //CATransaction.setValue(2.0, forKey: kCATransactionAnimationDuration)
+                    //let camera = GMSCameraPosition.camera(withLatitude: self.mapView.camera.target.latitude , longitude: self.mapView.camera.target.longitude, zoom: 8)
+                    //self.mapView.camera = camera
+                    self.loadData()
+                    self.navigationItem.rightBarButtonItems = nil
                     self.makeNavigationBarButtons()
                     //self.mapView.animate(to: GMSCameraPosition.camera(withTarget: self.mapView.camera.target, zoom: 8))
                     CATransaction.commit()
@@ -160,7 +161,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     //Apimanager.shared.stopAllSessions()
                     //self.searchProjects()
                 }else{
-                    //new change self.navigationItem.rightBarButtonItems = nil
+                    self.navigationItem.rightBarButtonItems = nil
                     self.makeNavigationBarButtons()
                     self.loadData()
                 }
@@ -361,7 +362,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         if(!allDownloaded){
             var dict = [[String : Any]]()
             dict = constructCategory()
-            //new change self.navigationItem.rightBarButtonItems = nil
+            self.navigationItem.rightBarButtonItems = nil
             //self.makeNavigationBarButtons()
         print(lat)
         print(lng)
@@ -406,7 +407,6 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                             self.from = self.from + self.size
                             self.loadMapView(temp: projects!)
                             Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "\(self.from) of \(self.totalRecords) projects")
-                            self.loadMapView(temp: projects!)
                             self.allDownloaded = true
                         }
                         
@@ -483,7 +483,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         //sizee was 500000
         var dict = [[String : Any]]()
         dict = constructCategory()
-        //new change self.navigationItem.rightBarButtonItems = nil
+        self.navigationItem.rightBarButtonItems = nil
         //self.makeNavigationBarButtons()
             Apimanager.shared.searchProjectsElasticForMapNew (from: 0, sizee : 100, search : search, category : dict, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
@@ -497,8 +497,6 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     self.projects = self.filterProjects
                     self.allDownloaded = false
                     self.projects = self.searchedProjects
-                        
-                    self.loadMapView(temp: projects!)
                     Utility.hideLoading()
                         self.arrProjects = [String]()
                         self.arrFilter = [String]()
@@ -522,13 +520,11 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                             self.progressView.isHidden = true
                             self.from = self.from + self.size
                             self.loadMapView(temp: projects!)
-                            if(self.mapViewTopConstraint.constant != 0){
+                            if(self.tableViewContainer.isHidden == true && self.mapViewTopConstraint.constant != 0){
                             Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "\(self.from) of \(self.totalRecords) projects")
                             }
-                            self.loadMapView(temp: projects!)
                             self.allDownloaded = true
                         }
-                        
                         self.tableView.reloadData()
                     }
                 }else{
@@ -1024,9 +1020,6 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItems = nil
-        self.makeNavigationBarButtons()
-        viewDidLayoutSubviews()
         self.searchBar.isHidden = true
         tableViewtopConstraint.constant = 0.58 * UIScreen.main.bounds.size.height
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipes(_:)))
@@ -1159,6 +1152,9 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
     override func viewWillAppear(_ animated: Bool) {
         searchBar.tintColor = UIColor.white
         searchBar.layer.borderWidth = 1
+        self.navigationItem.leftBarButtonItems = nil
+        self.makeNavigationBarButtons()
+        viewDidLayoutSubviews()
         //self.navigationController?.navigationBar.barTintColor = UIColor.white
         //searchBar.layer.borderColor = UIColor.hex(hex: Colors.primaryColor).cgColor
         //right nav buttons
@@ -1178,7 +1174,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         searchButton.addTarget(self, action: #selector(self.handleSearch(_:)), for: .touchUpInside)
         let searchBarButton = UIBarButtonItem(customView: searchButton)
         
-        var filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
+        let filterButton = UIButton(frame: CGRect(x: 0, y: 0, width: 28, height: 28))
         let tempcerts = certificationsarray.mutableCopy() as! NSMutableArray
         let tempratings = ratingsarray.mutableCopy() as! NSMutableArray
         let tempversions = versionsarray.mutableCopy() as! NSMutableArray
@@ -1242,17 +1238,9 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         self.navigationItem.title = "Projects"
         temp.customView?.translatesAutoresizingMaskIntoConstraints = true;
         var negativeSpace:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.fixedSpace, target: nil, action: nil)
-        negativeSpace.width = 30.0
-        self.navigationItem.rightBarButtonItems = [ filterBarButton, negativeSpace, listBarButton]
-        self.navigationItem.leftBarButtonItems = [temp]
+        negativeSpace.width = 17.0
+        self.navigationItem.leftBarButtonItems = [temp, filterBarButton, listBarButton]
         self.navigationItem.rightBarButtonItems = nil
-        self.navigationItem.leftBarButtonItems = nil
-        let v = UIView.init(frame: CGRect(x:0,y:0,width:UIScreen.main.bounds.size.width,height:40))
-        self.search.frame = CGRect(x:0,y:0,width:300,height:40)
-        filterButton.frame = CGRect(x: 305, y: 0, width: 40, height: 40)
-        v.addSubview(self.search)
-        v.addSubview(filterButton)
-        self.navigationItem.titleView = v
         var textField = search.value(forKey: "_searchField") as! UITextField
         //textField.clearButtonMode = .never
         //self.navigationItem.leftBarButtonItem =
@@ -1371,29 +1359,30 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                 viewController.tagarray = tagarray
             }
         }else if segue.identifier == "ProjectDetailsViewController" {
-            if let vc = segue.destination as? ProjectDetailsViewController {
+            if let vc = segue.destination as? UINavigationController {
+                let v = vc.viewControllers[0] as! ProjectDetailsViewController
                 if(frominfoView == true){
                     //Crash
                     print(sender as! GMSMarker)
                     if(self.markerArray.index(of: sender as! GMSMarker)! != -1){
-                        vc.node_id = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
-                        vc.projectID = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].ID
-                        vc.currentProject = self.projects[self.markerArray.index(of: sender as! GMSMarker)!]
-                        vc.navigationItem.title = vc.currentProject.title
+                        v.node_id = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
+                        v.projectID = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].ID
+                        v.currentProject = self.projects[self.markerArray.index(of: sender as! GMSMarker)!]
+                        v.navigationItem.title = "Overview"
                     }
                 }else{
                     
-                    vc.node_id = searchedProjects[sender as! Int].node_id
-                    vc.projectID = searchedProjects[sender as! Int].ID
-                    vc.currentProject = searchedProjects[sender as! Int]
-                    vc.navigationItem.title = vc.currentProject.title
+                    v.node_id = searchedProjects[sender as! Int].node_id
+                    v.projectID = searchedProjects[sender as! Int].ID
+                    v.currentProject = searchedProjects[sender as! Int]
+                    v.navigationItem.title = "Overview"
                 }
                 if(locationManager.location != nil){
                     self.currentLocation = locationManager.location
                 }else{
                     self.currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
                 }
-                vc.currentLocation = self.currentLocation
+                v.currentLocation = self.currentLocation
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title
             }
         }
@@ -2257,7 +2246,7 @@ extension ViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
-        if(UIDevice.current.userInterfaceIdiom == .pad){
+        if(searchBar == self.search){
             arrFilter.removeAll(keepingCapacity: false)
             self.arrCountry.removeAll()
             arrProjects = [String]()
@@ -2272,7 +2261,7 @@ extension ViewController: UISearchBarDelegate {
                 searchBar.resignFirstResponder()
                 self.tableViewContainer.isHidden = true
             }
-            timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
+            timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(searchProjects), userInfo: nil, repeats: false)
         }
         
     }

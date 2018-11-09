@@ -840,20 +840,22 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ProjectDetailsViewController" {
-            if let vc = segue.destination as? ProjectDetailsViewController {
+            if let vc = segue.destination as? UINavigationController {
+                let v = vc.viewControllers[0] as! ProjectDetailsViewController
+                
                 if((self.search.text?.count)! > 0){
-                    vc.node_id = filterProjects[sender as! Int].node_id
-                    vc.projectID = filterProjects[sender as! Int].ID
-                    vc.currentProject = filterProjects[sender as! Int]
-                    vc.currentLocation = self.currentLocation
-                    vc.navigationItem.title = vc.currentProject.title
+                    v.node_id = filterProjects[sender as! Int].node_id
+                    v.projectID = filterProjects[sender as! Int].ID
+                    v.currentProject = filterProjects[sender as! Int]
+                    v.currentLocation = self.currentLocation
+                    v.navigationItem.title = "Overview"
                 }else{
-                    vc.currentProject = filterProjects[sender as! Int]
-                    vc.node_id = filterProjects[sender as! Int].node_id
-                    vc.projectID = filterProjects[sender as! Int].ID
-                    vc.currentProject = filterProjects[sender as! Int]
-                    vc.currentLocation = self.currentLocation
-                    vc.navigationItem.title = vc.currentProject.title
+                    v.currentProject = filterProjects[sender as! Int]
+                    v.node_id = filterProjects[sender as! Int].node_id
+                    v.projectID = filterProjects[sender as! Int].ID
+                    v.currentProject = filterProjects[sender as! Int]
+                    v.currentLocation = self.currentLocation
+                    v.navigationItem.title = "Overview"
                 }
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title
             }
@@ -1387,26 +1389,29 @@ extension ProjectListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchTxt: String) {
-//        request.naturalLanguageQuery = searchTxt
-//
-//        let search = MKLocalSearch(request: request)
-//        search.start { response, _ in
-//            guard let response = response else {
-//                return
-//            }
-//            self.arrCountry.removeAll()
-//            self.arrCountry.append("Current location")
-//            for i in response.mapItems{
-//                print(i.placemark.name)
-//                print(i.placemark.coordinate.latitude)
-//                print(i.placemark.coordinate.longitude)
-//                self.arrCountry.append(i.placemark.name!)
-//            }
-//            if(self.tableViewTopConstraint.constant != 0){
-//                self.locationtableView.isHidden = false
-//                self.locationtableView.reloadData()
-//            }
-//        }
+        if(searchBar == self.search){
+            DispatchQueue.main.async {
+                UserDefaults.standard.set(searchBar.text!, forKey: "searchText")
+                self.arrFilter.removeAll(keepingCapacity: false)
+                self.arrCountry.removeAll()
+                self.arrProjects = [String]()
+                self.filterProjects = [Project]()
+                self.tableView.reloadData()
+                let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", self.search.text!)
+                let array = (self.arrCountry as NSArray).filtered(using: searchPredicate)
+                self.arrProjects = [String]()
+                self.arrFilter = array as! [String]
+                self.timer.invalidate()
+                Apimanager.shared.stopAllSessions()
+                self.loading = true
+                self.allDownloaded = false
+                self.from = 0
+                self.filterProjects = [Project]()
+                self.searchedProjects = [Project]()
+            UserDefaults.standard.set(self.search.text!, forKey: "searchText")
+                self.timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.searchProjects), userInfo: nil, repeats: false)
+            }
+        }
     }
     
 }
