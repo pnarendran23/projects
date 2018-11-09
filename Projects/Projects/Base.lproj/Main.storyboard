@@ -457,7 +457,7 @@
         <!--Explore-->
         <scene sceneID="QJg-bY-FNw">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bmn-lS-ckt" customClass="rootController" customModule="USGBC_Explore" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bmn-lS-ckt" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Explore" image="Explore_BU" id="IFs-m9-fFd"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Kfa-nw-305">
