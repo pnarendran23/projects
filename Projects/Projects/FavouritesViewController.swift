@@ -476,22 +476,23 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ProjectDetailsViewController" {
-            if let vc = segue.destination as? ProjectDetailsViewController {
+            if let vc = segue.destination as? UINavigationController {
+                let v = vc.viewControllers[0] as! ProjectDetailsViewController
                 self.navigationItem.title = ""
                 print(favourites[sender as! Int].node_id.count)
                 if(favourites[sender as! Int].node_id != ""){
-                    vc.node_id = favourites[sender as! Int].node_id
-                    vc.projectID = favourites[sender as! Int].ID
-                    vc.currentProject = favourites[sender as! Int]
+                    v.node_id = favourites[sender as! Int].node_id
+                    v.projectID = favourites[sender as! Int].ID
+                    v.currentProject = favourites[sender as! Int]
                     let currentLocation = CLLocation.init(latitude: 38.904449, longitude: -77.046797)
-                    vc.currentLocation = currentLocation
+                    v.currentLocation = currentLocation
                     let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 44))
                     label.backgroundColor = .clear
                     label.numberOfLines = 0
                     label.textAlignment = .center
                     label.font = UIFont.AktivGrotesk_Md(size: 15)
-                    label.text = vc.currentProject.title
-                    vc.navigationItem.titleView = label
+                    label.text = v.currentProject.title
+                    v.navigationItem.title = "Overview"
                     //vc.navigationItem.title =
                 }
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title
