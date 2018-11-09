@@ -17,6 +17,7 @@ import RealmSwift
 class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     @IBOutlet weak var tableView: UITableView!
     var favourites = [Project]()
+    var imageData : Data!
     var heights : [CGFloat] = [0.0]
     var isFavourite = false
     var titleArray = [String]()
@@ -255,9 +256,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             cell.title.text = "\(title)"
             if(temp){
-                cell.expandButton.setImage(UIImage.init(named: "arrow_down"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_down"), for: .normal)
             }else{
-                cell.expandButton.setImage(UIImage.init(named: "arrow_right"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_right"), for: .normal)
             }
             cell.expandButton.addTarget(self, action: #selector(expandCollapse(button:)), for: .touchUpInside)
             cell.layoutIfNeeded()
@@ -512,6 +513,20 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     self.Details.address = self.Details.address.replacingOccurrences(of: "\n", with: "")
                     print(self.Details.image)
                     if(self.Details.image.count > 0 && self.Details.image.range(of: "placeholder") == nil){
+                        
+                        var url = URL.init(string: self.Details.project_images.first!)
+                        let remoteImageURL = url
+                        if(url != nil){
+                            Alamofire.request(remoteImageURL!).responseData { (response) in
+                                if response.error == nil {
+                                    if let data = response.data {
+                                        self.imageData = data
+                                    }
+                                }else{
+                                    
+                                }
+                            }
+                        }
 //                        self.items.append(GalleryItem.image { callback in
 //                            var url = URL.init(string: self.Details.image)
 //                            let remoteImageURL = url
@@ -832,20 +847,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                 if(self.Details.project_images.count > 0 && self.Details.image.range(of: "placeholder") == nil){
                                     print(self.Details.image)
                                     
-                                    thumbnailView.imgView.image = nil
-                                    var url = URL.init(string: self.Details.project_images.first!)
-                                    let remoteImageURL = url
-                                    if(url != nil){
-                                        Alamofire.request(remoteImageURL!).responseData { (response) in
-                                            if response.error == nil {
-                                                if let data = response.data {
-                                                    thumbnailView.imgView.image = UIImage(data: data)
-                                                }
-                                            }else{
-                                                
-                                            }
-                                        }
-                                    }
+                                    thumbnailView.imgView.image = UIImage(data: imageData)
                                     
                                 //thumbnailView.imgView.sd_setImage(with: URL(string: self.Details.image), placeholderImage: UIImage.init(named: "project_placeholder"))
                                 }else{
@@ -1077,9 +1079,10 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
 
             cell.title.text = "Details"
             if(expandDetails){
-                cell.expandButton.setImage(UIImage.init(named: "arrow_down"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_down"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_down"), for: .normal)
             }else{
-                cell.expandButton.setImage(UIImage.init(named: "arrow_right"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_right"), for: .normal)
             }
             let tintedImage = cell.expandButton.imageView?.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             cell.expandButton.setImage(tintedImage, for: .normal)
@@ -1122,9 +1125,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             cell.title.text = "Scorecard"
             if(expandScoreCard){
-                cell.expandButton.setImage(UIImage.init(named: "arrow_down"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_down"), for: .normal)
             }else{
-                cell.expandButton.setImage(UIImage.init(named: "arrow_right"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_right"), for: .normal)
             }
             let tintedImage = cell.expandButton.imageView?.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             cell.expandButton.setImage(tintedImage, for: .normal)
@@ -1190,9 +1193,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             cell.title.text = "Projects Nearby"
             if(expandNearby){
-                cell.expandButton.setImage(UIImage.init(named: "arrow_down"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_down"), for: .normal)
             }else{
-                cell.expandButton.setImage(UIImage.init(named: "arrow_right"), for: .normal)
+                cell.expandButton.setBackgroundImage(UIImage(named: "arrow_right"), for: .normal)
             }
             
             let tintedImage = cell.expandButton.imageView?.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
