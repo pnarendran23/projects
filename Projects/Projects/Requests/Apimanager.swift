@@ -694,7 +694,7 @@ class Apimanager{
                 ],"minimum_should_match": "1"]]
         }
         header = [
-            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date","url"],
             "query": [
                 "bool" : [
                     "must_not":[
@@ -768,6 +768,7 @@ class Apimanager{
                                 //print(subJson)
                                     project.title = subJson["_source"]["title"].stringValue
                                     project.ID = subJson["_source"]["prjt_id"].stringValue
+                                    project.path = subJson["_source"]["url"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //
                                     project.lat = subJson["_source"]["geo_code"]["lat"].stringValue
@@ -857,7 +858,7 @@ class Apimanager{
                 ],"minimum_should_match": "1"]]
         }
         header = [
-            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
+            "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date","url"],
         ]
         header["query"] = [String : Any]()
         var query = header["query"] as! [String : Any]
@@ -910,6 +911,7 @@ class Apimanager{
                                 }
                                     //print(subJson)
                                     project.title = subJson["_source"]["title"].stringValue
+                                    project.path = subJson["_source"]["url"].stringValue
                                     project.ID = subJson["_source"]["prjt_id"].stringValue
                                     project.certification_level = subJson["_source"]["certification_level"].stringValue
                                     //

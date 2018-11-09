@@ -846,9 +846,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                 thumbnailView.selectionStyle = .none
                                 if(self.Details.project_images.count > 0 && self.Details.image.range(of: "placeholder") == nil){
                                     print(self.Details.image)
-                                    
-                                    thumbnailView.imgView.image = UIImage(data: imageData)
-                                    
+                                    if(imageData != nil){
+                                        thumbnailView.imgView.image = UIImage(data: imageData)
+                                    }
                                 //thumbnailView.imgView.sd_setImage(with: URL(string: self.Details.image), placeholderImage: UIImage.init(named: "project_placeholder"))
                                 }else{
                                     thumbnailView.imgView.image = UIImage.init(named: "project_placeholder")

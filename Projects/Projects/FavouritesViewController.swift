@@ -578,7 +578,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     @objc func share(){
         // text to share
-        let url = URL.init(string: "\(Apimanager.shared.projectDetailsURL)/projects/\(selected_project.node_id)")
+        let url = URL.init(string: "\(selected_project.path)")
         
         // set up activity view controller
         let textToShare = [ url! ]

@@ -11,6 +11,7 @@ import SwiftyJSON
 
 class Project: NSObject, NSCoding{
     var title = ""
+    var path = ""
     var city = ""
     var certification_level = ""
     var certification_date = ""
@@ -29,6 +30,7 @@ class Project: NSObject, NSCoding{
     required init?(coder aDecoder: NSCoder) {
         // super.init(coder:) is optional, see notes below
         self.ID = aDecoder .decodeObject(forKey: "ID") as! String
+        self.path = aDecoder .decodeObject(forKey: "path") as! String
         self.node_id = aDecoder.decodeObject(forKey: "node_id") as! String
         self.lat = aDecoder.decodeObject(forKey: "lat") as! String
         self.long = aDecoder.decodeObject(forKey: "long") as! String
@@ -46,6 +48,7 @@ class Project: NSObject, NSCoding{
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(city, forKey: "city")
+        aCoder.encode(path, forKey: "path")
         aCoder.encode(ID, forKey: "ID")
         aCoder.encode(lat, forKey: "lat")
         aCoder.encode(long, forKey: "long")
@@ -64,6 +67,7 @@ class Project: NSObject, NSCoding{
     init(json: JSON) {
         certification_date = (json["certification_date"].arrayValue.first?.stringValue)!
         registration_date = (json["registration_date"].arrayValue.first?.stringValue)!
+        path = (json["path"].arrayValue.first?.stringValue)!
         node_id = (json["node_id"].arrayValue.first?.stringValue)!
         title = (json["title"].arrayValue.first?.stringValue)!
         lat = (json["lat"].arrayValue.first?.stringValue)!
