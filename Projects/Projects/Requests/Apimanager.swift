@@ -677,7 +677,21 @@ class Apimanager{
         var header = [String : Any]()
         var matchTitle = [String : Any]()
         if(search.count > 0){
-            matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest" ] ]
+            matchTitle = ["bool": [
+                "should": [
+                    ["multi_match": [
+                        "query": "\(search)",
+                        "fields": ["title.raw^3","certification_level.raw","rating_system.raw","rating_system_version.raw","add_city.raw","add_country.raw^2","add_state.raw^2","add_street.raw^2","add_postal_code.raw","prjt_id.raw","geo_street_name.raw^2","geo_city_name.raw^2","geo_state_name.raw^2","geo_state_abbrv.raw^2","geo_country_name.raw^2","geo_country_abbrv.raw^2","geo_postal_code.raw","geo_full_address.raw^2","title^3","certification_level","rating_system","rating_system_version","add_city^2","add_country^2","add_state^2","add_street^2","add_postal_code","prjt_id","geo_street_name^2","geo_city_name^2","geo_state_name^2","geo_state_abbrv^2","geo_country_name^2","geo_country_abbrv^2","geo_postal_code","geo_full_address^2"
+                        ],
+                        "type": "cross_fields","operator": "and"]
+                    ], ["multi_match": [
+                        "query": "\(search)",
+                        "fields":[
+                            "title.raw^3","certification_level.raw","rating_system.raw","rating_system_version.raw","add_city.raw^2","add_country.raw^2","add_state.raw^2","add_street.raw^2","add_postal_code.raw","prjt_id.raw","geo_street_name.raw^2","geo_city_name.raw^2","geo_state_name.raw^2","geo_state_abbrv.raw^2","geo_country_name.raw^2","geo_country_abbrv.raw^2","geo_postal_code.raw","geo_full_address.raw^2","title^3","certification_level","rating_system","rating_system_version","add_city^2","add_country^2","add_state^2","add_street^2","add_postal_code","prjt_id","geo_street_name^2","geo_city_name^2","geo_state_name^2","geo_state_abbrv^2","geo_country_name^2","geo_country_abbrv^2","geo_postal_code","geo_full_address^2"
+                        ],
+                        "type": "phrase_prefix","operator": "and"]
+                    ]
+                ],"minimum_should_match": "1"]]
         }
         header = [
             "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
@@ -719,7 +733,7 @@ class Apimanager{
             var query = header["query"] as! [String : Any]
             var bool = query["bool"] as! [String : Any]
             if(search.count > 0){
-                cat.append([ "multi_match" : matchTitle ])
+                cat.append(matchTitle)
             }
             if(cat.count > 0){
                 bool["must"] = cat
@@ -779,7 +793,7 @@ class Apimanager{
                                     let a = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                     project.address = a
                                     project.node_id = subJson["_source"]["node_id"].stringValue
-                                    if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                    if(subJson["_source"]["geo_state_name"].stringValue != ""){
                                         project.state = subJson["_source"]["geo_state_name"].stringValue
                                     }else{
                                         project.state = subJson["_source"]["add_state"].stringValue
@@ -826,7 +840,21 @@ class Apimanager{
         if(search.count > 0){
             
             
-            matchTitle = [ "query" : search, "fields": [ "title.autosuggest", "certification_level.autosuggest", "rating_system.autosuggest", "rating_system_version.autosuggest", "add_city.autosuggest", "add_country.autosuggest", "add_state.autosuggest", "add_street.autosuggest", "add_postal_code.autosuggest", "prjt_id.autosuggest" ] ]
+            matchTitle = ["bool": [
+                "should": [
+                    ["multi_match": [
+                        "query": "\(search)",
+                        "fields": ["title.raw^3","certification_level.raw","rating_system.raw","rating_system_version.raw","add_city.raw","add_country.raw^2","add_state.raw^2","add_street.raw^2","add_postal_code.raw","prjt_id.raw","geo_street_name.raw^2","geo_city_name.raw^2","geo_state_name.raw^2","geo_state_abbrv.raw^2","geo_country_name.raw^2","geo_country_abbrv.raw^2","geo_postal_code.raw","geo_full_address.raw^2","title^3","certification_level","rating_system","rating_system_version","add_city^2","add_country^2","add_state^2","add_street^2","add_postal_code","prjt_id","geo_street_name^2","geo_city_name^2","geo_state_name^2","geo_state_abbrv^2","geo_country_name^2","geo_country_abbrv^2","geo_postal_code","geo_full_address^2"
+                        ],
+                        "type": "cross_fields","operator": "and"]
+                    ], ["multi_match": [
+                        "query": "\(search)",
+                        "fields":[
+                            "title.raw^3","certification_level.raw","rating_system.raw","rating_system_version.raw","add_city.raw^2","add_country.raw^2","add_state.raw^2","add_street.raw^2","add_postal_code.raw","prjt_id.raw","geo_street_name.raw^2","geo_city_name.raw^2","geo_state_name.raw^2","geo_state_abbrv.raw^2","geo_country_name.raw^2","geo_country_abbrv.raw^2","geo_postal_code.raw","geo_full_address.raw^2","title^3","certification_level","rating_system","rating_system_version","add_city^2","add_country^2","add_state^2","add_street^2","add_postal_code","prjt_id","geo_street_name^2","geo_city_name^2","geo_state_name^2","geo_state_abbrv^2","geo_country_name^2","geo_country_abbrv^2","geo_postal_code","geo_full_address^2"
+                        ],
+                        "type": "phrase_prefix","operator": "and"]
+                    ]
+                ],"minimum_should_match": "1"]]
         }
         header = [
             "_source": ["title","certification_level","geo_code", "add_country", "add_state","rating_system_version","rating_system","add_city","node_id", "add_street","profile_image","prjt_id","geo_street_name","geo_city_name","geo_state_name","geo_country_name", "certification_date","certification_level","registration_date"],
@@ -845,7 +873,7 @@ class Apimanager{
         if(search.count > 0 || cat.count > 0){
             bool = query["bool"] as! [String : Any]
             if(search.count > 0){
-                cat.append([ "multi_match" : matchTitle ])
+                cat.append(matchTitle)
             }
             if(cat.count > 0){
                 bool["must"] = cat
@@ -908,7 +936,7 @@ class Apimanager{
                                 }
                                 project.address = project.address.replacingOccurrences(of: "&[^;]+;", with: "", options: String.CompareOptions.regularExpression, range: nil)
                                 project.node_id = subJson["_source"]["node_id"].stringValue
-                                if(subJson["_source"]["geo_street_name"].stringValue != ""){
+                                if(subJson["_source"]["geo_state_name"].stringValue != ""){
                                     project.state = subJson["_source"]["geo_state_name"].stringValue
                                 }else{
                                     project.state = subJson["_source"]["add_state"].stringValue

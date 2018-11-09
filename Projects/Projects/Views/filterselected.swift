@@ -30,7 +30,7 @@ class filterselected: UITableViewCell {
         set {
             var frame = newValue
             frame.origin.x += 13
-            frame.size.width -= 2 * 19
+            frame.size.width -= 2 * 13
             
             super.frame = frame
         }

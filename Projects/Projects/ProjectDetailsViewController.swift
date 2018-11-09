@@ -32,6 +32,8 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
     var projectID = ""
     var Details = ProjectDetails()
     var node_id = ""
+    @IBOutlet weak var progressView: UIProgressView!
+    
     var expandSite = false
     var expandDetails = true
     var expandScoreCard = true
@@ -73,7 +75,8 @@ class ProjectDetailsViewController: UIViewController, WKNavigationDelegate {
         
         DispatchQueue.main.async {
             self.tableView.isHidden = true
-            Utility.showLoading()
+            self.progressView.isHidden = false
+            self.progressView.setProgress(0, animated: true)
             self.tableView.isUserInteractionEnabled = false
             self.getDetails(nodeid: self.node_id)
         }        
@@ -171,9 +174,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         }else if(titleArray[indexPath.row] == "size" || titleArray[indexPath.row] == "use" || titleArray[indexPath.row] == "setting" || titleArray[indexPath.row] == "energystar" || titleArray[indexPath.row] == "walkscore" || titleArray[indexPath.row] == "certified"){
             return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "details heading"){
-            return 50
+            return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "scorecard heading"){
-            return 50
+            return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row].contains("scorecard:")){
             if(expandScoreCard){
                 var j = 0
@@ -187,7 +190,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 if(j > 0){
                     print((titleArray.index(of: "scorecard heading")! + j ))
                     if(indexPath.row == (titleArray.index(of: "scorecard heading")! + j )){
-                        return 54
+                        return UITableViewAutomaticDimension
                     }
                 }
                 return UITableViewAutomaticDimension
@@ -417,7 +420,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 for i in self.scoreCard{
                     self.currentScore = self.currentScore + Int(i.awarded)!
                     self.maxScore = self.maxScore + Int(i.possible)!
-                }                
+                }
+                self.progressView.setProgress(0.7, animated: true)
                 self.getNearbyProjects()
             }else{
                 var temp = [
@@ -469,7 +473,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     self.currentScore = self.currentScore + Int(i.awarded)!
                     self.maxScore = self.maxScore + Int(i.possible)!
                 }
-                self.tableView.reloadData()
+                //self.tableView.reloadData()
+                self.progressView.setProgress(0.7, animated: true)
                 self.getNearbyProjects()
             }
             }
@@ -489,8 +494,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     label.font = UIFont.AktivGrotesk_Md(size: 15)
                     label.text = self.currentProject.title
                     self.navigationItem.titleView = label
-                    print(self.currentProject.lat)
+                    print(projectDetails!.project_id)
                     print(self.currentProject.long)
+                    self.progressView.setProgress(0.4, animated: true)
                     self.currentLocation = CLLocation.init(latitude: Double(self.currentProject.lat)!, longitude: Double(self.currentProject.long)!)
                     self.Details = projectDetails!
                     self.latitude = CLLocationDegrees(self.Details.lat)!
@@ -538,7 +544,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                         })
                     }
                     self.tableView.isHidden = false
-                    self.tableView.reloadData()
+                    
                     self.getProjectScorecard(projectID: self.Details.project_id)
                 }
                 
@@ -591,13 +597,15 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 //self.lastRecordsCount = projects!.count
                 //self.filterProjects = self.projects
                 DispatchQueue.main.async {
-                    Utility.hideLoading()
+                    self.progressView.setProgress(1, animated: true)
                     //self.tableView.scrollToRow(at: IndexPath.init(row: 0, section: 0), at: .bottom , animated: false)                    
                     self.tableView.reloadData()
                     let indexPath = IndexPath(row: 0, section: 0)
                     self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                     self.tableView.isHidden = false
-                    Utility.hideLoading()
+                    if(self.progressView.progress == 1.0){
+                        self.progressView.isHidden = true
+                    }
                     self.tableView.isUserInteractionEnabled = true
                     self.tableView.layoutIfNeeded()
                 }
@@ -620,9 +628,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        for view in (self.navigationController?.navigationBar.subviews)! {
-            view.layoutMargins = UIEdgeInsets.zero
-        }
+        
         //tabbar.invalidateIntrinsicContentSize()
     }
     
@@ -645,10 +651,12 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 self.node_id = self.nearbyprojects[i].node_id
                 self.currentProject = self.nearbyprojects[i]
                 self.nearbyprojects.removeAll()
-                Utility.showLoading()
+                self.scoreCard.removeAll()
                 self.tableView.isUserInteractionEnabled = false
                 self.titleArray.removeAll()
                 self.tableView.reloadData()
+                self.progressView.setProgress(0, animated: false)
+                self.progressView.isHidden = false
                 if(UserDefaults.standard.object(forKey: "favourites") != nil){
                     self.favourites = NSKeyedUnarchiver.unarchiveObject(with: UserDefaults.standard.object(forKey: "favourites") as! Data) as! [Project]
                     self.isFavourite = false
@@ -859,12 +867,18 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             
             var t = ""
-            if(self.Details.city.count > 0 && self.Details.state.count > 0 && self.Details.zip_code.count > 0){
-                t = t + self.Details.city + ", \(self.Details.state), \(self.Details.zip_code)\n"
+            if(self.Details.city.count > 0){
+                t = t + self.Details.city + ","
+            }
+            if(self.Details.state.count > 0){
+             t = t + self.Details.state + ","
+            }
+            if(self.Details.zip_code.count > 0){
+                t = t + self.Details.zip_code + ","
             }
             
-            if(self.Details.state.count > 0){
-                //t = t + self.Details.state + ",\n"
+            if(t.count > 0){
+                t = t + "\n"
             }
             
             if(self.Details.country.count > 0){
@@ -878,9 +892,15 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             }
             
             var attr = NSMutableAttributedString.init(string: "")
-            let attributed = NSMutableAttributedString.init(string: "\(Details.title)\n\(self.Details.address),\n\(t)")
+            var attributed = NSMutableAttributedString()
+            if(self.Details.address.count > 0){
+              attributed =  NSMutableAttributedString.init(string: "\(Details.title)\n\(self.Details.address),\n\(t)")
+                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(self.Details.address),\n\(t)".count ))
+            }else{
+              attributed =  NSMutableAttributedString.init(string: "\(Details.title)\n\(t)")
+                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(t)".count ))
+            }
             
-            attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(self.Details.address),\n\(t)".count ))
             
             attr.append(attributed)
 //            projectInfoView.name.minimumScaleFactor = 0.9

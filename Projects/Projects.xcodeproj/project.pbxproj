@@ -134,6 +134,7 @@
 		56CA1BF92169DF2200D94909 /* ProjectsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56CA1BF82169DF2200D94909 /* ProjectsTests.swift */; };
 		56CA1C042169DF2200D94909 /* ProjectsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56CA1C032169DF2200D94909 /* ProjectsUITests.swift */; };
 		56CA1C122169EFCF00D94909 /* Apimanager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56CA1C112169EFCF00D94909 /* Apimanager.swift */; };
+		56E3333C2195F69400733DA3 /* rootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E3333B2195F69400733DA3 /* rootController.swift */; };
 		56FB3343216F2441000784F5 /* expandCollapseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FB3341216F2441000784F5 /* expandCollapseCell.swift */; };
 		56FB3344216F2441000784F5 /* expandCollapseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 56FB3342216F2441000784F5 /* expandCollapseCell.xib */; };
 		6445BA09D54DE2EC5A71D042 /* Pods_ProjectsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 886214D8ED7D44F12D141173 /* Pods_ProjectsUITests.framework */; };
@@ -336,6 +337,7 @@
 		56CA1C032169DF2200D94909 /* ProjectsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsUITests.swift; sourceTree = "<group>"; };
 		56CA1C052169DF2200D94909 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		56CA1C112169EFCF00D94909 /* Apimanager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Apimanager.swift; sourceTree = "<group>"; };
+		56E3333B2195F69400733DA3 /* rootController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rootController.swift; sourceTree = "<group>"; };
 		56FB3341216F2441000784F5 /* expandCollapseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = expandCollapseCell.swift; sourceTree = "<group>"; };
 		56FB3342216F2441000784F5 /* expandCollapseCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = expandCollapseCell.xib; sourceTree = "<group>"; };
 		886214D8ED7D44F12D141173 /* Pods_ProjectsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ProjectsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -646,6 +648,7 @@
 				566C7116217A1B300032EEF1 /* AktivGrotesk-Bd.ttf */,
 				56A5FBE1217AF25400242EF5 /* morepopoverViewController.swift */,
 				56766F7E2194464000F9EDA9 /* customCluster.swift */,
+				56E3333B2195F69400733DA3 /* rootController.swift */,
 				565DDB4A216B7F4300404B65 /* ProjectListViewController.swift */,
 				566C711021799AAE0032EEF1 /* FavouritesViewController.swift */,
 				5622989D216E006700C2D07B /* ProjectDetailsViewController.swift */,
@@ -1052,6 +1055,7 @@
 				565DDB75216B80BA00404B65 /* ProjectFilter.swift in Sources */,
 				565DDB7D216B80BA00404B65 /* ProjectCompactCell.swift in Sources */,
 				562720AC216CAAE2004B3538 /* ProjectCellwithoutImage.swift in Sources */,
+				56E3333C2195F69400733DA3 /* rootController.swift in Sources */,
 				56CA1C122169EFCF00D94909 /* Apimanager.swift in Sources */,
 				5625DFF9217EFECC00E61AB3 /* OperationsCell.swift in Sources */,
 				565DDB7B216B80BA00404B65 /* FilterCell.swift in Sources */,
@@ -1280,8 +1284,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "USGBC Explore";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PROVISIONING_PROFILE = "09867d99-be90-47d6-b6ca-56ddb090dd55";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects App store";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -1310,8 +1314,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.usgbc.USGBCProjects;
 				PRODUCT_NAME = "USGBC Explore";
-				PROVISIONING_PROFILE = "e4c58d40-f010-4331-bc94-67005457aec0";
-				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects Adhoc";
+				PROVISIONING_PROFILE = "09867d99-be90-47d6-b6ca-56ddb090dd55";
+				PROVISIONING_PROFILE_SPECIFIER = "USGBC Projects App store";
 				SWIFT_OBJC_BRIDGING_HEADER = "Projects/Projects-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

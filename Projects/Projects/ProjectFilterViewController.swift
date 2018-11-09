@@ -558,7 +558,7 @@ extension ProjectFilterViewController: UITableViewDelegate, UITableViewDataSourc
             var str = temp.componentsJoined(by: ", ")
             let cell = tableView.dequeueReusableCell(withIdentifier: "filterselected") as! filterselected
             cell.detailTextLabel?.numberOfLines = 0
-            cell.separatorInset =  UIEdgeInsetsMake(0, 6, 0, 15)
+            cell.separatorInset =  UIEdgeInsetsMake(0, 13, 0, 13)
             cell.textLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)
             cell.textLabel?.font = UIFont.AktivGrotesk_Md(size: 16)
             cell.detailTextLabel?.textColor = UIColor(red:0.16, green:0.2, blue:0.23, alpha:1)

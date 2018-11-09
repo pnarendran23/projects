@@ -25,7 +25,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     var locationsearchTxt = ""
     var selected_tags = [String]()
     var tagarray = NSMutableArray()
-    let locationManager = CLLocationManager()
+    var locationManager = CLLocationManager()
     var tags = NSMutableArray()
     var arrCountry = ["Afghanistan", "Algeria", "Bahrain","Brazil", "Cuba", "Denmark","Denmark", "Georgia", "Hong Kong", "Iceland", "India", "Japan", "Kuwait", "Nepal"];
     var arrFilter:[String] = []
@@ -192,7 +192,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             if(tempcerts.count > 0 || tempratings.count > 0 || tempversions.count > 0 || tempstate.count > 0 || tempcountry.count > 0 || (self.search.text?.count)! > 0){
                 self.searchProjects()
             }else{
-                Utility.showLoading()
+                //Utility.showLoading()
                 self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.currentPosition.target.latitude , lng: self.currentPosition.target.longitude, distance: self.queryingDistance)
             }
             
@@ -209,6 +209,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
             var dict = [[String : Any]]()
             dict = self.constructCategory()
             self.makeNavigationBarButtons()
+            print(lat)
+            print(lng)
+            print(distance)
             Apimanager.shared.getProjectsElasticForMapNew (from: self.from, sizee : size, search : search, category : dict, lat : lat, lng : lng, distance : distance, callback: {(totalRecords, projects, code) in
                 if(code == -1 && projects != nil){
                     self.totalRecords = totalRecords!
@@ -323,7 +326,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         
         //self.makeNavigationBarButtons()
         dict = self.constructCategory()
-        Apimanager.shared.searchProjectsElasticForMapNew (from: self.from, sizee : 1000, search : search, category : dict, callback: {(totalRecords, projects, code) in
+        Apimanager.shared.searchProjectsElasticForMapNew (from: self.from, sizee : 300, search : search, category : dict, callback: {(totalRecords, projects, code) in
             if(code == -1 && projects != nil){
                 DispatchQueue.main.async {
                     Utility.hideLoading()
@@ -439,9 +442,9 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
+//            locationManager.delegate = self
+//            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            //locationManager.startUpdatingLocation()
         }
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         tabBarController?.title = "Projects"
@@ -648,7 +651,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         projectsMapTab.currentPosition = self.currentPosition
         UserDefaults.standard.set(self.search.text!, forKey: "searchText")
         navigationController?.viewControllers[0] = projectsMapTab
-        self.navigationController?.view.setNeedsLayout()
+        //self.navigationController?.view.setNeedsLayout()
     }
     var opened = false
     //To load JSON from file
@@ -924,7 +927,15 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                     distance = "1000+ mi. away"
                 }
                 }
-                var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                var t = "\n"
+                if(project.state.count > 0){
+                    t = t + project.state + ", "
+                }
+                if(project.country.count > 0){
+                    t = t + project.country + "\n"
+                }
+                
+                var boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 
                 // *** set LineSpacing property in points ***
@@ -936,34 +947,34 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                 var cert_color = UIColor()
                 if(project.certification_level.lowercased() == "certified" && distance.count > 0){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
                     cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
                     cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
                     cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "" && distance.count > 0){
                     cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                    boldText = "\(t)\(distance)"
                 }else if(project.certification_level.lowercased() == "" && distance.count == 0){
                     cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)"
+                    boldText = "\(t)"
                 }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
                     cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
                     cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
                     cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }
                 let attrs = [NSAttributedStringKey.font : cell.address.font] as [NSAttributedStringKey : Any]
                 var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
@@ -971,17 +982,17 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                 
                 if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
                     
-                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\(t)".count, "\(project.certification_level)".count))
                     
-                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\(t)".count, "\(project.certification_level)".count))
                     if(project.certification_level.lowercased() != "" && distance.count == 0){
                     
                     }else{
-                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\(t)\(project.certification_level.uppercased()) • ".count, distance.count))
                     }
                 }else{
                     if(distance.count > 0){
-                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\(t)".count, distance.count))
                     }
                 }
                 attributedString.append(boldString)
@@ -1031,54 +1042,61 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                 
                 
                 var cert_color = UIColor()
+                var t = "\n"
+                if(project.state.count > 0){
+                    t = t + project.state + ", "
+                }
+                if(project.country.count > 0){
+                    t = t + project.country + "\n"
+                }
                 if(project.certification_level.lowercased() == "certified" && distance.count > 0){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "gold" && distance.count > 0){
                     cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "platinum" && distance.count > 0){
                     cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "silver" && distance.count > 0){
                     cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
+                    boldText = "\(t)\(project.certification_level.capitalized) • \(distance)"
                 }else if(project.certification_level.lowercased() == "" && distance.count > 0){
                     cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(distance)"
+                    boldText = "\(t)\(distance)"
                 }else if(project.certification_level.lowercased() == "" && distance.count == 0){
                     cert_color = UIColor(red:21/255, green:101/255, blue:192/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)"
+                    boldText = "\(t)"
                 }else if(project.certification_level.lowercased() == "certified" && distance.count == 0){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "gold" && distance.count == 0){
                     cert_color = UIColor(red:198/255, green:162/255, blue:0/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "silver" && distance.count == 0){
                     cert_color = UIColor(red:110/255, green:130/255, blue:142/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }else if(project.certification_level.lowercased() == "platinum" && distance.count == 0){
                     cert_color = UIColor(red:77/255, green:77/255, blue:77/255, alpha:1.0)
-                    boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized)"
+                    boldText = "\(t)\(project.certification_level.capitalized)"
                 }
                 let attrs = [NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 12)] as [NSAttributedStringKey : Any]
                 var boldString = NSMutableAttributedString(string: boldText, attributes:attrs)
                 boldString.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
                 if(project.certification_level.lowercased() == "certified" || project.certification_level.lowercased() == "gold" || project.certification_level.lowercased() == "platinum" || project.certification_level.lowercased() == "silver"){
-                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: cert_color, range: NSMakeRange("\(t)".count, "\(project.certification_level)".count))
                     
-                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, "\(project.certification_level)".count))
+                    boldString.addAttribute(NSAttributedStringKey.font , value: UIFont.AktivGrotesk_Md(size: 14), range: NSMakeRange("\(t)".count, "\(project.certification_level)".count))
                     
                     if(project.certification_level.lowercased() != "" && distance.count == 0){
                         
                     }else{
-                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n\(project.certification_level.uppercased()) • ".count, distance.count))
+                        boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\(t)\(project.certification_level.uppercased()) • ".count, distance.count))
                     }
                 }else{
                     if(distance.count > 0){
-                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\n\(project.state), \(project.country)\n".count, distance.count))
+                    boldString.addAttribute(NSAttributedStringKey.foregroundColor , value: UIColor(red:0.53, green:0.60, blue:0.64, alpha:1.0), range: NSMakeRange("\(t)".count, distance.count))
                     }
                 }
                 
@@ -1226,21 +1244,27 @@ extension ProjectListViewController: UISearchBarDelegate {
 //            self.navigationItem.leftBarButtonItems = [temp]
 //            self.search.becomeFirstResponder()
 //        }
+    }
+    
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         
         DispatchQueue.main.async {
-                if((searchBar.text?.count)! == 0){
-                    self.arrFilter = [String]()
-                    self.arrCountry = [String]()
-                    self.tableView.reloadData()
-                }
-                self.tableView.isHidden = false
-                self.selected_searchbar = "searchcontroller"
-                Apimanager.shared.stopAllSessions()
-                self.loading = true
-                self.allDownloaded = false
-                self.from = 0
-                self.searchProjects()
+            if((searchBar.text?.count)! == 0){
+                self.arrFilter = [String]()
+                self.arrCountry = [String]()
+                self.tableView.reloadData()
+            self.tableView.isHidden = false
+            self.selected_searchbar = "searchcontroller"
+            Apimanager.shared.stopAllSessions()
+            self.loading = true
+            self.allDownloaded = false
+            self.from = 0
+            self.searchProjects()
+            }
         }
+        
+        return true
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
