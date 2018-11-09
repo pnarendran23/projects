@@ -877,13 +877,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             
             var t = ""
             if(self.Details.city.count > 0){
-                t = t + self.Details.city + ","
+                t = t + self.Details.city + ", "
             }
             if(self.Details.state.count > 0){
-             t = t + self.Details.state + ","
+             t = t + self.Details.state
             }
             if(self.Details.zip_code.count > 0){
-                t = t + self.Details.zip_code + ","
+                t = t + " " + self.Details.zip_code 
             }
             
             if(t.count > 0){
@@ -903,8 +903,8 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             var attr = NSMutableAttributedString.init(string: "")
             var attributed = NSMutableAttributedString()
             if(self.Details.address.count > 0){
-              attributed =  NSMutableAttributedString.init(string: "\(Details.title)\n\(self.Details.address),\n\(t)")
-                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(self.Details.address),\n\(t)".count ))
+              attributed =  NSMutableAttributedString.init(string: "\(Details.title)\n\(self.Details.address)\n\(t)")
+                attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(self.Details.address)\n\(t)".count ))
             }else{
               attributed =  NSMutableAttributedString.init(string: "\(Details.title)\n\(t)")
                 attributed.addAttributes([NSAttributedStringKey.foregroundColor: UIColor(red:0.16, green:0.2, blue:0.23, alpha:1), NSAttributedStringKey.font : UIFont.AktivGrotesk_Rg(size: 14) ], range: NSMakeRange("\(Details.title)".count, "\n\(t)".count ))
