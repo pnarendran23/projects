@@ -492,7 +492,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
                     label.textAlignment = .center
                     label.font = UIFont.AktivGrotesk_Md(size: 15)
                     label.text = v.currentProject.title
-                    v.navigationItem.title = "Overview"
+                    v.navigationItem.title = ""
                     //vc.navigationItem.title =
                 }
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title

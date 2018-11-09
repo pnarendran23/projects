@@ -406,7 +406,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                             self.progressView.isHidden = true
                             self.from = self.from + self.size
                             self.loadMapView(temp: projects!)
-                            Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "\(self.from) of \(self.totalRecords) projects")
+                            Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "Showing \(self.from) of \(self.totalRecords) projects")
                             self.allDownloaded = true
                         }
                         
@@ -521,7 +521,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                             self.from = self.from + self.size
                             self.loadMapView(temp: projects!)
                             if(self.tableViewContainer.isHidden == true && self.mapViewTopConstraint.constant != 0){
-                            Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "\(self.from) of \(self.totalRecords) projects")
+                            Utility.showToast(y: self.searchBar.frame.origin.y + self.searchBar.frame.size.height - UIApplication.shared.statusBarFrame.size.height, message: "Showing \(self.from) of \(self.totalRecords) projects")
                             }
                             self.allDownloaded = true
                         }
@@ -712,7 +712,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                     distance = "1000+ mi. away"
                 }
                 }
-                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+                cell.separatorInset = UIEdgeInsetsMake(0, 13, 0, 14)
                 var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 
@@ -1368,14 +1368,14 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
                         v.node_id = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].node_id
                         v.projectID = self.projects[self.markerArray.index(of: sender as! GMSMarker)!].ID
                         v.currentProject = self.projects[self.markerArray.index(of: sender as! GMSMarker)!]
-                        v.navigationItem.title = "Overview"
+                        v.navigationItem.title = ""
                     }
                 }else{
                     
                     v.node_id = searchedProjects[sender as! Int].node_id
                     v.projectID = searchedProjects[sender as! Int].ID
                     v.currentProject = searchedProjects[sender as! Int]
-                    v.navigationItem.title = "Overview"
+                    v.navigationItem.title = ""
                 }
                 if(locationManager.location != nil){
                     self.currentLocation = locationManager.location

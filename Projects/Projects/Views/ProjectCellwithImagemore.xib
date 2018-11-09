@@ -21,7 +21,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W3Z-Wl-2bV">
-                        <rect key="frame" x="85" y="7" width="193" height="63"/>
+                        <rect key="frame" x="100" y="7" width="178" height="63"/>
                         <attributedString key="attributedText">
                             <fragment content="Label">
                                 <attributes>
@@ -32,7 +32,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KIZ-Vh-KPN">
-                        <rect key="frame" x="78" y="138" width="186" height="26"/>
+                        <rect key="frame" x="78" y="137" width="186" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <nil key="textColor"/>
@@ -51,7 +51,7 @@
                         <state key="normal" title="Button" image="more"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UCj-jt-CgI">
-                        <rect key="frame" x="0.0" y="28" width="20" height="20"/>
+                        <rect key="frame" x="0.0" y="27" width="20" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                         <state key="normal" backgroundImage="delete-1"/>
                     </button>
@@ -61,7 +61,7 @@
                     <constraint firstItem="AFO-fR-2Qd" firstAttribute="top" secondItem="r8Z-0G-jc1" secondAttribute="top" constant="7" id="GPC-79-ZDg"/>
                     <constraint firstItem="W3Z-Wl-2bV" firstAttribute="top" secondItem="r8Z-0G-jc1" secondAttribute="topMargin" constant="-4" id="SVv-w1-ndf"/>
                     <constraint firstAttribute="trailing" secondItem="W3Z-Wl-2bV" secondAttribute="trailing" constant="42" id="bgB-Y7-PVp"/>
-                    <constraint firstItem="W3Z-Wl-2bV" firstAttribute="leading" secondItem="r8Z-0G-jc1" secondAttribute="leading" constant="85" id="iaj-Hp-Us2"/>
+                    <constraint firstItem="W3Z-Wl-2bV" firstAttribute="leading" secondItem="r8Z-0G-jc1" secondAttribute="leading" constant="100" id="iaj-Hp-Us2"/>
                     <constraint firstAttribute="bottom" secondItem="W3Z-Wl-2bV" secondAttribute="bottom" constant="7.5" id="wBf-3W-gns"/>
                 </constraints>
             </tableViewCellContentView>

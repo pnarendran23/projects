@@ -848,14 +848,14 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
                     v.projectID = filterProjects[sender as! Int].ID
                     v.currentProject = filterProjects[sender as! Int]
                     v.currentLocation = self.currentLocation
-                    v.navigationItem.title = "Overview"
+                    v.navigationItem.title = ""
                 }else{
                     v.currentProject = filterProjects[sender as! Int]
                     v.node_id = filterProjects[sender as! Int].node_id
                     v.projectID = filterProjects[sender as! Int].ID
                     v.currentProject = filterProjects[sender as! Int]
                     v.currentLocation = self.currentLocation
-                    v.navigationItem.title = "Overview"
+                    v.navigationItem.title = ""
                 }
                 //viewController.navigationItem.title = searchedProjects[sender as! Int].title
             }
@@ -1034,7 +1034,7 @@ extension ProjectListViewController: UITableViewDataSource, UITableViewDelegate 
                     distance = "1000+ mi. away"
                 }
                 }
-                cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
+                cell.separatorInset = UIEdgeInsetsMake(0, 13, 0, 14)
                 var boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
                 var mutableParagraphStyle = NSMutableParagraphStyle()
                 

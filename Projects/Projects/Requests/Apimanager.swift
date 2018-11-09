@@ -278,10 +278,10 @@ class Apimanager{
                                 projectDetails.site_context = subJson["foundation_statement"].stringValue
                                 projectDetails.description_full = subJson["description"].stringValue
                                 
-                                if(subJson["geo_full_address"].stringValue == ""){
+                                if(subJson["geo_street_name"].stringValue == ""){
                                 projectDetails.address = subJson["add_street"].stringValue
                                 }else{
-                                projectDetails.address = subJson["geo_full_address"].stringValue
+                                projectDetails.address = subJson["geo_street_name"].stringValue
                                 }
                                 
                                 projectDetails.state = subJson["add_state"].stringValue

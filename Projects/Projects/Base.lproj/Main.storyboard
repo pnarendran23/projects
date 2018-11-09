@@ -513,7 +513,7 @@
             </objects>
             <point key="canvasLocation" x="4800.8000000000002" y="1268.8155922038982"/>
         </scene>
-        <!--Filter Projects-->
+        <!--Project Filter View Controller-->
         <scene sceneID="b8T-Nm-tCP">
             <objects>
                 <viewController storyboardIdentifier="ProjectFilterViewController" id="cTm-LG-OEB" customClass="ProjectFilterViewController" customModule="USGBC_Explore" customModuleProvider="target" sceneMemberID="viewController">
@@ -600,7 +600,7 @@
                         <color key="backgroundColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
                         <viewLayoutGuide key="safeArea" id="5pp-h9-XS0"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Filter Projects" id="Vvx-qd-2Z9">
+                    <navigationItem key="navigationItem" id="Vvx-qd-2Z9">
                         <barButtonItem key="leftBarButtonItem" title="Close" id="aUl-lY-MBF">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>

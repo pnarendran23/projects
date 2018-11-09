@@ -165,7 +165,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if(titleArray[indexPath.row] == "profile_image"){
-            return UIScreen.main.bounds.size.height * 0.4
+            return UIScreen.main.bounds.size.height * 0.32
         }else if(titleArray[indexPath.row] == "info"){
             return UITableViewAutomaticDimension
         }else if(titleArray[indexPath.row] == "title"){
@@ -495,7 +495,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     label.textAlignment = .center
                     label.font = UIFont.AktivGrotesk_Md(size: 15)
                     label.text = self.currentProject.title
-                    self.navigationItem.title = "Overview"//self.currentProject.title
+                    self.navigationItem.title = ""//self.currentProject.title
                     //self.navigationItem.titleView = label
                     print(projectDetails!.project_id)
                     print(self.currentProject.long)
@@ -512,21 +512,21 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                     self.Details.address = self.Details.address.replacingOccurrences(of: "\n", with: "")
                     print(self.Details.image)
                     if(self.Details.image.count > 0 && self.Details.image.range(of: "placeholder") == nil){
-                        self.items.append(GalleryItem.image { callback in
-                            var url = URL.init(string: self.Details.image)
-                            let remoteImageURL = url
-                            if(url != nil){
-                                Alamofire.request(remoteImageURL!).responseData { (response) in
-                                    if response.error == nil {
-                                        if let data = response.data {
-                                            callback(UIImage(data: data))
-                                        }
-                                    }else{
-                                        callback(nil)
-                                    }
-                                }
-                            }
-                        })
+//                        self.items.append(GalleryItem.image { callback in
+//                            var url = URL.init(string: self.Details.image)
+//                            let remoteImageURL = url
+//                            if(url != nil){
+//                                Alamofire.request(remoteImageURL!).responseData { (response) in
+//                                    if response.error == nil {
+//                                        if let data = response.data {
+//                                            callback(UIImage(data: data))
+//                                        }
+//                                    }else{
+//                                        callback(nil)
+//                                    }
+//                                }
+//                            }
+//                        })
                     }
                     for s in self.Details.project_images{
                         
@@ -728,7 +728,9 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             temp.append("setting")
         }
         
-        if(self.Details.certification_date != ""){
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "MM/dd/yyyy"
+        if(self.Details.certification_date != "" && dateFormat.date(from: self.Details.certification_date) != nil){
             temp.append("certified")
         }
         
@@ -791,11 +793,13 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             var dateFormat = DateFormatter()
             dateFormat.dateFormat = "MM/dd/yyyy"
             var date = Date()
-            date = dateFormat.date(from: self.Details.certification_date)!
-            dateFormat.dateFormat = "yyyy"
-            var justyear = dateFormat.string(from: date)
-            dateFormat.dateFormat = "MMM dd, yyyy"
-            stackCell.detaillbl.text = "\(dateFormat.string(from: date))"
+            if(dateFormat.date(from: self.Details.certification_date) != nil){
+                date = dateFormat.date(from: self.Details.certification_date)!
+                dateFormat.dateFormat = "yyyy"
+                var justyear = dateFormat.string(from: date)
+                dateFormat.dateFormat = "MMM dd, yyyy"
+                stackCell.detaillbl.text = "\(dateFormat.string(from: date))"
+            }
             stackCell.separatorInset = UIEdgeInsetsMake(0, -18, 0, UIScreen.main.bounds.width)
             return stackCell
         }else if(titleArray[indexPath.row] == "use"){
@@ -825,11 +829,11 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
         }else if(titleArray[indexPath.row] == "profile_image"){
             let thumbnailView = tableView.dequeueReusableCell(withIdentifier: "thumbnail", for: indexPath) as! thumbnail
                                 thumbnailView.selectionStyle = .none
-                                if(self.Details.image.count > 0 && self.Details.image.range(of: "placeholder") == nil){
+                                if(self.Details.project_images.count > 0 && self.Details.image.range(of: "placeholder") == nil){
                                     print(self.Details.image)
                                     
                                     thumbnailView.imgView.image = nil
-                                    var url = URL.init(string: self.Details.image)
+                                    var url = URL.init(string: self.Details.project_images.first!)
                                     let remoteImageURL = url
                                     if(url != nil){
                                         Alamofire.request(remoteImageURL!).responseData { (response) in
@@ -847,7 +851,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                                 }else{
                                     thumbnailView.imgView.image = UIImage.init(named: "project_placeholder")
                                 }
-                                thumbnailView.thumbnailcount.text = "\(self.Details.project_images.count + 1)"
+                                thumbnailView.thumbnailcount.text = "\(self.Details.project_images.count)"
             
                                 thumbnailView.selectionStyle = .none
                                 return thumbnailView
