@@ -406,7 +406,7 @@ class ProjectListViewController: UIViewController, UIPopoverControllerDelegate, 
         if(UIDevice.current.userInterfaceIdiom == .pad){
         search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.91 * UIScreen.main.bounds.size.width, height:20))
         }else{
-        search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.77 * UIScreen.main.bounds.size.width, height:20))
+        search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.76 * UIScreen.main.bounds.size.width, height:20))
         }
         search.placeholder = "Search"
         if(UserDefaults.standard.object(forKey: "searchText") != nil){

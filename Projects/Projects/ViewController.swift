@@ -1211,7 +1211,7 @@ class ViewController: UIViewController,UIGestureRecognizerDelegate, UITabBarDele
         if(UIDevice.current.userInterfaceIdiom == .pad){
             search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.91 * UIScreen.main.bounds.size.width, height:20))
         }else{
-            search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.77 * UIScreen.main.bounds.size.width, height:20))
+            search = UISearchBar(frame: CGRect(x:-10, y:0, width:0.76 * UIScreen.main.bounds.size.width, height:20))
         }
         search.placeholder = "Search"
         
@@ -1758,7 +1758,7 @@ extension ViewController: GMUClusterManagerDelegate {
         let newCamera = GMSCameraPosition.camera(withTarget: cluster.position,
                                                  zoom: mapView.camera.zoom + 0.3)
         let update = GMSCameraUpdate.setCamera(newCamera)
-        mapView.moveCamera(update)
+        //mapView.moveCamera(update)
         return false
     }
 }
@@ -2050,7 +2050,8 @@ extension ViewController:  UICollectionViewDelegateFlowLayout {
             tempversions.remove("")
             tempstate.remove("")
             tempcountry.remove("")
-            if(self.search.text?.count == 0 && tempcerts.count == 0 && tempratings.count == 0 && tempversions.count == 0 && tempstate.count == 0 && tempcountry.count == 0 ){
+            //if(self.search.text?.count == 0 && tempcerts.count == 0 && tempratings.count == 0 && tempversions.count == 0 && tempstate.count == 0 && tempcountry.count == 0 ){
+            if(self.tableViewtopConstraint.constant != 0){
                 let distanceinKms = Double(self.mapView.getRadius() * 0.000621371193 * 0.8)
                 self.loadProjectsElasticUsingLocation(search: self.search.text!, category: self.category, lat: self.mapView.camera.target.latitude, lng: self.mapView.camera.target.longitude, distance: distanceinKms)
             }else{
