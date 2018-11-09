@@ -14,7 +14,7 @@ import Fabric
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-let mapKey = "<key>"
+let mapKey = "AIzaSyAioRmz1p523z5qLShx8f_l7Ueaq2EHcK8"
     var window: UIWindow?
 
 
