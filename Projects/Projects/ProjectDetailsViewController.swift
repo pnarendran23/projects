@@ -962,7 +962,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
             }else{
                 s = "CERTIFICATION \(tempLevel)\(temprating)"
             }
-            var cert_color = UIColor()
+            var cert_color = UIColor.clear
             if(self.Details.project_certification_level.lowercased() == "certified"){
                 cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
             }else if(self.Details.project_certification_level.lowercased() == "gold"){
@@ -1236,7 +1236,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 }
                 cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 14)
                 
-                var cert_color = UIColor()
+                var cert_color = UIColor.clear
                 if(project.certification_level.lowercased() == "certified"){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
                     boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
@@ -1315,7 +1315,7 @@ extension ProjectDetailsViewController : UITableViewDelegate, UITableViewDataSou
                 //bold.addAttribute(NSAttributedStringKey.paragraphStyle , value: mutableParagraphStyle, range: NSMakeRange(0, boldText.count))
                 
                 
-                var cert_color = UIColor()
+                var cert_color = UIColor.clear
                 if(project.certification_level.lowercased() == "certified"){
                     cert_color = UIColor(red:76/255, green:175/255, blue:85/255, alpha:1.0)
                     boldText = "\n\(project.state), \(project.country)\n\(project.certification_level.capitalized) • \(distance)"
